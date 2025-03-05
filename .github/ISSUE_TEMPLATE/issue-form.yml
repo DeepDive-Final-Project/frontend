@@ -1,0 +1,38 @@
+name: '✨ feature'
+description: '새로운 기능, 명세가 있나요?(Jira Story와 연동됩니다.)'
+labels: [feat]
+title: '이슈 제목을 입력하세요'
+body:
+  - type: input
+    id: storyKey
+    attributes:
+      label: '🌳 기능 구현 키 (Story Ticket Number)'
+      description: 'Jira의 Story Ticket Number를 입력해주세요 (예: ICT-100)'
+      placeholder: 'EX) ICT-100'
+    validations:
+      required: true
+
+  - type: input
+    id: branch
+    attributes:
+      label: '🍃브랜치명 (Branch)'
+      description: '브랜치명을 작성해주세요 (예: feature/your-branch)'
+      placeholder: 'feature/your-branch'
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: '📝상세 내용 (Description)'
+      description: '이슈에 대한 설명을 작성해주세요'
+      placeholder: '이슈에 대한 설명을 입력해주세요'
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        **🔗 자동 생성된 정보**
+        - Jira Sub-task: `${{ inputs.subtaskKey }}`

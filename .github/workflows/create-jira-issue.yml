@@ -1,0 +1,78 @@
+name: Create Jira Issue and Update Sub-task
+on:
+  issues:
+    types:
+      - opened
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  create-jira-issue:
+    name: Create Jira Issue and Update Story
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Jira
+        uses: atlassian/gajira-login@v3
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: dev
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Parse Issue Inputs
+        id: issue-parser
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: .github/ISSUE_TEMPLATE/issue-form.yml
+
+      - name: Move Story to "In Progress"
+        run: |
+          echo "Moving Jira Story ${{ steps.issue-parser.outputs.storyKey }} to In Progress"
+
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS=%{http_code}" -u "${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}" \
+          -X POST -H "Content-Type: application/json" \
+          --data '{"transition": {"id": "2"}}' \
+          "${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.issue-parser.outputs.storyKey }}/transitions")
+
+          HTTP_STATUS=$(echo "$RESPONSE" | grep HTTP_STATUS | cut -d= -f2)
+          echo "Jira API Response: $RESPONSE"
+          echo "HTTP Status Code: $HTTP_STATUS"
+
+          if [[ "$HTTP_STATUS" -ne 204 ]]; then
+            echo "ERROR: Failed to transition Jira Story to In Progress. HTTP Status: $HTTP_STATUS"
+            exit 1
+          else
+            echo "SUCCESS: Jira Story transitioned to In Progress!"
+          fi
+
+      - name: Debug Jira Story Key
+        run: |
+          echo "Extracted Jira Story Key: ${{ steps.issue-parser.outputs.storyKey }}"
+
+          
+      - name: Create Branch
+        run: |
+          BRANCH_NAME="${{ steps.issue-parser.outputs.issueparser_branch }}"
+          echo "Switching to new branch: $BRANCH_NAME"
+          git checkout -b "$BRANCH_NAME"
+
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git "$BRANCH_NAME"
+
+      - name: Add Comment with Jira Sub-task Link
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'create-comment'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          body: 'Jira Sub-task Updated: [${{ steps.issue-parser.outputs.subtaskKey }}](${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.issue-parser.outputs.subtaskKey }})'
