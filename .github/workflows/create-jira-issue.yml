@@ -1,4 +1,4 @@
-name: Create Jira Issue and Update Sub-task
+name: Create Jira Issue and Update Story
 on:
   issues:
     types:
@@ -29,21 +29,44 @@ jobs:
 
       - name: Parse Issue Inputs
         id: issue-parser
-        uses: stefanbuck/github-issue-parser@v3
+        uses: actions/github-script@v6
         with:
-          template-path: .github/ISSUE_TEMPLATE/issue-form.yml
+          script: |
+            const issueBody = context.payload.issue.body;
+            console.log("Issue Body:", issueBody);
+
+            const storyMatch = issueBody.match(/### 🌳 기능 구현 키 \(Story Ticket Number\)\n\n([A-Z]+-[0-9]+)/);
+            const branchMatch = issueBody.match(/### 🍃브랜치명 \(Branch\)\n\n([a-zA-Z0-9_\-\/.]+)/);
+
+            if (storyMatch) {
+              core.setOutput('storyKey', storyMatch[1]);
+              console.log("✅ Extracted storyKey:", storyMatch[1]);
+            } else {
+              core.setFailed("❌ storyKey 값을 찾을 수 없습니다. Issue Template을 확인하세요.");
+            }
+
+            if (branchMatch) {
+              core.setOutput('branch', branchMatch[1]);
+              console.log("✅ Extracted branch:", branchMatch[1]);
+            } else {
+              core.setFailed("❌ branch 값을 찾을 수 없습니다. Issue Template을 확인하세요.");
+            }
+
+
+
 
       - name: Move Story to "In Progress"
         run: |
           echo "Moving Jira Story ${{ steps.issue-parser.outputs.storyKey }} to In Progress"
 
-          RESPONSE=$(curl -s -w "\nHTTP_STATUS=%{http_code}" -u "${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}" \
+          RESPONSE=$(curl -s -o response.txt -w "\nHTTP_STATUS=%{http_code}" -u "${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}" \
           -X POST -H "Content-Type: application/json" \
           --data '{"transition": {"id": "2"}}' \
           "${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.issue-parser.outputs.storyKey }}/transitions")
 
           HTTP_STATUS=$(echo "$RESPONSE" | grep HTTP_STATUS | cut -d= -f2)
-          echo "Jira API Response: $RESPONSE"
+          echo "Jira API Response:"
+          cat response.txt
           echo "HTTP Status Code: $HTTP_STATUS"
 
           if [[ "$HTTP_STATUS" -ne 204 ]]; then
@@ -53,14 +76,19 @@ jobs:
             echo "SUCCESS: Jira Story transitioned to In Progress!"
           fi
 
+
       - name: Debug Jira Story Key
         run: |
-          echo "Extracted Jira Story Key: ${{ steps.issue-parser.outputs.storyKey }}"
+          echo "Extracted Jira Story Key: '${{ steps.issue-parser.outputs.storyKey }}'"
 
-          
       - name: Create Branch
         run: |
-          BRANCH_NAME="${{ steps.issue-parser.outputs.issueparser_branch }}"
+          BRANCH_NAME="${{ steps.issue-parser.outputs.branch }}"
+          if [ -z "$BRANCH_NAME" ]; then
+            BRANCH_NAME="feature/default-branch"
+            echo "⚠️ Warning: Branch name was empty. Using default: $BRANCH_NAME"
+          fi
+
           echo "Switching to new branch: $BRANCH_NAME"
           git checkout -b "$BRANCH_NAME"
 
@@ -68,6 +96,12 @@ jobs:
           git config --global user.name "GitHub Actions"
 
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git "$BRANCH_NAME"
+
+      - name: Debug Issue Parser Outputs
+        run: |
+          echo "All Parsed Outputs:"
+          echo "${{ toJson(steps.issue-parser.outputs) }}"
+
 
       - name: Add Comment with Jira Sub-task Link
         uses: actions-cool/issues-helper@v3
