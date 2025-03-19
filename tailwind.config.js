@@ -2,7 +2,18 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    screens: {
+      mobile: '320px',
+      tablet: '640px',
+      desktop: '1024px',
+    },
+    extend: {
+      colors: {
+        'point-blue': '#146EF5',
+        'btn-gray': '#5A5C63',
+        'btn-disabled': '#4E5157',
+      },
+    },
   },
   plugins: [],
 };
