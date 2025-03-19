@@ -18,8 +18,8 @@ interface UserCardProps {
 const UserCard: React.FC<UserCardProps> = ({ user }) => {
   const [isSelected, setIsSelected] = useState(false);
   const handleClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation(); // 이벤트 버블링 방지
-    setIsSelected((prev) => !prev); // 클릭하면 토글
+    e.stopPropagation();
+    setIsSelected((prev) => !prev);
   }, []);
   const handleDeselect = useCallback(() => {
     setIsSelected(false);
