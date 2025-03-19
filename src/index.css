@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 body {
-  @apply bg-black text-[#E6E6E6];
+  @apply bg-black text-[#E6E6E6] font-pretendard;
 }
