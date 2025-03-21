@@ -31,7 +31,11 @@ const ProfileInfoPage = () => {
               placeholder="본명 혹은 닉네임을 입력하세요"
             />
             <div className="h-6" />
-            <InputFieldLabel textLabel="나의 이메일은" />
+
+            <InputFieldLabel
+              textLabel="나의 이메일은"
+              rightText="| 미기입시 가입하신 소셜로그인으로 등록됩니다"
+            />
             <InputField
               type="email"
               placeholder="abc@kakao.com"
