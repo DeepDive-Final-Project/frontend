@@ -104,7 +104,7 @@ const BottomSheet: React.FC = () => {
   const handleTouchEnd = () => {
     setIsDragging(false);
     if (bottomSheetHeight < window.innerHeight / 3) {
-      setBottomSheetHeight(100);
+      setBottomSheetHeight(150);
     } else {
       setBottomSheetHeight(window.innerHeight - 50);
     }

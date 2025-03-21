@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority';
 import ChatRequestMessage from '@/components/Chat/ChatRequestMessage';
-import Button from '@/components/Common/Button';
+import Button from '@/components/common/Button';
 import { LogOut } from 'react-feather';
 
 interface ChatRequestCardProps {

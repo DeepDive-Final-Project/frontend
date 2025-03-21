@@ -3,7 +3,7 @@ import ChatFilter from '@/components/Chat/ChatFilter';
 import ChatList from '@/components/Chat/ChatList';
 import ChatHeader from '@/components/Chat/ChatHeader';
 import ChatRoom from '@/components/Chat/ChatRoom';
-import Button from '@/components/Common/Button';
+import Button from '@/components/common/Button';
 import { ChatRoomType } from '@/types/chatRoom';
 
 import profileImg from '@/assets/images/explore.svg';
