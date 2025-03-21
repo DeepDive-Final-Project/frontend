@@ -1,4 +1,4 @@
-import Button from '@/components/Common/Button';
+import Button from '@/components/common/Button';
 import ChatProfileInfo from '@/components/Chat/ChatProfileInfo';
 import ChatRequestCard from '@/components/Chat/ChatRequestCard';
 import ChatInput from '@/components/Chat/ChatInput';

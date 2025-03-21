@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useUserStore } from '@/stores/useUserStore';
 
 const allInterests = ['축구', '농구', '독서', '코딩', '등산', '요가'];

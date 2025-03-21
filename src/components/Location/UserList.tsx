@@ -1,4 +1,3 @@
-import React from 'react';
 import { useUserStore } from '@/stores/useUserStore';
 
 const UserList = () => {

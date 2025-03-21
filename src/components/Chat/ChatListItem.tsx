@@ -1,4 +1,4 @@
-import Button from '@/components/Common/Button';
+import Button from '@/components/common/Button';
 import { ChatRoomType } from '@/types/chatRoom';
 import { formatTime } from '@/utils/formatTime';
 
