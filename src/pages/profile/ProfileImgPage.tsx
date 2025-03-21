@@ -1,9 +1,16 @@
+import { useNavigate } from 'react-router-dom';
 import ProgressBar from '@/components/profile/ProgressBar';
 import TopNav from '@/components/profile/TopNav';
 import NextButton from '@/components/profile/NextButton';
 import Profile1 from '@/assets/images/profile1.svg';
 
 const ProfileImgPage = () => {
+  const navigate = useNavigate();
+
+  const handleSkip = () => {
+    navigate('/profile2');
+  };
+
   return (
     <>
       <div className="flex min-h-screen">
@@ -29,7 +36,11 @@ const ProfileImgPage = () => {
 
           <footer className="w-full tablet:w-[320px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center">
             <NextButton text={'프로필 이미지 선택하기'} />
-            <div className="mt-2 text-[#B7B9BD]">프로필 이미지 건너뛰기</div>
+            <div
+              className="mt-2 text-[#B7B9BD] cursor-pointer"
+              onClick={handleSkip}>
+              프로필 이미지 건너뛰기
+            </div>
           </footer>
         </div>
       </div>
