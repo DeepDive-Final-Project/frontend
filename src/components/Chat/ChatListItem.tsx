@@ -1,4 +1,4 @@
-import { ChatRoomType } from '@/types/chatRoom';
+import { ChatRoomType } from '@/types/chatRoomType';
 import { formatTime } from '@/utils/formatTime';
 interface ChatListItemProps {
   chat: ChatRoomType;

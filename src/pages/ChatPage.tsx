@@ -4,7 +4,7 @@ import ChatList from '@/components/Chat/ChatList';
 import ChatHeader from '@/components/Chat/ChatHeader';
 import ChatRoom from '@/components/Chat/ChatRoom';
 import Button from '@/components/common/Button';
-import { ChatRoomType } from '@/types/chatRoom';
+import { ChatRoomType } from '@/types/chatRoomType';
 
 import profileImg from '@/assets/images/explore.svg';
 
@@ -31,7 +31,7 @@ const chatRooms: ChatRoomType[] = [
   },
 ];
 
-const Chat = () => {
+const ChatPage = () => {
   const [selectedRoom, setSelectedRoom] = useState<ChatRoomType | null>(null);
 
   const onSelectRoom = (roomId: ChatRoomType) => {
@@ -76,4 +76,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default ChatPage;

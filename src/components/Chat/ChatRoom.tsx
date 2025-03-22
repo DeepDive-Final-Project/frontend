@@ -1,7 +1,7 @@
 import Button from '@/components/common/Button';
 import ChatProfileInfo from '@/components/Chat/ChatProfileInfo';
 import ChatInput from '@/components/Chat/ChatInput';
-import { ChatRoomType } from '@/types/chatRoom';
+import { ChatRoomType } from '@/types/chatRoomType';
 import { LogOut } from 'react-feather';
 
 interface ChatRoomProps {
