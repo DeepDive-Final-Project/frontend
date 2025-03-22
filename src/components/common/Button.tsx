@@ -1,7 +1,7 @@
 import { ElementType } from 'react';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-import { buttonVariants } from '@/components/Common/buttonVariants';
+import { buttonVariants } from '@/components/common/buttonVariants';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'basic';
