@@ -11,14 +11,14 @@ const UserLocation = () => {
       user: any;
     }[]
   >([]);
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserLocation(position.coords.latitude, position.coords.longitude);
-      },
-      (error) => console.error('위치 정보를 가져올 수 없습니다.', error),
-    );
-  }, [setUserLocation]);
+  // useEffect(() => {
+  //   navigator.geolocation.getCurrentPosition(
+  //     (position) => {
+  //       setUserLocation(position.coords.latitude, position.coords.longitude);
+  //     },
+  //     (error) => console.error('위치 정보를 가져올 수 없습니다.', error),
+  //   );
+  // }, [setUserLocation]);
 
   useEffect(() => {
     if (!users.length) return;
@@ -27,23 +27,34 @@ const UserLocation = () => {
     const radius = size / 2.5;
     const centerX = size / 2;
     const centerY = size / 2;
+    const smallRadius = size / 6;
 
-    const positions = Array.from({ length: 10 }).map((_, i) => {
-      const degree = i * (360 / 10);
+    const smallCirclePosition = [
+      { x: centerX, y: centerY - smallRadius },
+      { x: centerX, y: centerY + smallRadius },
+    ];
+    const bigCirclePosition = Array.from({ length: 8 }).map((_, i) => {
+      const degree = i * (360 / 8);
       const radian = (degree * Math.PI) / 180;
       const x = centerX + radius * Math.cos(radian);
       const y = centerY + radius * Math.sin(radian);
       return { x, y };
     });
 
-    const assignedUsers = positions.map((pos, index) => ({
+    const smallCircleUsers = smallCirclePosition.map((pos, index) => ({
       id: index,
       x: pos.x,
       y: pos.y,
       user: users[Math.floor(Math.random() * users.length)],
     }));
+    const bigCircleUsers = bigCirclePosition.map((pos, index) => ({
+      id: index + 2,
+      x: pos.x,
+      y: pos.y,
+      user: users[Math.floor(Math.random() * users.length)],
+    }));
 
-    setRandomUsers(assignedUsers);
+    setRandomUsers([...smallCircleUsers, ...bigCircleUsers]);
   }, [users]);
 
   if (!latitude || !longitude) return <p>위치를 불러오는 중...</p>;
@@ -83,7 +94,6 @@ const UserLocation = () => {
             <div className="w-6 h-6 bg-gray-500 rounded-full mr-2"></div>
             <div>
               <p className="text-sm font-bold">{user.name}</p>
-              <p className="text-xs text-gray-500">{user.role}</p>
             </div>
           </div>
         ))}

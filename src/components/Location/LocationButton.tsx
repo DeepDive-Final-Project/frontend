@@ -1,58 +1,74 @@
 import { useState } from 'react';
+import axios from 'axios';
+import { useUserStore } from '@/stores/useUserStore';
 
-const LocationButton = () => {
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
-    null,
-  );
-  const [permission, setPermission] = useState<PermissionState>('prompt');
+const LocationButton: React.FC = () => {
+  const setUsers = useUserStore((state) => state.setUsers);
 
-  const getLocation = () => {
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+
+  const handleSendLocation = () => {
     if (!navigator.geolocation) {
-      alert('Geolocation을 지원하지 않는 브라우저입니다.');
+      alert('위치 정보를 지원하지 않는 브라우저입니다.');
       return;
     }
-    navigator.permissions.query({ name: 'geolocation' }).then((result) => {
-      setPermission(result.state);
-      if (result.state === 'denied') {
-        alert('위치 접근이 차단되었습니다. 브라우저 설정에서 허용해주세요.');
-        return;
-      }
 
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.error('위치 가져오기 실패:', error);
-          alert('위치를 가져올 수 없습니다.');
-        },
-      );
-    });
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        setLatitude(lat);
+        setLongitude(lng);
+
+        const payload = {
+          userId: 1,
+          latitude: lat,
+          longitude: lng,
+        };
+
+        try {
+          const response = await axios.post(
+            'http://3.34.165.63:8080/api/location/save',
+            payload,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            },
+          );
+
+          console.log(' 받은 유저 리스트:', response.data);
+          setUsers(response.data);
+        } catch (error) {
+          console.error(' 위치 전송 실패:', error);
+        }
+      },
+      (error) => {
+        console.error(' 위치 정보를 가져올 수 없습니다:', error);
+        alert('위치 정보를 가져오는 데 실패했습니다.');
+      },
+    );
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-900 text-white p-4 rounded-lg">
+    <div className="flex flex-col items-start gap-2 text-white">
       <button
-        onClick={getLocation}
-        className="px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-600 transition">
-        내 위치 가져오기
+        onClick={handleSendLocation}
+        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+        내 위치 전송 & 주변 유저 받기
       </button>
 
-      {location && (
-        <div className="mt-4 text-lg">
-          <p>📍 위도: {location.lat}</p>
-          <p>📍 경도: {location.lng}</p>
+      {latitude && longitude && (
+        <div className="text-sm text-gray-300">
+          📍 현재 위치:
+          <br />
+          위도: <span className="text-white">{latitude}</span>
+          <br />
+          경도: <span className="text-white">{longitude}</span>
         </div>
       )}
-
-      <p className="text-gray-400 text-sm mt-2">
-        {permission === 'prompt' && '위치 정보를 요청하세요.'}
-        {permission === 'granted' && '위치 정보가 활성화되었습니다!'}
-        {permission === 'denied' && '위치 접근이 차단되었습니다.'}
-      </p>
     </div>
   );
 };
