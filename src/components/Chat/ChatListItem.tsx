@@ -1,5 +1,6 @@
 import { ChatRoomType } from '@/types/chatRoomType';
-import { formatTime } from '@/utils/formatTime';
+import { formatTime } from '@/utils/chat/formatTime';
+
 interface ChatListItemProps {
   chat: ChatRoomType;
   onSelectRoom: (roomId: ChatRoomType) => void;

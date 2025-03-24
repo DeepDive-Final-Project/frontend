@@ -1,46 +1,59 @@
-import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ChatFilter from '@/components/Chat/ChatFilter';
 import ChatList from '@/components/Chat/ChatList';
 import ChatHeader from '@/components/Chat/ChatHeader';
 import ChatRoom from '@/components/Chat/ChatRoom';
 import Button from '@/components/common/Button';
 import { ChatRoomType } from '@/types/chatRoomType';
-
+import { api } from '@/utils/api';
 import profileImg from '@/assets/images/explore.svg';
 
-// chat mock data
-const chatRooms: ChatRoomType[] = [
-  {
-    roomId: 1,
-    participants: ['김민수'],
-    lastMessage:
-      '안녕하세요, 반갑습니다 민수님~! 채팅 주셔서 감사합니다. 혹시 만나서 이야기 나눌까요? 몇 시쯤 시간 괜찮으신가요?',
-    lastMessageTime: '2025-03-16T15:55:46.311Z',
-  },
-  {
-    roomId: 2,
-    participants: ['홍길동'],
-    lastMessage: '홍길동님이 대화를 요청했어요',
-    lastMessageTime: '2025-03-16T15:30:00.000Z',
-  },
-  {
-    roomId: 3,
-    participants: ['하민지'],
-    lastMessage: '대화 요청이 거절되었어요',
-    lastMessageTime: '2025-03-16T15:30:00.000Z',
-  },
-];
+// 현재 로그인한 사용자 (임시)
+const currentUser = localStorage.getItem('userId');
+
+const fetchChat = async () => {
+  const response = await api.get(`/api/chat/${currentUser}`);
+
+  return response.data;
+};
 
 const ChatPage = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [selectedRoom, setSelectedRoom] = useState<ChatRoomType | null>(null);
+  const roomId = searchParams.get('roomId');
 
-  const onSelectRoom = (roomId: ChatRoomType) => {
-    setSelectedRoom(roomId);
+  const {
+    data: chatRooms = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['chatRooms'],
+    queryFn: fetchChat,
+  });
+
+  useEffect(() => {
+    if (!roomId) return;
+    setSelectedRoom(
+      chatRooms.find((room: ChatRoomType) => room.roomId === Number(roomId)) ??
+        null,
+    );
+  }, [roomId, chatRooms]);
+
+  const onSelectRoom = (room: ChatRoomType) => {
+    setSelectedRoom(room);
   };
 
   const onBackToList = () => {
     setSelectedRoom(null);
+    navigate('/chat', { replace: true });
   };
+
+  if (isLoading) return <p>로딩 중...</p>;
+  if (error) return <p>{error.message}</p>;
 
   return (
     <div className="max-w-[1440px] m-auto flex h-screen overflow-hidden">
@@ -62,7 +75,9 @@ const ChatPage = () => {
         )}
       </div>
       <div
-        className={`relative flex-auto flex-col ${selectedRoom ? 'flex' : 'hidden tablet:flex'}`}>
+        className={`relative flex-auto flex-col ${
+          selectedRoom ? 'flex' : 'hidden tablet:flex'
+        }`}>
         <ChatHeader onBackToList={onBackToList} />
         {selectedRoom ? (
           <ChatRoom selectedRoom={selectedRoom} />
