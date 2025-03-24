@@ -15,14 +15,15 @@ export interface User {
   longitude?: number;
   image: string;
   tags: Tag[];
+  // interests: string[];
 }
 
 interface UserStore {
   users: User[];
   setUsers: (users: User[]) => void;
 
-  interests: string[];
-  setInterests: (interests: string[]) => void;
+  // interests: string[];
+  // setInterests: (interests: string[]) => void;
 
   latitude: number | null;
   longitude: number | null;
@@ -33,8 +34,8 @@ export const useUserStore = create<UserStore>((set) => ({
   users: [],
   setUsers: (users) => set({ users }),
 
-  interests: [],
-  setInterests: (interests) => set({ interests }),
+  // interests: [],
+  // setInterests: (interests) => set({ interests }),
 
   latitude: null,
   longitude: null,
