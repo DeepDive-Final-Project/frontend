@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.1",
+    "@tanstack/react-query": "^5.69.0",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
     "axios": "^1.8.1",
@@ -21,6 +22,7 @@
     "react-dom": "^19.0.0",
     "react-feather": "^2.0.10",
     "react-router-dom": "^7.2.0",
+    "react-toastify": "^11.0.5",
     "sockjs-client": "^1.6.1",
     "zustand": "^5.0.3"
   },

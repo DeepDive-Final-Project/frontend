@@ -1,8 +1,7 @@
 import Button from '@/components/common/Button';
-import ChatProfileInfo from '@/components/Chat/ChatProfileInfo';
-import ChatRequestCard from '@/components/Chat/ChatRequestCard';
-import ChatInput from '@/components/Chat/ChatInput';
-import { ChatRoomType } from '@/types/chatRoom';
+import ChatProfileInfo from '@/components/chat/ChatProfileInfo';
+import ChatInput from '@/components/chat/ChatInput';
+import { ChatRoomType } from '@/types/chatRoomType';
 import { LogOut } from 'react-feather';
 
 interface ChatRoomProps {
@@ -15,7 +14,6 @@ const ChatRoom = ({ selectedRoom }: ChatRoomProps) => {
       <div className="relative flex flex-col flex-auto p-5 overflow-y-auto scrollbar-hide">
         <ChatProfileInfo />
         <div className="flex flex-col pt-5">
-          <ChatRequestCard status="request" />
           <b className="mb-1 text-center text-sm text-[#A2A4AA]">오늘</b>
           <p className="mb-7 text-center text-sm font-medium text-[#A2A4AA]">
             <b>{selectedRoom.participants}</b>님과의 대화가 시작되었어요

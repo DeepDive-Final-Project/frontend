@@ -1,6 +1,5 @@
-import Button from '@/components/common/Button';
-import { ChatRoomType } from '@/types/chatRoom';
-import { formatTime } from '@/utils/formatTime';
+import { ChatRoomType } from '@/types/chatRoomType';
+import { formatTime } from '@/utils/chat/formatTime';
 
 interface ChatListItemProps {
   chat: ChatRoomType;
@@ -24,17 +23,6 @@ const ChatListItem = ({ chat, onSelectRoom }: ChatListItemProps) => {
           <p className="text-[#B7B9BD] text-sm line-clamp-2 leading-relaxed">
             {chat.lastMessage}
           </p>
-          <div className="flex space-x-3 mt-3">
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={(e) => e.stopPropagation()}>
-              거절
-            </Button>
-            <Button size="sm" onClick={(e) => e.stopPropagation()}>
-              수락
-            </Button>
-          </div>
           <span className="absolute top-0 right-[14.5px] flex items-center justify-center w-5 h-5 text-white text-xs bg-[#FF1313] rounded-full">
             5
           </span>
