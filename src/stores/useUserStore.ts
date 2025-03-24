@@ -20,9 +20,23 @@ export interface User {
 interface UserStore {
   users: User[];
   setUsers: (users: User[]) => void;
+
+  interests: string[];
+  setInterests: (interests: string[]) => void;
+
+  latitude: number | null;
+  longitude: number | null;
+  setUserLocation: (lat: number, lng: number) => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
   users: [],
   setUsers: (users) => set({ users }),
+
+  interests: [],
+  setInterests: (interests) => set({ interests }),
+
+  latitude: null,
+  longitude: null,
+  setUserLocation: (lat, lng) => set({ latitude: lat, longitude: lng }),
 }));
