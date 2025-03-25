@@ -14,9 +14,10 @@ import profileImg from '@/assets/images/explore.svg';
 // 현재 로그인한 사용자 (임시)
 const currentUser = localStorage.getItem('userId');
 
+const filterOption = ['최신 메세지 순', '안읽은 메세지 순'];
+
 const fetchChat = async () => {
   const response = await api.get(`/api/chat/${currentUser}`);
-
   return response.data;
 };
 
@@ -24,6 +25,7 @@ const ChatPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [selectedRoom, setSelectedRoom] = useState<ChatRoomType | null>(null);
+  const [selectedOption, setSelectedOption] = useState(filterOption[0]);
   const roomId = searchParams.get('roomId');
 
   const {
@@ -59,7 +61,11 @@ const ChatPage = () => {
     <div className="max-w-[1440px] m-auto flex h-screen overflow-hidden">
       <div
         className={`flex flex-col w-full h-full desktop:max-w-[400px] tablet:max-w-[320px] overflow-y-auto border border-l-0 border-t-0 border-b-0 border-[#222325] bg-[#0A0A0B] ${selectedRoom ? 'hidden tablet:flex' : 'flex'}`}>
-        <ChatFilter />
+        <ChatFilter
+          options={filterOption}
+          selectedOption={selectedOption}
+          onChangeOption={setSelectedOption}
+        />
         {chatRooms.length > 0 ? (
           <ChatList chatRooms={chatRooms} onSelectRoom={onSelectRoom} />
         ) : (
