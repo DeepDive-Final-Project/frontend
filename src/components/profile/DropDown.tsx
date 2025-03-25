@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp } from 'react-feather';
+import { ChevronDown } from 'react-feather';
 import { useState } from 'react';
 
 interface DropdownProps {
@@ -25,12 +25,14 @@ const Dropdown = ({ label, options, onSelect }: DropdownProps) => {
         focus:border-[#2C7DF6] focus:ring-1 focus:ring-[#2C7DF6] outline-none transition-all duration-200 
         ${selectedOption ? 'text-white' : 'text-[#A2A4AA]'}`}>
         <span>{selectedOption || label}</span>
-        <div className="w-6 h-6 flex items-center justify-center border border-[#B3B3B3] rounded-[2px] p-1">
-          {isOpen ? (
-            <ChevronUp size={16} color="#B7B9BD" />
-          ) : (
-            <ChevronDown size={16} color="#B7B9BD" />
-          )}
+
+        <div className="flex items-center gap-2">
+          <span className="text-[#66A1F8] text-xs">필수 선택</span>
+          <div
+            className={`w-6 h-6 flex items-center justify-center border-[0.5px] border-[#5A5C63] bg-[#1E1E1F] rounded-[2px]
+            transform transition-transform duration-700 ${isOpen ? 'rotate-180' : 'rotate-0'}`}>
+            <ChevronDown size={20} strokeWidth={2} color="#E6E6E6" />
+          </div>
         </div>
       </button>
 
