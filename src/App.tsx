@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import ChatPage from '@/pages/ChatPage';
 import LoginPage from '@/pages/LoginPage';
-import Chat from '@/pages/Chat';
 import ProfileImgPage from '@/pages/profile/ProfileImgPage';
 import ProfileInfoPage from '@/pages/profile/ProfileInfoPage';
 import LocationPage from '@/pages/LocationPage';
