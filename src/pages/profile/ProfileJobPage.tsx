@@ -14,6 +14,7 @@ const ProfileJobPage = () => {
     { key: string; description: string }[]
   >([]);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [showCareerInput, setShowCareerInput] = useState(false);
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -40,6 +41,7 @@ const ProfileJobPage = () => {
           );
           console.log('Careers Data:', response.data);
           setCareers(response.data);
+          setShowCareerInput(true);
         } catch (error) {
           console.error('Error fetching careers:', error);
         }
@@ -79,12 +81,16 @@ const ProfileJobPage = () => {
               }}
             />
 
-            <InputFieldLabel textLabel="현재 학력은" />
-            <Dropdown
-              label="현재 혹은 최종 학력을 선택해주세요"
-              options={careers}
-              onSelect={(career) => console.log('선택된 학력:', career)}
-            />
+            {showCareerInput && (
+              <>
+                <InputFieldLabel textLabel="현재 학력은" />
+                <Dropdown
+                  label="현재 혹은 최종 학력을 선택해주세요"
+                  options={careers}
+                  onSelect={(career) => console.log('선택된 학력:', career)}
+                />
+              </>
+            )}
           </main>
 
           <footer className="w-full tablet:w-[320px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center">
