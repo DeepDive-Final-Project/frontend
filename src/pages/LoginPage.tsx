@@ -31,15 +31,18 @@ const LoginPage = () => {
           <main className="flex flex-col items-center px-4 w-full flex-grow gap-[16px]">
             <LoginButton
               text="Google로 가입하기"
-              icon={<img src={Google} onClick={handleGoogle} />}
+              icon={<img src={Google} />}
+              onClick={handleGoogle}
             />
             <LoginButton
               text="Github로 가입하기"
-              icon={<img src={Github} onClick={handleGit} />}
+              icon={<img src={Github} />}
+              onClick={handleGit}
             />
             <LoginButton
               text="Kakao로 가입하기"
-              icon={<img src={Kakao} onClick={handleKakao} />}
+              icon={<img src={Kakao} />}
+              onClick={handleKakao}
             />
           </main>
         </div>
