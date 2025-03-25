@@ -3,8 +3,52 @@ import ProgressBar from '@/components/profile/ProgressBar';
 import NextButton from '@/components/profile/NextButton';
 import InputFieldLabel from '@/components/profile/InputFieldLabel';
 import Dropdown from '@/components/profile/DropDown';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const ProfileJobPage = () => {
+  const [roles, setRoles] = useState<{ key: string; description: string }[]>(
+    [],
+  );
+  const [careers, setCareers] = useState<
+    { key: string; description: string }[]
+  >([]);
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/client/enums/roles`,
+        );
+        console.log('Roles Data:', response.data);
+        setRoles(response.data);
+      } catch (error) {
+        console.error('Error fetching roles:', error);
+      }
+    };
+
+    fetchRoles();
+  }, []);
+
+  useEffect(() => {
+    if (selectedRole) {
+      const fetchCareers = async () => {
+        try {
+          const response = await axios.get(
+            `${import.meta.env.VITE_API_BASE_URL}/api/client/enums/careers?role=${selectedRole}`,
+          );
+          console.log('Careers Data:', response.data);
+          setCareers(response.data);
+        } catch (error) {
+          console.error('Error fetching careers:', error);
+        }
+      };
+
+      fetchCareers();
+    }
+  }, [selectedRole]);
+
   return (
     <>
       <div className="flex min-h-screen">
@@ -28,7 +72,18 @@ const ProfileJobPage = () => {
             <InputFieldLabel textLabel="나의 직무는" />
             <Dropdown
               label="직무를 선택해주세요"
-              onSelect={(role) => console.log('선택된 역할:', role)}
+              options={roles}
+              onSelect={(role) => {
+                console.log('선택된 역할:', role);
+                setSelectedRole(role);
+              }}
+            />
+
+            <InputFieldLabel textLabel="현재 학력은" />
+            <Dropdown
+              label="현재 혹은 최종 학력을 선택해주세요"
+              options={careers}
+              onSelect={(career) => console.log('선택된 학력:', career)}
             />
           </main>
 
