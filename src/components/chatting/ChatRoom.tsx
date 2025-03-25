@@ -1,6 +1,6 @@
 import Button from '@/components/common/Button';
-import ChatProfileInfo from '@/components/chat/ChatProfileInfo';
-import ChatInput from '@/components/chat/ChatInput';
+import ChatProfileInfo from '@/components/chatting/ChatProfileInfo';
+import ChatInput from '@/components/chatting/ChatInput';
 import { ChatRoomType } from '@/types/chatRoomType';
 import { LogOut } from 'react-feather';
 
