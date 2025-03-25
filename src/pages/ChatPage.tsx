@@ -2,10 +2,10 @@ import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ChatFilter from '@/components/chat/ChatFilter';
-import ChatList from '@/components/chat/ChatList';
-import ChatHeader from '@/components/chat/ChatHeader';
-import ChatRoom from '@/components/chat/ChatRoom';
+import ChatFilter from '@/components/chatting/ChatFilter';
+import ChatList from '@/components/chatting/ChatList';
+import ChatHeader from '@/components/chatting/ChatHeader';
+import ChatRoom from '@/components/chatting/ChatRoom';
 import Button from '@/components/common/Button';
 import { ChatRoomType } from '@/types/chatRoomType';
 import { api } from '@/utils/api';
@@ -14,12 +14,10 @@ import profileImg from '@/assets/images/explore.svg';
 // 현재 로그인한 사용자 (임시)
 const currentUser = localStorage.getItem('userId');
 
-const filterOption = ['최신 메세지 순', '안읽은 메세지 순'];
-
-const fetchChat = async () => {
-  const response = await api.get(`/api/chat/${currentUser}`);
-  return response.data;
-};
+const filterOption = [
+  { label: '최신 메세지 순', value: 'latest' },
+  { label: '안읽은 메세지 순', value: 'unread' },
+];
 
 const ChatPage = () => {
   const navigate = useNavigate();
@@ -28,12 +26,21 @@ const ChatPage = () => {
   const [selectedOption, setSelectedOption] = useState(filterOption[0]);
   const roomId = searchParams.get('roomId');
 
+  // 채팅방 정렬 리스트
+  const fetchChat = async () => {
+    const endpoint = selectedOption.value;
+    const response = await api.get(
+      `/api/chat/${endpoint}?nickname=${currentUser}`,
+    );
+    return response.data;
+  };
+
   const {
     data: chatRooms = [],
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['chatRooms'],
+    queryKey: ['chatRooms', selectedOption],
     queryFn: fetchChat,
   });
 
@@ -62,9 +69,11 @@ const ChatPage = () => {
       <div
         className={`flex flex-col w-full h-full desktop:max-w-[400px] tablet:max-w-[320px] overflow-y-auto border border-l-0 border-t-0 border-b-0 border-[#222325] bg-[#0A0A0B] ${selectedRoom ? 'hidden tablet:flex' : 'flex'}`}>
         <ChatFilter
-          options={filterOption}
-          selectedOption={selectedOption}
-          onChangeOption={setSelectedOption}
+          filter={{
+            options: filterOption,
+            selected: selectedOption,
+            onChange: setSelectedOption,
+          }}
         />
         {chatRooms.length > 0 ? (
           <ChatList chatRooms={chatRooms} onSelectRoom={onSelectRoom} />

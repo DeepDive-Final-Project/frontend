@@ -2,23 +2,30 @@ import { useState } from 'react';
 import { ChevronDown } from 'react-feather';
 import sorting from '@/assets/images/sorting.svg';
 
-interface ChatFilterProps {
-  options: string[];
-  selectedOption: string;
-  onChangeOption: (value: string) => void;
+type FilterOption = {
+  label: string;
+  value: string;
+};
+
+interface FilterState {
+  options: FilterOption[];
+  selected: FilterOption;
+  onChange: (value: FilterOption) => void;
 }
 
-const ChatFilter = ({
-  options,
-  selectedOption,
-  onChangeOption,
-}: ChatFilterProps) => {
+interface ChatFilterProps {
+  filter: FilterState;
+}
+
+const ChatFilter = ({ filter }: ChatFilterProps) => {
+  const { options, selected, onChange } = filter;
+
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
-  const onSelect = (option: string) => {
-    onChangeOption(option);
+  const onSelect = (option: FilterOption) => {
+    onChange(option);
     setIsOpen(false);
   };
 
@@ -30,7 +37,7 @@ const ChatFilter = ({
           onClick={toggleDropdown}
           className="relative flex h-8 px-2 min-w-[140px] items-center cursor-pointer text-left rounded-[4px] border border-[#222325] bg-[#141415]">
           <img src={sorting} alt="필터 아이콘" />
-          {selectedOption}
+          {selected.label}
           <ChevronDown size={16} className="ml-1" />
         </button>
         {isOpen && (
@@ -39,11 +46,11 @@ const ChatFilter = ({
 shadow-[0px_0px_4px_rgba(0,0,0,0.25),0px_4px_8px_rgba(0,0,0,0.08),0px_6px_12px_rgba(0,0,0,0.08)] transition-all duration-200 ease-in-out opacity-100 scale-100">
             {options.map((option) => (
               <li
-                aria-selected={selectedOption === option}
-                key={option}
+                aria-selected={selected === option}
+                key={option.value}
                 className="py-[5px] px-2 text-[#B3B3B3] rounded-[4px] hover:bg-[#262627] cursor-pointer"
                 onClick={() => onSelect(option)}>
-                {option}
+                {option.label}
               </li>
             ))}
           </ul>
