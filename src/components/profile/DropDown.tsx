@@ -1,38 +1,19 @@
 import { ChevronDown, ChevronUp } from 'react-feather';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 
 interface DropdownProps {
   label: string;
-  onSelect: (selected: string) => void;
+  options: { key: string; description: string }[];
+  onSelect: (selectedKey: string) => void;
 }
 
-const Dropdown = ({ label, onSelect }: DropdownProps) => {
+const Dropdown = ({ label, options, onSelect }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [options, setOptions] = useState<
-    { key: string; description: string }[]
-  >([]);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchOptions = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/client/enums/roles`,
-        );
-        console.log('API Response Data:', response.data);
-        setOptions(response.data);
-      } catch (error) {
-        console.error('Error Data', error);
-      }
-    };
-
-    fetchOptions();
-  }, []);
-
-  const handleSelect = (option: string) => {
-    setSelectedOption(option);
-    onSelect(option);
+  const handleSelect = (optionKey: string, optionDescription: string) => {
+    setSelectedOption(optionDescription);
+    onSelect(optionKey);
     setIsOpen(false);
   };
 
@@ -59,16 +40,14 @@ const Dropdown = ({ label, onSelect }: DropdownProps) => {
             <li
               key={option.key}
               className="p-3 hover:bg-[#1E1E1F] hover:text-white cursor-pointer"
-              onClick={() => handleSelect(option.description)}>
+              onClick={() => handleSelect(option.key, option.description)}>
               {option.description}
             </li>
           ))}
         </ul>
       )}
       {isOpen && options.length === 0 && (
-        <p className="text-[#B7B9BD] text-xs mt-2">
-          데이터를 불러올 수 없습니다.
-        </p>
+        <p className="text-[#B7B9BD] text-xs mt-2">직무를 먼저 선택해야해요</p>
       )}
     </div>
   );
