@@ -11,6 +11,9 @@ importers:
       '@stomp/stompjs':
         specifier: ^7.0.1
         version: 7.0.1
+      '@tanstack/react-query':
+        specifier: ^5.69.0
+        version: 5.69.0(react@19.0.0)
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.25.0
         version: 8.27.0(@typescript-eslint/parser@8.27.0(eslint@9.22.0(jiti@1.21.7))(typescript@5.7.3))(eslint@9.22.0(jiti@1.21.7))(typescript@5.7.3)
@@ -41,6 +44,9 @@ importers:
       react-router-dom:
         specifier: ^7.2.0
         version: 7.4.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react-toastify:
+        specifier: ^11.0.5
+        version: 11.0.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       sockjs-client:
         specifier: ^1.6.1
         version: 1.6.1
@@ -551,6 +557,14 @@ packages:
 
   '@stomp/stompjs@7.0.1':
     resolution: {integrity: sha512-qip3juB0JiInS70QSYVdgMoNLxbrRwDiYN5xx6b/RWcy/vSIUUZKLQOkSJTH2Z0x3rOvDHT/sPvs9gDJM32Yzg==}
+
+  '@tanstack/query-core@5.69.0':
+    resolution: {integrity: sha512-Kn410jq6vs1P8Nm+ZsRj9H+U3C0kjuEkYLxbiCyn3MDEiYor1j2DGVULqAz62SLZtUZ/e9Xt6xMXiJ3NJ65WyQ==}
+
+  '@tanstack/react-query@5.69.0':
+    resolution: {integrity: sha512-Ift3IUNQqTcaFa1AiIQ7WCb/PPy8aexZdq9pZWLXhfLcLxH0+PZqJ2xFImxCpdDZrFRZhLJrh76geevS5xjRhA==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -1655,6 +1669,12 @@ packages:
       react-dom:
         optional: true
 
+  react-toastify@11.0.5:
+    resolution: {integrity: sha512-EpqHBGvnSTtHYhCPLxML05NLY2ZX0JURbAdNYa6BUkk+amz4wbKBQvoKQAB0ardvSarUBuY4Q4s1sluAzZwkmA==}
+    peerDependencies:
+      react: ^18 || ^19
+      react-dom: ^18 || ^19
+
   react@19.0.0:
     resolution: {integrity: sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ==}
     engines: {node: '>=0.10.0'}
@@ -2407,6 +2427,13 @@ snapshots:
     optional: true
 
   '@stomp/stompjs@7.0.1': {}
+
+  '@tanstack/query-core@5.69.0': {}
+
+  '@tanstack/react-query@5.69.0(react@19.0.0)':
+    dependencies:
+      '@tanstack/query-core': 5.69.0
+      react: 19.0.0
 
   '@types/babel__core@7.20.5':
     dependencies:
@@ -3654,6 +3681,12 @@ snapshots:
       set-cookie-parser: 2.7.1
       turbo-stream: 2.4.0
     optionalDependencies:
+      react-dom: 19.0.0(react@19.0.0)
+
+  react-toastify@11.0.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      clsx: 2.1.1
+      react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
   react@19.0.0: {}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ChatSideBar from '@/components/Chat/ChatSideBar';
+import ChatSideBar from '@/components/chat/ChatSideBar';
 import { Menu, Bell, BellOff, ArrowLeft } from 'react-feather';
 
 interface ChatHeaderProps {
