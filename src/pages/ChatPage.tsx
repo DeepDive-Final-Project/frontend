@@ -12,7 +12,7 @@ import { api } from '@/utils/api';
 import profileImg from '@/assets/images/explore.svg';
 
 // 현재 로그인한 사용자 (임시)
-const currentUser = localStorage.getItem('userId');
+const currentUser = localStorage.getItem('userNickname');
 
 const filterOption = [
   { label: '최신 메세지 순', value: 'latest' },
@@ -23,16 +23,18 @@ const ChatPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [selectedRoom, setSelectedRoom] = useState<ChatRoomType | null>(null);
+
+  // 채팅방 정렬 상태 저장
   const [selectedOption, setSelectedOption] = useState(filterOption[0]);
-  const roomId = searchParams.get('roomId');
+
+  const roomId = Number(searchParams.get('roomId'));
 
   // 채팅방 정렬 리스트
   const fetchChat = async () => {
     const endpoint = selectedOption.value;
-    const response = await api.get(
-      `/api/chat/${endpoint}?nickname=${currentUser}`,
-    );
-    return response.data;
+    const res = await api.get(`/api/chat/${endpoint}?nickname=${currentUser}`);
+
+    return res.data;
   };
 
   const {
@@ -45,15 +47,21 @@ const ChatPage = () => {
   });
 
   useEffect(() => {
-    if (!roomId) return;
-    setSelectedRoom(
-      chatRooms.find((room: ChatRoomType) => room.roomId === Number(roomId)) ??
-        null,
-    );
-  }, [roomId, chatRooms]);
+    if (isLoading) return;
+
+    if (roomId) {
+      const found = chatRooms.find(
+        (room: ChatRoomType) => room.roomId === roomId,
+      );
+      setSelectedRoom(found ?? null);
+    } else {
+      setSelectedRoom(null);
+    }
+  }, [roomId, chatRooms, isLoading]);
 
   const onSelectRoom = (room: ChatRoomType) => {
     setSelectedRoom(room);
+    navigate(`/chat?roomId=${room.roomId}`, { replace: true });
   };
 
   const onBackToList = () => {
@@ -61,7 +69,6 @@ const ChatPage = () => {
     navigate('/chat', { replace: true });
   };
 
-  if (isLoading) return <p>로딩 중...</p>;
   if (error) return <p>{error.message}</p>;
 
   return (
@@ -75,7 +82,11 @@ const ChatPage = () => {
             onChange: setSelectedOption,
           }}
         />
-        {chatRooms.length > 0 ? (
+        {isLoading ? (
+          <p className="flex items-center justify-center pt-8 text-[#A2A4AA] text-sm">
+            채팅 리스트를 불러오는 중입니다.
+          </p>
+        ) : chatRooms.length > 0 ? (
           <ChatList chatRooms={chatRooms} onSelectRoom={onSelectRoom} />
         ) : (
           <div
@@ -97,7 +108,7 @@ const ChatPage = () => {
         {selectedRoom ? (
           <ChatRoom selectedRoom={selectedRoom} />
         ) : (
-          <div className="text-[#A2A4AA] text-[14px] text-center font-medium pt-[86px]">
+          <div className="text-[#A2A4AA] text-sm text-center font-medium pt-[86px]">
             채팅방을 선택해주세요
           </div>
         )}

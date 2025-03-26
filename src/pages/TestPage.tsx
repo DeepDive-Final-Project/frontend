@@ -19,7 +19,7 @@ interface UserType {
   nickName: string;
 }
 
-const currentUser = localStorage.getItem('userId');
+const currentUser = localStorage.getItem('userNickname');
 
 const fetchUsers = async () => {
   const response = await api.get('/api/client/profile/all');
@@ -56,6 +56,11 @@ const TestPage = () => {
   const { data: receivedPendingList = [] } = useChatReceivedList(
     currentUser ?? '',
     'PENDING',
+  );
+
+  const { data: receivedAcceptedList = [] } = useChatReceivedList(
+    currentUser ?? '',
+    'ACCEPTED',
   );
 
   // 채팅 요청
@@ -121,15 +126,22 @@ const TestPage = () => {
 
   return (
     <div className="max-w-[1440px] m-auto">
-      <p>현재 로그인 : {currentUser}</p>
+      <p className="text-2xl">현재 로그인 : {currentUser}</p>
       <section>
         <ul className="flex flex-col space-y-7 mt-10">
           {users.map((user) => {
             const requestStatusMap = {
-              acceptedChat: sentAcceptedList.find(
-                (req: ChatRequestType) =>
-                  req.receiverNickname === user.nickName,
-              ),
+              acceptedChat:
+                sentAcceptedList.find(
+                  (req: ChatRequestType) =>
+                    req.receiverNickname === user.nickName ||
+                    req.senderNickname === user.nickName,
+                ) ||
+                receivedAcceptedList.find(
+                  (req: ChatRequestType) =>
+                    req.receiverNickname === user.nickName ||
+                    req.senderNickname === user.nickName,
+                ),
               alreadySentPending: sentPendingList.find(
                 (req: ChatRequestType) =>
                   req.receiverNickname === user.nickName,
@@ -140,7 +152,7 @@ const TestPage = () => {
             };
 
             return (
-              <div key={user.id}>
+              <li key={user.id}>
                 <p>내 주변 참가자 {user.nickName}</p>
                 {requestStatusMap.acceptedChat ? (
                   <Button
@@ -167,7 +179,7 @@ const TestPage = () => {
                     대화 요청하기
                   </Button>
                 )}
-              </div>
+              </li>
             );
           })}
         </ul>
@@ -196,9 +208,8 @@ const TestPage = () => {
         {receivedPendingList.length > 0 ? (
           <ul>
             {receivedPendingList.map((list: ChatRequestType) => (
-              <li key={list.id}>
+              <li key={`received-${list.id}`}>
                 <p>{list.senderNickname}</p>
-                <p>{list.id}</p>
                 <Button
                   size="sm"
                   variant="secondary"
