@@ -1,9 +1,12 @@
 {
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/oauth2/:path*",
-      "destination": "https://api.i-contacts.link/oauth2/:path*"
-    },
+      "source": "/oauth2/:path",
+      "destination": "https://api.i-contacts.link/oauth2/:path",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"
