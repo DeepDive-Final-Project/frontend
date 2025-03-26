@@ -5,22 +5,22 @@ import Github from '@/assets/images/github.svg';
 import Kakao from '@/assets/images/kakao.svg';
 
 const handleKakao = () => {
-  const url = `https://www.i-contacts.link/oauth2/authorization/kakao`;
-  console.log("🥸 카카오 로그인 요청 URL:", url);
+  const url = "https://www.i-contacts.link/oauth2/authorization/kakao";
   window.location.href = url;
 };
+console.log("🥸 카카오 로그인 요청 URL:", url);
 
 const handleGoogle = () => {
-  const url = `https://www.i-contacts.link/oauth2/authorization/google`;
-  console.log("🥸 구글 로그인 요청 URL:", url);
+  const url = "https://www.i-contacts.link/oauth2/authorization/google";
   window.location.href = url;
 };
+console.log("🥸 구글 로그인 요청 URL:", url);
 
 const handleGit = () => {
-  const url = `https://www.i-contacts.link/oauth2/authorization/github`;
-  console.log("🥸 깃허브 로그인 요청 URL:", url);
+  const url = "https://www.i-contacts.link/oauth2/authorization/github";
   window.location.href = url;
 };
+console.log("🥸 깃허브 로그인 요청 URL:", url);
 
   return (
     <>
