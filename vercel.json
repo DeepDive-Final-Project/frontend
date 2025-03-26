@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/oauth2/:path*",
+      "destination": "https://api.i-contacts.link/oauth2/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
