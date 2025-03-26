@@ -5,19 +5,19 @@ import Github from '@/assets/images/github.svg';
 import Kakao from '@/assets/images/kakao.svg';
 
 const handleKakao = () => {
-  const url = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/kakao`;
+  const url = `https://www.i-contacts.link/oauth2/authorization/kakao`;
   console.log("🥸 카카오 로그인 요청 URL:", url);
   window.location.href = url;
 };
 
 const handleGoogle = () => {
-  const url = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/google`;
+  const url = `https://www.i-contacts.link/oauth2/authorization/google`;
   console.log("🥸 구글 로그인 요청 URL:", url);
   window.location.href = url;
 };
 
 const handleGit = () => {
-  const url = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/github`;
+  const url = `https://www.i-contacts.link/oauth2/authorization/github`;
   console.log("🥸 깃허브 로그인 요청 URL:", url);
   window.location.href = url;
 };
