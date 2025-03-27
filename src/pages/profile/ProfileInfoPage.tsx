@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import TopNav from '@/components/profile/TopNav';
 import ProgressBar from '@/components/profile/ProgressBar';
 import NextButton from '@/components/profile/NextButton';
@@ -5,6 +6,11 @@ import InputField from '@/components/profile/InputField';
 import InputFieldLabel from '@/components/profile/InputFieldLabel';
 
 const ProfileInfoPage = () => {
+  const navigate = useNavigate();
+
+  const handleSkip = () => {
+    navigate('/profile3');
+  };
   return (
     <>
       <div className="flex min-h-screen">
@@ -44,7 +50,7 @@ const ProfileInfoPage = () => {
           </main>
 
           <footer className="w-full tablet:w-[320px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center">
-            <NextButton text={'다음으로 진행하기'} />
+            <NextButton text={'다음으로 진행하기'} onClick={handleSkip} />
             <div className="h-[42px]" />
           </footer>
         </div>

@@ -26,7 +26,7 @@ const Button = ({
       className={clsx(
         buttonVariants({ size, variant }),
         icon && 'flex items-center justify-center gap-2',
-        Component === Link && 'block',
+        Component === Link && 'inline-block',
         className,
       )}
       {...(Component === Link ? { to } : {})}
