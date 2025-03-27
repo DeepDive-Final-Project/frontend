@@ -12,7 +12,11 @@ const users = [
     name: '김아무개',
     role: '디자이너',
     career: '주니어',
-    tags: [{ color: '#ff7f50', text: 'UI/UX' }],
+    tags: [
+      { color: '#ff7f50', text: 'UI/UX' },
+      { color: '#6a5acd', text: 'React' },
+      { color: '#32cd32', text: 'PM' },
+    ],
     message: '디자인 같이 할 분 구합니다!',
     image: dummy,
   },
@@ -21,7 +25,11 @@ const users = [
     name: '이아무개',
     role: '개발자',
     career: '시니어',
-    tags: [{ color: '#6a5acd', text: 'React' }],
+    tags: [
+      { color: '#ff7f50', text: 'UI/UX' },
+      { color: '#6a5acd', text: 'React' },
+      { color: '#32cd32', text: 'PM' },
+    ],
     message: '프론트 전문가입니다.',
     image: dummy,
   },
@@ -30,7 +38,11 @@ const users = [
     name: '박아무개',
     role: '프로젝트 매니저',
     career: '미들',
-    tags: [{ color: '#32cd32', text: 'PM툴' }],
+    tags: [
+      { color: '#ff7f50', text: 'UI/UX' },
+      { color: '#6a5acd', text: 'React' },
+      { color: '#32cd32', text: 'PM' },
+    ],
     message: 'PM 역할 맡고 있어요!',
     image: dummy,
   },
@@ -39,7 +51,11 @@ const users = [
     name: '최아무개',
     role: '학생',
     career: '',
-    tags: [{ color: '#ff7f50', text: '공부 중' }],
+    tags: [
+      { color: '#ff7f50', text: 'UI/UX' },
+      { color: '#6a5acd', text: 'React' },
+      { color: '#32cd32', text: 'PM' },
+    ],
     message: '개발을 배우고 있어요!',
     image: dummy,
   },
@@ -48,7 +64,11 @@ const users = [
     name: '정아무개',
     role: '기타',
     career: '',
-    tags: [{ color: '#ff7f50', text: '기획' }],
+    tags: [
+      { color: '#ff7f50', text: 'UI/UX' },
+      { color: '#6a5acd', text: 'React' },
+      { color: '#32cd32', text: 'PM' },
+    ],
     message: '프로젝트 열정 가득!',
     image: dummy,
   },
@@ -57,14 +77,20 @@ const users = [
     name: '최아무개',
     role: '기타',
     career: '',
-    tags: [{ color: '#ff7f50', text: '기획' }],
+    tags: [
+      { color: '#ff7f50', text: 'UI/UX' },
+      { color: '#6a5acd', text: 'React' },
+      { color: '#32cd32', text: 'PM' },
+    ],
     message: '프로젝트 열정 가득!',
     image: dummy,
   },
 ];
+
 const BottomSheet: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [requestedUserIds, setRequestedUserIds] = useState<number[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
 
   const height = useBottomSheetStore((state) => state.height);
@@ -82,11 +108,18 @@ const BottomSheet: React.FC = () => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
   }, []);
 
+  const handleRequest = useCallback((userId: number) => {
+    setRequestedUserIds((prev) =>
+      prev.includes(userId) ? prev : [...prev, userId],
+    );
+  }, []);
+
   const handleDeselectUser = useCallback((e: React.MouseEvent) => {
     if (!(e.target as HTMLElement).closest('.user-card')) {
       setSelectedUserId(null);
     }
   }, []);
+
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return;
     const touchY = e.touches[0].clientY;
@@ -102,6 +135,7 @@ const BottomSheet: React.FC = () => {
       setHeight(window.innerHeight - 100);
     }
   };
+
   const handleListScroll = useCallback((e: React.TouchEvent) => {
     e.stopPropagation();
   }, []);
@@ -119,19 +153,32 @@ const BottomSheet: React.FC = () => {
       return matchRole && matchCareer;
     });
   }, [role, career]);
+
   const memoizedUserCards = useMemo(
     () =>
-      filteredUsers.map((user, index) => (
-        <div key={user.id} className={`${index % 2 === 1 ? 'mt-6' : ''}`}>
-          <UserCard
-            user={user}
-            onSelect={handleUserSelect}
-            selectedUserId={selectedUserId}
-          />
-        </div>
-      )),
-    [filteredUsers, selectedUserId, handleUserSelect],
+      filteredUsers.map((user, index) => {
+        const isRequested = requestedUserIds.includes(user.id);
+        return (
+          <div key={user.id} className={`${index % 2 === 1 ? 'mt-6' : ''}`}>
+            <UserCard
+              user={user}
+              onSelect={handleUserSelect}
+              selectedUserId={selectedUserId}
+              isRequested={isRequested}
+              onRequest={() => handleRequest(user.id)}
+            />
+          </div>
+        );
+      }),
+    [
+      filteredUsers,
+      selectedUserId,
+      requestedUserIds,
+      handleUserSelect,
+      handleRequest,
+    ],
   );
+
   return (
     <div
       className="fixed bottom-0 left-0 w-full bg-[#111111] rounded-t-lg transition-all duration-100
@@ -141,8 +188,8 @@ const BottomSheet: React.FC = () => {
       onTouchStart={() => setIsDragging(true)}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}>
-      <div className="w-full h-full flex flex-col px-4 overflow-hidden">
-        <div className="flex justify-between items-start bg-[#222222] p-3 rounded-t-lg gap-2 ">
+      <div className="w-full h-full flex flex-col  overflow-hidden">
+        <div className="flex justify-between items-start bg-[#222222] p-3 rounded-t-lg gap-2">
           <div className="flex flex-col flex-1 min-w-0">
             <span className="text-white font-bold text-sm tablet:text-lg">
               {mode === 'chat' ? '채팅 요청' : '탐색하기'}
@@ -159,18 +206,20 @@ const BottomSheet: React.FC = () => {
             닫기
           </button>
         </div>
+
         {mode === 'explore' && (
           <div className="pt-2 pb-3">
             <Filter />
           </div>
         )}
+
         {mode === 'chat' && (
-          <div className="flex justify-center gap-2 mt-3">
+          <div className="flex justify-start gap-12 mt-4 mb-6">
             <button
               onClick={() => setChatTab('sent')}
-              className={`px-4 py-1  rounded-full text-sm border ${
+              className={`px-4 py-1 rounded-full text-sm border ${
                 chatTab === 'sent'
-                  ? 'bg-blue-500 text-white border-blue-500'
+                  ? 'text-white border-blue-500'
                   : 'bg-[#222222] text-gray-300 border-gray-500'
               }`}>
               보낸 요청
@@ -179,7 +228,7 @@ const BottomSheet: React.FC = () => {
               onClick={() => setChatTab('received')}
               className={`px-4 py-1 rounded-full text-sm border ${
                 chatTab === 'received'
-                  ? 'bg-blue-500 text-white border-blue-500'
+                  ? 'text-white border-blue-500'
                   : 'bg-[#222222] text-gray-300 border-gray-500'
               }`}>
               받은 요청
@@ -195,14 +244,6 @@ const BottomSheet: React.FC = () => {
             {memoizedUserCards}
           </div>
         </div>
-
-        {mode === 'explore' && selectedUserId && (
-          <div className="pt-4 pb-6 flex justify-center">
-            <button className="px-4 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600 w-full">
-              대화 요청하기
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

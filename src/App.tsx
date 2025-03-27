@@ -11,7 +11,7 @@ export default function App() {
         <Route path="/chat" element={<Chat />} />
         <Route path="/profile1" element={<ProfileImgPage />} />
         <Route path="/profile2" element={<ProfileInfoPage />} />
-        <Route path="/" element={<LocationPage />} />
+        <Route path="/home" element={<LocationPage />} />
       </Routes>
     </Router>
   );

@@ -17,16 +17,18 @@ const Filter: React.FC = () => {
   const isCareerDisabled = role === '학생' || role === '기타';
 
   return (
-    <div className="flex gap-4 items-start w-full relative">
-      <div className="relative">
+    <div className="flex gap-2 items-start w-full px-2">
+      <div className="relative w-1/2">
         <button
           onClick={() => setShowRoleDropdown((prev) => !prev)}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-500 bg-[#222222] text-white text-sm">
-          {role || '분야 선택'}
-          <ChevronDown size={16} />
+          className="w-full flex items-center justify-between gap-2 px-4 py-2 rounded-lg border border-gray-500 bg-[#222222] text-white text-sm">
+          <span>{role || '분야 선택'}</span>
+          <span className="border border-gray-500 rounded-md">
+            <ChevronDown size={16} />
+          </span>
         </button>
         {showRoleDropdown && (
-          <ul className="absolute left-0 mt-2 w-full bg-[#222222] border border-gray-500 rounded-lg shadow-md z-20">
+          <ul className="absolute left-0 mt-2 w-full bg-[#222222] border border-gray-500 rounded-lg shadow-md z-30">
             {roles.map((r) => (
               <li
                 key={r}
@@ -42,23 +44,25 @@ const Filter: React.FC = () => {
         )}
       </div>
 
-      <div className="relative">
+      <div className="relative w-1/2">
         <button
           onClick={() => {
             if (!isCareerDisabled) {
               setShowCareerDropdown((prev) => !prev);
             }
           }}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${
+          className={`w-full flex justify-between items-center gap-2 px-4 py-2 rounded-lg border ${
             isCareerDisabled
               ? 'border-gray-700 bg-[#333333] text-gray-500 cursor-not-allowed'
               : 'border-gray-500 bg-[#222222] text-white'
           } text-sm`}>
-          {career || '경력 선택'}
-          <ChevronDown size={16} />
+          <span>{career || '경력 선택'}</span>
+          <span className="border border-gray-500 rounded-md ">
+            <ChevronDown size={16} />
+          </span>
         </button>
         {showCareerDropdown && !isCareerDisabled && (
-          <ul className="absolute left-0 mt-2 w-full bg-[#222222] border border-gray-500 rounded-lg shadow-md z-20">
+          <ul className="absolute left-0 mt-2 w-full bg-[#222222] border border-gray-500 rounded-lg shadow-md z-30">
             {careers.map((c) => (
               <li
                 key={c}
