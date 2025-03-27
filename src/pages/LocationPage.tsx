@@ -1,9 +1,9 @@
 // import InterestSelector from '@/components/Location/InterestSelector';
 // import UserList from '@/components/Location/UserList';
-import UserLocation from '@/components/location/UserLocation';
-import BottomSheet from '@/components/location/BottomSheet';
-import LocationButton from '@/components/location/LocationButton';
-import LocationNavBar from '@/components/location/LocationNavBar';
+import UserLocation from '@/components/Location_temp/UserLocation';
+import BottomSheet from '@/components/Location_temp/BottomSheet';
+import LocationButton from '@/components/Location_temp/LocationButton';
+import LocationNavBar from '@/components/Location_temp/LocationNavBar';
 
 const LocationPage = () => {
   return (

@@ -9,6 +9,6 @@ export default defineConfig({
     global: 'window',
   },
   build: {
-    outDir: "build",
+    outDir: 'build',
   },
 });

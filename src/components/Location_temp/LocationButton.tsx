@@ -3,7 +3,6 @@ import axios from 'axios';
 // import { useUserStore } from '@/stores/useUserStore';
 const LocationButton: React.FC = () => {
   // const setUsers = useUserStore((state) => state.setUsers);
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL2;
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
 
@@ -42,7 +41,7 @@ const LocationButton: React.FC = () => {
     };
 
     try {
-      await axios.post(`${apiBaseUrl}/save`, payload, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/save`, payload, {
         headers: {
           'Content-Type': 'application/json',
           accept: 'application/json',
@@ -52,7 +51,7 @@ const LocationButton: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       const nearbyResponse = await axios.post(
-        `${apiBaseUrl}/nearby`,
+        `${import.meta.env.VITE_API_BASE_URL}/nearby`,
         { id: 56 },
         {
           headers: {
