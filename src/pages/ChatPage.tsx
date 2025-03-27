@@ -74,7 +74,7 @@ const ChatPage = () => {
   return (
     <div className="max-w-[1440px] m-auto flex h-screen overflow-hidden">
       <div
-        className={`flex flex-col w-full h-full desktop:max-w-[400px] tablet:max-w-[320px] overflow-y-auto border border-l-0 border-t-0 border-b-0 border-[#222325] bg-[#0A0A0B] ${selectedRoom ? 'hidden tablet:flex' : 'flex'}`}>
+        className={`flex flex-col w-full h-full desktop:max-w-[400px] tablet:max-w-[320px] flex-shrink-0 overflow-y-auto border border-l-0 border-t-0 border-b-0 border-[#222325] bg-[#0A0A0B] ${selectedRoom ? 'hidden tablet:flex' : 'flex'}`}>
         <ChatFilter
           filter={{
             options: filterOption,

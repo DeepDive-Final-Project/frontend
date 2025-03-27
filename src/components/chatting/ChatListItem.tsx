@@ -1,5 +1,7 @@
+import { useChatStore } from '@/stores/useChatStore';
 import { formatTime } from '@/utils/chat/formatTime';
 import { ChatRoomType } from '@/types/chatRoomType';
+
 interface ChatListItemProps {
   chat: ChatRoomType;
   onSelectRoom: (roomId: ChatRoomType) => void;
@@ -8,6 +10,9 @@ interface ChatListItemProps {
 const currentUser = localStorage.getItem('userNickname');
 
 const ChatListItem = ({ chat, onSelectRoom }: ChatListItemProps) => {
+  const lastMessages = useChatStore((state) => state.lastMessages);
+  const lastMessageData = lastMessages[chat.roomId];
+
   // 채팅 상대 찾기
   const otherParticipant = chat.participants.find(
     (nickname) => nickname !== currentUser,
@@ -23,13 +28,15 @@ const ChatListItem = ({ chat, onSelectRoom }: ChatListItemProps) => {
       <div className="flex-1">
         <div className="flex justify-between">
           <p className="text-lg">{otherParticipant}</p>
-          {chat.lastMessageTime && (
-            <span className="text-xs">{formatTime(chat.lastMessageTime)}</span>
-          )}
+          <span className="text-xs">
+            {formatTime(
+              lastMessageData?.timeStamp ?? chat.lastMessageTime ?? undefined,
+            )}
+          </span>
         </div>
         <div className="relative pr-[66px] mt-1">
           <p className="text-[#B7B9BD] text-sm line-clamp-2 leading-relaxed">
-            {chat.lastMessage}
+            {lastMessageData?.content ?? chat.lastMessage}
           </p>
           {chat.unreadCount > 0 && (
             <span className="absolute top-0 right-[14.5px] flex items-center justify-center w-5 h-5 text-white text-xs bg-[#FF1313] rounded-full">
