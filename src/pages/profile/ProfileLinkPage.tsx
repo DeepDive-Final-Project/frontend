@@ -10,21 +10,29 @@ import { Plus, Minus } from 'react-feather';
 const ProfileLinkPage = () => {
   const navigate = useNavigate();
   const [links, setLinks] = useState([{ title: '', url: '' }]);
+  const [isAdding, setIsAdding] = useState<number | null>(null);
+  const [isRemoving, setIsRemoving] = useState(false);
 
   const handleAddLink = () => {
     if (links.length < 2) {
       setLinks([...links, { title: '', url: '' }]);
+      setIsAdding(1);
+      setTimeout(() => setIsAdding(null), 200);
     }
   };
 
   const handleRemoveLink = () => {
     if (links.length > 1) {
-      setLinks(links.slice(0, 1));
+      setIsRemoving(true);
+      setTimeout(() => {
+        setLinks(links.slice(0, 1));
+        setIsRemoving(false);
+      }, 300);
     }
   };
 
   const handleSkip = () => {
-    navigate('/profile6');
+    navigate('/profile3');
   };
 
   return (
@@ -46,10 +54,16 @@ const ProfileLinkPage = () => {
 
         <main className="flex flex-col items-center px-4 w-full flex-grow gap-2">
           <InputFieldLabel textLabel="나의 링크는" rightText="선택입력" />
+
           {links.map((_, index) => (
             <div
               key={index}
-              className="w-full flex flex-col items-center gap-2">
+              className={`
+                w-full flex flex-col items-center gap-2 transition-all duration-300 ease-out
+                ${index === 1 && isAdding === 1 ? 'opacity-0 translate-y-4' : ''}
+
+                ${index === 1 && isRemoving ? 'opacity-0 translate-y-4' : ''}
+              `}>
               <LinkInput
                 type="text"
                 placeholder="링크 제목을 적어보세요"
