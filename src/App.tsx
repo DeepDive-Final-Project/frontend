@@ -20,6 +20,7 @@ export default function App() {
           <Route path="/profile2" element={<ProfileInfoPage />} />
           <Route path="/profile3" element={<ProfileJobPage />} />
           <Route path="/profile5" element={<ProfileLinkPage />} />
+          <Route path="/home" element={<LocationPage />} />
           <Route path="/" element={<LocationPage />} />
           <Route path="/test" element={<TestPage />} />
         </Routes>
