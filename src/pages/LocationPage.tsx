@@ -1,9 +1,9 @@
 // import InterestSelector from '@/components/Location/InterestSelector';
 // import UserList from '@/components/Location/UserList';
-// import UserLocation from '@/components/Location/UserLocation';
-import BottomSheet from '@/components/Location/BottomSheet';
-import LocationButton from '@/components/Location/LocationButton';
-import LocationNavBar from '@/components/Location/LocationNavBar';
+import UserLocation from '@/components/location/UserLocation';
+import BottomSheet from '@/components/location/BottomSheet';
+import LocationButton from '@/components/location/LocationButton';
+import LocationNavBar from '@/components/location/LocationNavBar';
 
 const LocationPage = () => {
   return (
@@ -12,7 +12,7 @@ const LocationPage = () => {
         <LocationNavBar />
         <LocationButton />
         <div className="desktop:w-[40vw] w-full flex justify-center items-center">
-          {/* <UserLocation /> */}
+          <UserLocation />
         </div>
 
         <div className="desktop:w-[60vw] w-full hidden desktop:flex flex-col items-center bg-gray-100 p-4 rounded-lg shadow-lg">
