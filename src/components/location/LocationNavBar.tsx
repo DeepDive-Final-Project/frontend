@@ -22,6 +22,7 @@ const LocationNavBar: React.FC = () => {
 
   const [moreSetting, setMoreSetting] = useState(false);
   const [shareLocation, setShareLocation] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const buttons = [
     {
@@ -78,6 +79,31 @@ const LocationNavBar: React.FC = () => {
     },
   ];
 
+  const handleLocationPermission = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    if (checked) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+
+          console.log('위치 허용', lat, lng);
+          setShareLocation(true);
+          setShowModal(true);
+        },
+        (error) => {
+          console.error('위치 거부됨', error);
+          setShareLocation(false);
+        },
+      );
+      setTimeout(() => {
+        setShowModal(true);
+      }, 500);
+    } else {
+      setShareLocation(false);
+    }
+  };
+
   return (
     <div className="w-full flex justify-center">
       <div className="flex flex-col items-center">
@@ -127,7 +153,7 @@ const LocationNavBar: React.FC = () => {
                   type="checkbox"
                   className="sr-only peer"
                   checked={shareLocation}
-                  onChange={() => setShareLocation((prev) => !prev)}
+                  onChange={handleLocationPermission}
                 />
                 <div className="w-10 h-5 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-500 transition-colors duration-200" />
                 <div className="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-all duration-200 peer-checked:translate-x-5" />
@@ -140,6 +166,20 @@ const LocationNavBar: React.FC = () => {
           </div>
         )}
       </div>
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-white rounded-lg p-6 text-center shadow-lg w-[80%] max-w-xs">
+            <p className="text-gray-800 text-sm font-medium mb-4">
+              위치 정보 활용에 동의해야 서비스를 이용할 수 있어요.
+            </p>
+            <button
+              onClick={() => setShowModal(false)}
+              className="mt-2 px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600">
+              확인
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

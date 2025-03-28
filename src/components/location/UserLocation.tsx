@@ -15,22 +15,18 @@ const users = [
 ];
 
 const UserLocation = () => {
-  const size = 80;
-  const center = size / 2;
-
-  const smallR = size * 0.2;
-  const midR = size * 0.32;
-  const bigR = size * 0.45;
+  const smallR = 20;
+  const midR = 32;
+  const bigR = 45;
 
   const getCirclePoints = (radius: number) => {
     const angleStep = 360 / 10;
     return Array.from({ length: 10 }).map((_, i) => {
       const angle = i * angleStep;
       const rad = (angle * Math.PI) / 180;
-      return {
-        x: center + radius * Math.cos(rad),
-        y: center + radius * Math.sin(rad),
-      };
+      const cx = 50 + radius * Math.cos(rad);
+      const cy = 50 + radius * Math.sin(rad);
+      return { x: cx, y: cy };
     });
   };
 
@@ -62,11 +58,10 @@ const UserLocation = () => {
   return (
     <div className="w-full flex justify-center items-center bg-[#000000]">
       <div
-        className="relative rounded-full bg-[#111111]"
+        className="relative rounded-full bg-[#111111] aspect-square"
         style={{
-          width: '80vw',
-          maxWidth: '400px',
-          aspectRatio: '1 / 1',
+          width: 'min(100vw, 320px)',
+          height: 'min(100vw, 320px)',
         }}>
         <div
           className="absolute bg-gray-500 rounded-full"
@@ -83,10 +78,10 @@ const UserLocation = () => {
             key={idx}
             className="absolute border border-gray-500 rounded-full"
             style={{
-              width: `${r * 2}vw`,
-              height: `${r * 2}vw`,
-              left: `calc(50% - ${r}vw)`,
-              top: `calc(50% - ${r}vw)`,
+              width: `${r * 2}%`,
+              height: `${r * 2}%`,
+              left: `${50 - r}%`,
+              top: `${50 - r}%`,
             }}
           />
         ))}
@@ -95,11 +90,11 @@ const UserLocation = () => {
             key={index}
             className="absolute flex flex-col items-center"
             style={{
-              left: `${x}vw`,
-              top: `${y}vw`,
+              left: `${x}%`,
+              top: `${y}%`,
               transform: 'translate(-50%, -50%)',
             }}>
-            <div className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8">
+            <div className="w-[28px] h-[28px]">
               <img
                 src={avatarIcon}
                 alt="user"
