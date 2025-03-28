@@ -181,7 +181,7 @@ const BottomSheet: React.FC = () => {
 
   return (
     <div
-      className="fixed bottom-0 left-0 w-full bg-[#111111] rounded-t-lg transition-all duration-100
+      className="fixed bottom-0 left-0 w-full bg-[#141415] rounded-t-lg transition-all duration-100
       mobile:h-[50vh] tablet:h-[60vh] desktop:h-[70vh]"
       style={{ height: `${height}px` }}
       onClick={handleDeselectUser}
@@ -189,9 +189,12 @@ const BottomSheet: React.FC = () => {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}>
       <div className="w-full h-full flex flex-col  overflow-hidden">
-        <div className="flex justify-between items-start bg-[#222222] p-3 rounded-t-lg gap-2">
+        <div className="flex justify-center py-2">
+          <div className="w-10 h-1 rounded-full bg-gray-400" />
+        </div>
+        <div className="flex justify-between items-start bg-[#141415] p-3 rounded-t-lg gap-2">
           <div className="flex flex-col flex-1 min-w-0">
-            <span className="text-white font-bold text-sm tablet:text-lg">
+            <span className="text-gray-100 text-sm tablet:text-lg">
               {mode === 'chat' ? '채팅 요청' : '탐색하기'}
             </span>
             <span className="text-gray-400 text-xs tablet:text-base truncate">
@@ -201,7 +204,7 @@ const BottomSheet: React.FC = () => {
             </span>
           </div>
           <button
-            className="text-white px-2 rounded-lg text-sm border border-white"
+            className="text-white px-2 py-1 rounded-md text-sm border border-gray-500"
             onClick={handleClose}>
             닫기
           </button>

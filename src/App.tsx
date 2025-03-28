@@ -21,7 +21,7 @@ export default function App() {
           <Route path="/profile3" element={<ProfileJobPage />} />
           <Route path="/profile5" element={<ProfileLinkPage />} />
           <Route path="/home" element={<LocationPage />} />
-          <Route path="/" element={<LocationPage />} />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/test" element={<TestPage />} />
         </Routes>
         <ToastContainer
