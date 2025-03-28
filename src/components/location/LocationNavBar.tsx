@@ -22,6 +22,7 @@ const LocationNavBar: React.FC = () => {
 
   const [moreSetting, setMoreSetting] = useState(false);
   const [shareLocation, setShareLocation] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const buttons = [
     {
@@ -77,6 +78,23 @@ const LocationNavBar: React.FC = () => {
       },
     },
   ];
+  const handleLocationPermission = () => {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        console.log('위치 허용', lat, lng);
+        setShareLocation(true);
+        setShowModal(true);
+      },
+      (error) => {
+        console.error('위치 거부됨', error);
+        setShareLocation(false);
+        setShowModal(true);
+      },
+    );
+  };
 
   return (
     <div className="w-full flex justify-center">
@@ -127,7 +145,7 @@ const LocationNavBar: React.FC = () => {
                   type="checkbox"
                   className="sr-only peer"
                   checked={shareLocation}
-                  onChange={() => setShareLocation((prev) => !prev)}
+                  onChange={handleLocationPermission}
                 />
                 <div className="w-10 h-5 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:bg-blue-500 transition-colors duration-200" />
                 <div className="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-all duration-200 peer-checked:translate-x-5" />
