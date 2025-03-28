@@ -78,22 +78,30 @@ const LocationNavBar: React.FC = () => {
       },
     },
   ];
-  const handleLocationPermission = () => {
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
 
-        console.log('위치 허용', lat, lng);
-        setShareLocation(true);
+  const handleLocationPermission = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    if (checked) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+
+          console.log('위치 허용', lat, lng);
+          setShareLocation(true);
+          setShowModal(true);
+        },
+        (error) => {
+          console.error('위치 거부됨', error);
+          setShareLocation(false);
+        },
+      );
+      setTimeout(() => {
         setShowModal(true);
-      },
-      (error) => {
-        console.error('위치 거부됨', error);
-        setShareLocation(false);
-        setShowModal(true);
-      },
-    );
+      }, 500);
+    } else {
+      setShareLocation(false);
+    }
   };
 
   return (
@@ -158,6 +166,20 @@ const LocationNavBar: React.FC = () => {
           </div>
         )}
       </div>
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-white rounded-lg p-6 text-center shadow-lg w-[80%] max-w-xs">
+            <p className="text-gray-800 text-sm font-medium mb-4">
+              위치 정보 활용에 동의해야 서비스를 이용할 수 있어요.
+            </p>
+            <button
+              onClick={() => setShowModal(false)}
+              className="mt-2 px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600">
+              확인
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
