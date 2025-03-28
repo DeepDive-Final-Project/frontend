@@ -6,13 +6,21 @@ import Kakao from '@/assets/images/kakao.svg';
 
 const LoginPage = () => {
   const handleKakao = () => {
-    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/kakao`;
+    const url = "https://api.i-contacts.link/oauth2/authorization/kakao";
+    window.location.href = url;
+    console.log("🥸 카카오 로그인 요청 URL:", url);
   };
+  
   const handleGoogle = () => {
-    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/google`;
+    const url = "https://api.i-contacts.link/oauth2/authorization/google";
+    window.location.href = url;
+    console.log("🥸 구글 로그인 요청 URL:", url);
   };
+  
   const handleGit = () => {
-    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/github`;
+    const url = "https://api.i-contacts.link/oauth2/authorization/github";
+    window.location.href = url;
+    console.log("🥸 깃허브 로그인 요청 URL:", url);
   };
 
   return (
@@ -31,15 +39,18 @@ const LoginPage = () => {
           <main className="flex flex-col items-center px-4 w-full flex-grow gap-[16px]">
             <LoginButton
               text="Google로 가입하기"
-              icon={<img src={Google} onClick={handleGoogle} />}
+              icon={<img src={Google} />}
+              onClick={handleGoogle}
             />
             <LoginButton
               text="Github로 가입하기"
-              icon={<img src={Github} onClick={handleGit} />}
+              icon={<img src={Github} />}
+              onClick={handleGit}
             />
             <LoginButton
               text="Kakao로 가입하기"
-              icon={<img src={Kakao} onClick={handleKakao} />}
+              icon={<img src={Kakao} />}
+              onClick={handleKakao}
             />
           </main>
         </div>

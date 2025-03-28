@@ -18,7 +18,7 @@ const InputField = ({
       <input
         type={type}
         placeholder={placeholder}
-        className="p-3 w-full h-[48px] bg-[#0F0F10] rounded-sm border border-transparent 
+        className="p-3 w-full h-[40px] bg-[#0F0F10] rounded-sm border border-transparent 
         focus:border-[#2C7DF6] focus:outline-none caret-[#2C7DF6] pr-24"
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
