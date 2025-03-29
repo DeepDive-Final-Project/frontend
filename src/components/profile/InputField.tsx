@@ -1,15 +1,19 @@
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 
 interface InputFieldProps {
   type: string;
   placeholder: string;
   isRequired?: boolean;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const InputField = ({
   type,
   placeholder,
   isRequired = true,
+  value,
+  onChange,
 }: InputFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -18,8 +22,10 @@ const InputField = ({
       <input
         type={type}
         placeholder={placeholder}
+        value={value}
+        onChange={onChange}
         className="p-3 w-full h-[40px] bg-[#0F0F10] rounded-sm border border-transparent 
-        focus:border-[#2C7DF6] focus:outline-none caret-[#2C7DF6] pr-24"
+        focus:border-[#2C7DF6] focus:outline-none caret-[#2C7DF6] pr-24 text-white"
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />

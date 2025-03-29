@@ -5,6 +5,7 @@ import InputFieldLabel from '@/components/profile/InputFieldLabel';
 import Dropdown from '@/components/profile/DropDown';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ProfileJobPage = () => {
   const [roles, setRoles] = useState<{ key: string; description: string }[]>(
@@ -15,6 +16,11 @@ const ProfileJobPage = () => {
   >([]);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [showCareerInput, setShowCareerInput] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSkip = () => {
+    navigate('/profile4');
+  };
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -94,7 +100,7 @@ const ProfileJobPage = () => {
           </main>
 
           <footer className="w-full tablet:w-[320px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center">
-            <NextButton text={'다음으로 진행하기'} />
+            <NextButton text={'다음으로 진행하기'} onClick={handleSkip} />
             <div className="h-[42px]" />
           </footer>
         </div>

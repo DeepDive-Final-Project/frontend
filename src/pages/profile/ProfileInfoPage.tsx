@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import TopNav from '@/components/profile/TopNav';
 import ProgressBar from '@/components/profile/ProgressBar';
 import NextButton from '@/components/profile/NextButton';
@@ -8,9 +9,15 @@ import InputFieldLabel from '@/components/profile/InputFieldLabel';
 const ProfileInfoPage = () => {
   const navigate = useNavigate();
 
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
   const handleSkip = () => {
+    console.log('이름:', name);
+    console.log('이메일:', email);
     navigate('/profile3');
   };
+
   return (
     <>
       <div className="flex min-h-screen">
@@ -35,6 +42,8 @@ const ProfileInfoPage = () => {
             <InputField
               type="text"
               placeholder="본명 혹은 닉네임을 입력하세요"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
             <div className="h-6" />
 
@@ -46,6 +55,8 @@ const ProfileInfoPage = () => {
               type="email"
               placeholder="abc@kakao.com"
               isRequired={false}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </main>
 
