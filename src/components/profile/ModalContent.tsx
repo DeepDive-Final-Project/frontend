@@ -3,9 +3,10 @@ import Accordian from './Accordian';
 
 interface ModalContentProps {
   onClose: () => void;
+  onSave: (items: { key: string; description: string }[]) => void;
 }
 
-const ModalContent = ({ onClose }: ModalContentProps) => {
+const ModalContent = ({ onClose, onSave }: ModalContentProps) => {
   const [selectedItems, setSelectedItems] = useState<
     { key: string; description: string }[]
   >([]);
@@ -63,6 +64,7 @@ const ModalContent = ({ onClose }: ModalContentProps) => {
       <button
         onClick={() => {
           console.log('선택한 항목:', selectedItems);
+          onSave(selectedItems);
           onClose();
         }}
         className="self-end text-sm text-[14px] text-[#E6E6E6] mt-4 px-4 py-2 border border-[#5A5C63] rounded-full">
