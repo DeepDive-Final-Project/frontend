@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import TopNav from '@/components/profile/TopNav';
 import ProgressBar from '@/components/profile/ProgressBar';
@@ -8,7 +7,6 @@ import LinkInput from '@/components/profile/LinkInput';
 import { Plus, Minus } from 'react-feather';
 
 const ProfileLinkPage = () => {
-  const navigate = useNavigate();
   const [links, setLinks] = useState([{ title: '', url: '' }]);
   const [isAdding, setIsAdding] = useState<number | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
@@ -31,8 +29,18 @@ const ProfileLinkPage = () => {
     }
   };
 
-  const handleSkip = () => {
-    navigate('/profile3');
+  const handleLinkChange = (
+    index: number,
+    field: 'title' | 'url',
+    value: string,
+  ) => {
+    const updatedLinks = [...links];
+    updatedLinks[index][field] = value;
+    setLinks(updatedLinks);
+  };
+
+  const handleSubmitLinks = () => {
+    console.log('등록된 링크:', links);
   };
 
   return (
@@ -55,24 +63,29 @@ const ProfileLinkPage = () => {
         <main className="flex flex-col items-center px-4 w-full flex-grow gap-2">
           <InputFieldLabel textLabel="나의 링크는" rightText="선택입력" />
 
-          {links.map((_, index) => (
+          {links.map((link, index) => (
             <div
               key={index}
               className={`
                 w-full flex flex-col items-center gap-2 transition-all duration-300 ease-out
                 ${index === 1 && isAdding === 1 ? 'opacity-0 translate-y-4' : ''}
-
                 ${index === 1 && isRemoving ? 'opacity-0 translate-y-4' : ''}
               `}>
               <LinkInput
                 type="text"
                 placeholder="링크 제목을 적어보세요"
                 labelText="타이틀"
+                value={link.title}
+                onChange={(e) =>
+                  handleLinkChange(index, 'title', e.target.value)
+                }
               />
               <LinkInput
                 type="text"
                 placeholder="https://example.com"
                 labelText="링크주소"
+                value={link.url}
+                onChange={(e) => handleLinkChange(index, 'url', e.target.value)}
               />
             </div>
           ))}
@@ -99,12 +112,7 @@ const ProfileLinkPage = () => {
         </main>
 
         <footer className="w-full tablet:w-[320px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center">
-          <NextButton text={'링크등록하기'} />
-          <div
-            className="mt-2 text-[#B7B9BD] cursor-pointer"
-            onClick={handleSkip}>
-            프로필 이미지 건너뛰기
-          </div>
+          <NextButton text={'링크등록하기'} onClick={handleSubmitLinks} />
         </footer>
       </div>
     </div>
