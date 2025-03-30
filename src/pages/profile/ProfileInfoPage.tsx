@@ -24,14 +24,13 @@ const ProfileInfoPage = () => {
     setEmail(localEmail);
     console.log('이름:', localName);
     console.log('이메일:', localEmail);
-    navigate('/profile3');
+    navigate('/profile/3');
   };
 
   return (
     <>
       <div className="flex min-h-screen">
-        <div className="hidden tablet:flex flex-grow"></div>
-        <div className="w-full tablet:w-[320px] desktop:w-[375px] desktop:mx-20 min-h-screen flex flex-col items-center">
+        <div className="w-full tablet:w-[360px] desktop:w-[375px] desktop:mx-20 min-h-screen flex flex-col items-center">
           <TopNav />
           <ProgressBar currentStep={2} />
           <header className="py-[20px]">

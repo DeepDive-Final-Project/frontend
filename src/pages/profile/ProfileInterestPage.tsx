@@ -22,14 +22,13 @@ const ProfileInterestPage = () => {
       alert('관심사를 최소 1개 이상 선택해주세요.');
       return;
     }
-    navigate('/profile5');
+    navigate('/profile/5');
   };
 
   return (
     <>
       <div className="flex min-h-screen">
-        <div className="hidden tablet:flex flex-grow"></div>
-        <div className="w-full tablet:w-[375px] desktop:w-[375px] desktop:mx-20 min-h-screen flex flex-col items-center">
+        <div className="w-full tablet:w-[360px] desktop:w-[375px] desktop:mx-20 min-h-screen flex flex-col items-center">
           <TopNav />
           <ProgressBar currentStep={4} />
           <header className="py-[20px]">

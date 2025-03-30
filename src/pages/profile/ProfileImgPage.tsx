@@ -12,7 +12,7 @@ const ProfileImgPage = () => {
   const { setProfileImage } = useProfileStore();
 
   const handleSkip = () => {
-    navigate('/profile2');
+    navigate('/profile/2');
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,8 +34,7 @@ const ProfileImgPage = () => {
   return (
     <>
       <div className="flex min-h-screen">
-        <div className="hidden tablet:flex flex-grow"></div>
-        <div className="w-full tablet:w-[320px] desktop:w-[375px] desktop:mx-20 min-h-screen flex flex-col items-center">
+        <div className="w-full tablet:w-[360px] desktop:w-[375px] desktop:mx-20 min-h-screen flex flex-col items-center">
           <TopNav />
           <ProgressBar currentStep={1} />
           <header className="py-[20px]">

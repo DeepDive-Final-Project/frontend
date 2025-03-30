@@ -55,14 +55,13 @@ const ProfileJobPage = () => {
   }, [selectedRole]);
 
   const handleSkip = () => {
-    navigate('/profile4');
+    navigate('/profile/4');
   };
 
   return (
     <>
       <div className="flex min-h-screen">
-        <div className="hidden tablet:flex flex-grow"></div>
-        <div className="w-full tablet:w-[375px] desktop:w-[375px] desktop:mx-20 min-h-screen flex flex-col items-center">
+        <div className="w-full tablet:w-[360px] desktop:w-[375px] desktop:mx-20 min-h-screen flex flex-col items-center">
           <TopNav />
           <ProgressBar currentStep={3} />
           <header className="py-[20px]">
