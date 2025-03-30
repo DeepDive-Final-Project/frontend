@@ -1,20 +1,29 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TopNav from '@/components/profile/TopNav';
 import ProgressBar from '@/components/profile/ProgressBar';
 import NextButton from '@/components/profile/NextButton';
 import InputField from '@/components/profile/InputField';
 import InputFieldLabel from '@/components/profile/InputFieldLabel';
+import { useProfileStore } from '@/stores/useProfileStore';
 
 const ProfileInfoPage = () => {
   const navigate = useNavigate();
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const { name, email, setName, setEmail } = useProfileStore();
+  const [localName, setLocalName] = useState(name);
+  const [localEmail, setLocalEmail] = useState(email);
+
+  useEffect(() => {
+    setLocalName(name);
+    setLocalEmail(email);
+  }, [name, email]);
 
   const handleSkip = () => {
-    console.log('이름:', name);
-    console.log('이메일:', email);
+    setName(localName);
+    setEmail(localEmail);
+    console.log('이름:', localName);
+    console.log('이메일:', localEmail);
     navigate('/profile3');
   };
 
@@ -42,8 +51,8 @@ const ProfileInfoPage = () => {
             <InputField
               type="text"
               placeholder="본명 혹은 닉네임을 입력하세요"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={localName}
+              onChange={(e) => setLocalName(e.target.value)}
             />
             <div className="h-6" />
 
@@ -55,8 +64,8 @@ const ProfileInfoPage = () => {
               type="email"
               placeholder="abc@kakao.com"
               isRequired={false}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={localEmail}
+              onChange={(e) => setLocalEmail(e.target.value)}
             />
           </main>
 
