@@ -10,6 +10,7 @@ import ProfileInterestPage from '@/pages/profile/ProfileInterestPage';
 import ProfileIntroPage from '@/pages/profile/ProfileIntroPage';
 import LocationPage from '@/pages/LocationPage';
 import TestPage from '@/pages/TestPage';
+import ProfileLayout from "@/pages/profile/layout/ProfileLayout.tsx";
 
 export default function App() {
   return (
@@ -18,12 +19,14 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/chat" element={<ChatPage />} />
-          <Route path="/profile1" element={<ProfileImgPage />} />
-          <Route path="/profile2" element={<ProfileInfoPage />} />
-          <Route path="/profile3" element={<ProfileJobPage />} />
-          <Route path="/profile4" element={<ProfileInterestPage />} />
-          <Route path="/profile5" element={<ProfileLinkPage />} />
-          <Route path="/profile6" element={<ProfileIntroPage />} />
+          <Route path="/profile" element={<ProfileLayout />} >
+            <Route path="1" element={<ProfileImgPage />} />
+            <Route path="2" element={<ProfileInfoPage />} />
+            <Route path="3" element={<ProfileJobPage />} />
+            <Route path="4" element={<ProfileInterestPage />} />
+            <Route path="5" element={<ProfileLinkPage />} />
+            <Route path="6" element={<ProfileIntroPage />} />
+          </Route>
           <Route path="/home" element={<LocationPage />} />
           <Route path="/" element={<LocationPage />} />
           <Route path="/test" element={<TestPage />} />
