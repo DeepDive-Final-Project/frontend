@@ -4,4 +4,6 @@ export interface ChatRoomType {
   lastMessage: string;
   lastMessageTime: string | null;
   unreadCount: number;
+  exited: boolean;
+  otherId: number;
 }

@@ -1,23 +1,16 @@
 import { useMutation } from '@tanstack/react-query';
 import { api } from '@/utils/api';
 
-interface ChatRequestParams {
+interface ChatRequestPayload {
   senderNickname: string;
   receiverNickname: string;
 }
 
 export const useChatRequest = () => {
   return useMutation({
-    mutationFn: async ({
-      senderNickname,
-      receiverNickname,
-    }: ChatRequestParams) => {
-      const res = await api.post('/api/chat/request', {
-        senderNickname,
-        receiverNickname,
-      });
-
-      return res.data;
+    mutationFn: async (payload: ChatRequestPayload) => {
+      const response = await api.post('/api/chat/request', payload);
+      return response.data;
     },
   });
 };

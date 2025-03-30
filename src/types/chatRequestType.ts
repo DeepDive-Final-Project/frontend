@@ -3,4 +3,5 @@ export interface ChatRequestType {
   senderNickname: string;
   receiverNickname: string;
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  exited?: boolean;
 }

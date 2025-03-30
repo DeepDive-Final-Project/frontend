@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Client } from '@stomp/stompjs';
-import { useChatStore } from '@/stores/useChatStore';
+import { useChatMessageStore } from '@/stores/useChatMessageStore';
 import { ChatMessageType } from '@/types/chatMessageType';
 import { AlertCircle, CornerDownRight } from 'react-feather';
+import { useChatListStore } from '@/stores/useChatListStore';
 
 interface ChatInputProps {
   roomId: number;
@@ -11,42 +12,53 @@ interface ChatInputProps {
 }
 
 const ChatInput = ({ roomId, socketRef, currentUser }: ChatInputProps) => {
-  const { appendMessage, setLastMessage } = useChatStore();
-
   const [message, setMessage] = useState('');
   const maxLength = 1000;
 
-  // 메시지 전송
-  const onSend = () => {
-    if (!message.trim() || !socketRef.current?.connected) return;
+  const { appendMessage } = useChatMessageStore();
+  const { updateLastMessage } = useChatListStore();
 
-    const messageToSend: ChatMessageType = {
+  const handleSend = () => {
+    if (!socketRef.current || !socketRef.current.connected || !currentUser) {
+      return;
+    }
+    const trimmed = message.trim();
+
+    if (!trimmed) return;
+
+    const chatMessage: ChatMessageType = {
       messageId: Date.now(),
       roomId,
       senderNickname: currentUser,
-      content: message.trim(),
+      content: trimmed,
       timeStamp: new Date().toISOString(),
       type: 'CHAT',
     };
 
+    // 서버에 전송
     socketRef.current.publish({
       destination: '/app/chat.sendMessage',
-      body: JSON.stringify(messageToSend),
+      body: JSON.stringify(chatMessage),
     });
 
-    appendMessage(roomId, messageToSend);
-    setLastMessage(roomId, messageToSend);
-
-    console.log('publish 직후', message);
+    // 상태 반영
+    appendMessage(roomId, chatMessage);
+    updateLastMessage(roomId, chatMessage);
 
     setMessage('');
   };
 
-  // 메시지 입력
-  const onKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      onSend();
+    }
+  };
+
+  const onKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      const trimmed = message.trim();
+      if (trimmed === '') return;
+      handleSend();
     }
   };
 
@@ -64,13 +76,14 @@ const ChatInput = ({ roomId, socketRef, currentUser }: ChatInputProps) => {
           value={message}
           rows={1}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
         />
         <button
           className="w-[40px] h-[40px] flex-shrink-0 ml-2 rounded-full bg-[#1E1E1F] disabled:bg-[#141415] disabled:cursor-not-allowed"
           aria-label="메세지 전송 버튼"
-          disabled={message.length > maxLength}
-          onClick={onSend}>
+          onClick={handleSend}
+          disabled={message.length > maxLength || !message.trim()}>
           <CornerDownRight size={16} className="m-auto" />
         </button>
       </div>

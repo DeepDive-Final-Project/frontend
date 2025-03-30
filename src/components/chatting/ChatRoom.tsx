@@ -1,128 +1,92 @@
-import { useEffect, useRef } from 'react';
-import SockJS from 'sockjs-client';
-import { Client } from '@stomp/stompjs';
+import { useEffect } from 'react';
+import { useSocketStore } from '@/stores/useSocketStore';
+import { useChatMessageStore } from '@/stores/useChatMessageStore';
 import ChatProfileInfo from '@/components/chatting/ChatProfileInfo';
 import ChatInput from '@/components/chatting/ChatInput';
 import ChatMessageItem from '@/components/chatting/ChatMessageItem';
-import { useChatStore } from '@/stores/useChatStore';
 import { ChatRoomType } from '@/types/chatRoomType';
-import { ChatMessageType } from '@/types/chatMessageType';
-import { api } from '@/utils/api';
+import { useChatListStore } from '@/stores/useChatListStore';
+import { fetchMessagesApi } from '@/services/chatMessageApi';
 
 interface ChatRoomProps {
-  selectedRoom: ChatRoomType;
+  room: ChatRoomType | null;
 }
 
-const ChatRoom = ({ selectedRoom }: ChatRoomProps) => {
-  const currentUserId = localStorage.getItem('userId');
+const ChatRoom = ({ room }: ChatRoomProps) => {
+  const { stompClient } = useSocketStore();
+  const clientId = localStorage.getItem('userId');
   const currentUser = localStorage.getItem('userNickname');
 
-  const socketRef = useRef<Client | null>(null);
-  const { setMessages, appendMessage, messagesByRoom, setLastMessage } =
-    useChatStore();
+  const { appendMessage, setMessages, clearMessages } = useChatMessageStore();
+  const { updateLastMessage } = useChatListStore();
+
+  // 이전 메시지 불러오기
+  useEffect(() => {
+    if (!room || !clientId) return;
+
+    const fetchMessages = async () => {
+      try {
+        const messages = await fetchMessagesApi(room.roomId, Number(clientId));
+        setMessages(room.roomId, messages);
+      } catch (error) {
+        console.error('메시지 불러오기 실패', error);
+      }
+    };
+
+    fetchMessages();
+  }, [room?.roomId, clientId, setMessages]);
 
   useEffect(() => {
-    if (!selectedRoom?.roomId || !currentUserId) return;
+    if (!room || !stompClient || !stompClient.connected) return;
 
-    const client = socketRef.current;
-    if (client?.connected) return;
+    const subscription = stompClient.subscribe(
+      `/queue/${room.roomId}`,
+      (message) => {
+        const newMessage = JSON.parse(message.body);
 
-    const newClient = new Client({
-      webSocketFactory: () => new SockJS(import.meta.env.VITE_WS_CHAT_URL),
-      reconnectDelay: 5000,
-      debug: (str) => console.log('[debug]', str),
-    });
-
-    socketRef.current = newClient;
-
-    const fetchMessagesAndJoin = async (client: Client) => {
-      try {
-        const res = await api.get(
-          `/api/messages/${selectedRoom.roomId}?clientId=${currentUserId}`,
-        );
-        const data: ChatMessageType[] = Array.isArray(res.data) ? res.data : [];
-        setMessages(selectedRoom.roomId, data);
-
-        if (data.length === 0 && client.connected) {
-          const joinMessage: ChatMessageType = {
-            roomId: selectedRoom.roomId,
-            senderNickname: currentUser,
-            content: `${currentUser}님과의 대화가 시작되었어요.`,
-            type: 'JOIN',
-            timeStamp: new Date().toISOString(),
-          };
-          client.publish({
-            destination: '/app/chat.sendMessage',
-            body: JSON.stringify(joinMessage),
-          });
-        }
-      } catch (err) {
-        console.error('메시지 불러오기 실패:', err);
-        setMessages(selectedRoom.roomId, []);
-      }
-    };
-
-    newClient.onConnect = () => {
-      console.log('웹소켓 연결 완료');
-
-      newClient.subscribe(`/queue/${selectedRoom.roomId}`, (message) => {
-        const payload: ChatMessageType = JSON.parse(message.body);
-        console.log('메세지 전달 확인', payload);
-
-        const exists = messagesByRoom[selectedRoom.roomId]?.some((m) => {
-          if (payload.messageId && m.messageId) {
-            return m.messageId === payload.messageId;
-          }
-          return (
-            m.type === payload.type &&
-            m.senderNickname === payload.senderNickname &&
-            m.content === payload.content &&
-            m.timeStamp === payload.timeStamp
-          );
-        });
-
-        if (!exists) {
-          appendMessage(selectedRoom.roomId, payload);
-          setLastMessage(selectedRoom.roomId, payload);
-        }
-      });
-
-      fetchMessagesAndJoin(newClient);
-    };
-
-    newClient.onStompError = (frame) => {
-      console.error('웹소켓 오류:', frame);
-    };
-
-    newClient.activate();
+        appendMessage(room.roomId, newMessage);
+        updateLastMessage(room.roomId, newMessage);
+      },
+    );
 
     return () => {
-      if (socketRef.current) {
-        socketRef.current.deactivate();
-
-        console.log('웹소켓 연결 종료');
-
-        socketRef.current = null;
-      }
+      subscription.unsubscribe();
+      clearMessages(room.roomId);
     };
-  }, [selectedRoom.roomId]);
+  }, [
+    room?.roomId,
+    stompClient?.connected,
+    appendMessage,
+    updateLastMessage,
+    clearMessages,
+  ]);
+
+  if (!room) {
+    return (
+      <div className="pt-[86px] text-[#A2A4AA] text-sm text-center font-medium">
+        채팅방을 선택해주세요
+      </div>
+    );
+  }
+
+  const otherId = room.otherId;
 
   return (
     <>
       <div className="relative flex flex-col flex-auto p-5 overflow-y-auto scrollbar-hide">
-        <ChatProfileInfo />
+        <ChatProfileInfo otherId={otherId} />
         <div className="flex flex-col pt-5">
           <ChatMessageItem
-            roomId={selectedRoom.roomId}
-            chatParticipants={selectedRoom.participants}
-            currentUser={currentUser}
+            roomId={room.roomId}
+            chatParticipants={room.participants}
+            currentUser={localStorage.getItem('userNickname')}
           />
         </div>
       </div>
       <ChatInput
-        roomId={selectedRoom.roomId}
-        socketRef={socketRef}
+        roomId={room.roomId}
         currentUser={currentUser}
+        socketRef={{ current: stompClient }}
       />
     </>
   );
