@@ -44,7 +44,7 @@ jobs:
         run: |
           RESPONSE=$(curl -s -w "\nHTTP_STATUS=%{http_code}" -u "${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}" \
           -X POST -H "Content-Type: application/json" \
-          --data '{"transition": {"id": "4"}}' \
+          --data '{"transition": {"id": "3"}}' \
           "${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ env.JIRA_KEY }}/transitions")
 
           HTTP_STATUS=$(echo "$RESPONSE" | grep HTTP_STATUS | cut -d= -f2)
