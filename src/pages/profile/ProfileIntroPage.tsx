@@ -4,18 +4,75 @@ import ProgressBar from '@/components/profile/ProgressBar';
 import TopNav from '@/components/profile/TopNav';
 import NextButton from '@/components/profile/NextButton';
 import InputFieldLabel from '@/components/profile/InputFieldLabel';
+import { useProfileStore } from '@/stores/useProfileStore';
+import axios from 'axios';
 
 const ProfileIntroPage = () => {
   const navigate = useNavigate();
   const [intro, setIntro] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSkip = () => {
-    navigate('/home');
+  const {
+    name,
+    email,
+    role,
+    career,
+    links,
+    interests,
+    setIntro: setIntroGlobal,
+  } = useProfileStore();
+
+  const handleSubmit = async () => {
+    try {
+      setIntroGlobal(intro);
+
+      const formData = new FormData();
+
+      const imageUrl = useProfileStore.getState().profileImage;
+      if (imageUrl) {
+        formData.append('profileImage', imageUrl);
+      }
+
+      const userData = {
+        nickName: name,
+        email,
+        role,
+        career,
+        introduction: intro,
+        links: links.map((l) => ({
+          title: l.title,
+          link: l.url,
+        })),
+        topic1: interests[0]?.key || '',
+        topic2: interests[1]?.key || '',
+        topic3: interests[2]?.key || '',
+        provider: 'kakao',
+      };
+
+      formData.append('userData', JSON.stringify(userData));
+
+      console.log('FormData:', {
+        profileImage: imageUrl,
+        userData,
+      });
+
+      await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/client/profile`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      navigate('/home');
+    } catch (error) {
+      console.error('등록 실패', error);
+    }
   };
 
-  const handleSubmit = () => {
-    console.log('작성한 자기소개:', intro);
+  const handleSkip = () => {
     navigate('/home');
   };
 
@@ -37,7 +94,6 @@ const ProfileIntroPage = () => {
 
         <main className="flex flex-col items-center px-4 w-full flex-grow gap-2">
           <InputFieldLabel textLabel="한마디 한다면" />
-
           <textarea
             ref={textareaRef}
             value={intro}
@@ -54,7 +110,7 @@ const ProfileIntroPage = () => {
               focus:border-[#2C7DF6] focus:outline-none resize-none custom-scrollbar"
           />
           <div className="text-right w-full text-xs">
-            <span className="text-[#E6E6E6">현재 {intro.length}자</span>{' '}
+            <span className="text-[#E6E6E6]">현재 {intro.length}자</span>{' '}
             <span className="text-[#66A1F8]">| 최대 200자</span>
           </div>
         </main>
