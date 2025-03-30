@@ -1,17 +1,7 @@
 import { useState } from 'react';
 import { ChevronDown } from 'react-feather';
 import sorting from '@/assets/images/sorting.svg';
-
-type FilterOption = {
-  label: string;
-  value: string;
-};
-
-interface FilterState {
-  options: FilterOption[];
-  selected: FilterOption;
-  onChange: (value: FilterOption) => void;
-}
+import { ChatFilterOption, FilterState } from '@/types/chatFilterOptionType';
 
 interface ChatFilterProps {
   filter: FilterState;
@@ -24,7 +14,7 @@ const ChatFilter = ({ filter }: ChatFilterProps) => {
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
-  const onSelect = (option: FilterOption) => {
+  const onSelect = (option: ChatFilterOption) => {
     onChange(option);
     setIsOpen(false);
   };
