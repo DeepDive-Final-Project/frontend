@@ -5,3 +5,16 @@
 body {
   @apply bg-black text-[#E6E6E6] font-pretendard;
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1E1E1F; 
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #E6E6E6;
+  border-radius: 10px;
+}

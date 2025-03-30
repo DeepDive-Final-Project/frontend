@@ -30,8 +30,13 @@ const Dropdown = ({ label, options, onSelect }: DropdownProps) => {
           <span className="text-[#66A1F8] text-xs">필수 선택</span>
           <div
             className={`w-6 h-6 flex items-center justify-center border-[0.5px] border-[#5A5C63] bg-[#1E1E1F] rounded-[2px]
-            transform transition-transform duration-700 ${isOpen ? 'rotate-180' : 'rotate-0'}`}>
-            <ChevronDown size={20} strokeWidth={2} color="#E6E6E6" />
+            `}>
+            <ChevronDown
+              size={20}
+              strokeWidth={2}
+              color="#E6E6E6"
+              className={`transform transition-transform duration-700 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+            />
           </div>
         </div>
       </button>

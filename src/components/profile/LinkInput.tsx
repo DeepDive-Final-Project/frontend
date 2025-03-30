@@ -5,14 +5,21 @@ interface InputFieldProps {
   placeholder: string;
   isRequired?: boolean;
   labelText?: '타이틀' | '링크주소';
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const LinkInput = ({ type, placeholder, labelText }: InputFieldProps) => {
+const LinkInput = ({
+  type,
+  placeholder,
+  labelText,
+  value,
+  onChange,
+}: InputFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const isActive = isFocused || inputValue !== '';
+  const isActive = isFocused || value !== '';
 
   return (
     <div className="relative w-full">
@@ -25,8 +32,8 @@ const LinkInput = ({ type, placeholder, labelText }: InputFieldProps) => {
       <input
         ref={inputRef}
         type={type}
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
+        value={value}
+        onChange={onChange}
         placeholder={placeholder}
         className={`
           pl-[80px] pr-3 p-3 w-full h-[40px] rounded-sm border border-transparent 

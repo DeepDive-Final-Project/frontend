@@ -5,6 +5,8 @@ import InputFieldLabel from '@/components/profile/InputFieldLabel';
 import Dropdown from '@/components/profile/DropDown';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useProfileStore } from '@/stores/useProfileStore';
 
 const ProfileJobPage = () => {
   const [roles, setRoles] = useState<{ key: string; description: string }[]>(
@@ -15,6 +17,9 @@ const ProfileJobPage = () => {
   >([]);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [showCareerInput, setShowCareerInput] = useState(false);
+  const navigate = useNavigate();
+
+  const { setRole, setCareer } = useProfileStore();
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -22,7 +27,6 @@ const ProfileJobPage = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/api/client/enums/roles`,
         );
-        console.log('Roles Data:', response.data);
         setRoles(response.data);
       } catch (error) {
         console.error('Error fetching roles:', error);
@@ -39,7 +43,6 @@ const ProfileJobPage = () => {
           const response = await axios.get(
             `${import.meta.env.VITE_API_BASE_URL}/api/client/enums/careers?role=${selectedRole}`,
           );
-          console.log('Careers Data:', response.data);
           setCareers(response.data);
           setShowCareerInput(true);
         } catch (error) {
@@ -50,6 +53,10 @@ const ProfileJobPage = () => {
       fetchCareers();
     }
   }, [selectedRole]);
+
+  const handleSkip = () => {
+    navigate('/profile4');
+  };
 
   return (
     <>
@@ -75,9 +82,9 @@ const ProfileJobPage = () => {
             <Dropdown
               label="직무를 선택해주세요"
               options={roles}
-              onSelect={(role) => {
-                console.log('선택된 역할:', role);
-                setSelectedRole(role);
+              onSelect={(roleKey) => {
+                setSelectedRole(roleKey);
+                setRole(roleKey);
               }}
             />
 
@@ -87,14 +94,16 @@ const ProfileJobPage = () => {
                 <Dropdown
                   label="현재 혹은 최종 학력을 선택해주세요"
                   options={careers}
-                  onSelect={(career) => console.log('선택된 학력:', career)}
+                  onSelect={(careerKey) => {
+                    setCareer(careerKey);
+                  }}
                 />
               </>
             )}
           </main>
 
           <footer className="w-full tablet:w-[320px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center">
-            <NextButton text={'다음으로 진행하기'} />
+            <NextButton text={'다음으로 진행하기'} onClick={handleSkip} />
             <div className="h-[42px]" />
           </footer>
         </div>
