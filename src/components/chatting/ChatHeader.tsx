@@ -1,18 +1,27 @@
 import { useState } from 'react';
-import ChatSideBar from '@/components/chatting/ChatSideBar';
 import { Menu, Bell, BellOff, ArrowLeft } from 'react-feather';
+import ChatSideBar from '@/components/chatting/ChatSideBar';
 
 interface ChatHeaderProps {
+  otherUser?: string;
   onBackToList: () => void;
+  roomId: number;
+  currentUserId: number;
+  currentUserNickname: string;
 }
 
-const ChatHeader = ({ onBackToList }: ChatHeaderProps) => {
+const ChatHeader = ({
+  otherUser,
+  onBackToList,
+  roomId,
+  currentUserId,
+  currentUserNickname,
+}: ChatHeaderProps) => {
   const [isBellOff, setBellOff] = useState(true);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-  const toggleBell = () => {
-    setBellOff((prev) => !prev);
-  };
+  const toggleBell = () => setBellOff((prev) => !prev);
+  const toggleSidebar = () => setSidebarOpen(true);
 
   return (
     <>
@@ -23,21 +32,27 @@ const ChatHeader = ({ onBackToList }: ChatHeaderProps) => {
           onClick={onBackToList}>
           <ArrowLeft />
         </button>
-        <p className="absolute left-1/2 transform -translate-x-1/2">김민수</p>
+        <p className="absolute left-1/2 transform -translate-x-1/2">
+          {otherUser ?? '채팅방'}
+        </p>
         <div className="flex space-x-4 ml-auto">
           <button
             aria-label={isBellOff ? '알림 켜기' : '알림 끄기'}
             onClick={toggleBell}>
             {isBellOff ? <Bell /> : <BellOff />}
           </button>
-          <button aria-label="메뉴 열기" onClick={() => setSidebarOpen(true)}>
+          <button aria-label="메뉴 열기" onClick={toggleSidebar}>
             <Menu />
           </button>
         </div>
       </div>
+
       <ChatSideBar
         isOpen={isSidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        roomId={roomId}
+        currentUserId={currentUserId}
+        currentUserNickname={currentUserNickname}
       />
     </>
   );
