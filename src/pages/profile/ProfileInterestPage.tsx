@@ -7,16 +7,21 @@ import Modal from '@/components/profile/Modal';
 import ModalContent from '@/components/profile/ModalContent';
 import { useNavigate } from 'react-router-dom';
 import { AlertCircle } from 'react-feather';
+import { useProfileStore } from '@/stores/useProfileStore';
 
 const ProfileInterestPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [interests, setInterests] = useState<
-    { key: string; description: string }[]
-  >([]);
-
   const navigate = useNavigate();
 
-  const handleSkip = () => {
+  const { interests, setInterests } = useProfileStore();
+
+  const handleNext = () => {
+    console.log(interests);
+
+    if (interests.length === 0) {
+      alert('관심사를 최소 1개 이상 선택해주세요.');
+      return;
+    }
     navigate('/profile5');
   };
 
@@ -57,6 +62,7 @@ const ProfileInterestPage = () => {
                 <span className="text-[#A2A4AA]">관심사를 알려주세요</span>
               )}
             </div>
+
             {isModalOpen && (
               <Modal onClose={() => setIsModalOpen(false)}>
                 <ModalContent
@@ -65,6 +71,7 @@ const ProfileInterestPage = () => {
                 />
               </Modal>
             )}
+
             <div className="flex items-center gap-1 left-0 w-full px-4">
               <AlertCircle size={20} color="#1263DC" />
               <div className="text-[#66A1F8] text-[12px]">필수선택 입니다</div>
@@ -72,7 +79,7 @@ const ProfileInterestPage = () => {
           </main>
 
           <footer className="w-full tablet:w-[320px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center">
-            <NextButton text={'다음으로 진행하기'} onClick={handleSkip} />
+            <NextButton text={'다음으로 진행하기'} onClick={handleNext} />
             <div className="h-[42px]" />
           </footer>
         </div>
