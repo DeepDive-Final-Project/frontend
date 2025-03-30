@@ -58,7 +58,7 @@ const UserCard: React.FC<UserCardProps> = ({
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-xs mobile:text-sm tablet:text-base">
-                  {user.name}
+                  {user.nickname}
                 </p>
                 <p className="text-xs">
                   {user.role} • {user.career}
@@ -103,7 +103,7 @@ const UserCard: React.FC<UserCardProps> = ({
           ) : (
             <div className="p-2 mt-2 bg-[#0A0A0B] rounded-b-lg transition-all">
               <p className="text-xs text-gray-300 mobile:text-sm tablet:text-base">
-                {user.message}
+                {user.introduction}
               </p>
             </div>
           ))}

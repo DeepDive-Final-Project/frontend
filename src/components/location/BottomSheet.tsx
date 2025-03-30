@@ -1,91 +1,10 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import UserCard from './UserCard';
 import Filter from './Filter';
-import dummy from '@/assets/hyun.jpg';
 import { useBottomSheetStore } from '@/stores/useBottomSheetStore';
 import { useNavBarStore } from '@/stores/useNavBarStore';
 import { useFilterStore } from '@/stores/useFilterStore';
-
-const users = [
-  {
-    id: 1,
-    name: '김아무개',
-    role: '디자이너',
-    career: '주니어',
-    tags: [
-      { color: '#ff7f50', text: 'UI/UX' },
-      { color: '#6a5acd', text: 'React' },
-      { color: '#32cd32', text: 'PM' },
-    ],
-    message: '디자인 같이 할 분 구합니다!',
-    image: dummy,
-  },
-  {
-    id: 2,
-    name: '이아무개',
-    role: '개발자',
-    career: '시니어',
-    tags: [
-      { color: '#ff7f50', text: 'UI/UX' },
-      { color: '#6a5acd', text: 'React' },
-      { color: '#32cd32', text: 'PM' },
-    ],
-    message: '프론트 전문가입니다.',
-    image: dummy,
-  },
-  {
-    id: 3,
-    name: '박아무개',
-    role: '프로젝트 매니저',
-    career: '미들',
-    tags: [
-      { color: '#ff7f50', text: 'UI/UX' },
-      { color: '#6a5acd', text: 'React' },
-      { color: '#32cd32', text: 'PM' },
-    ],
-    message: 'PM 역할 맡고 있어요!',
-    image: dummy,
-  },
-  {
-    id: 4,
-    name: '최아무개',
-    role: '학생',
-    career: '',
-    tags: [
-      { color: '#ff7f50', text: 'UI/UX' },
-      { color: '#6a5acd', text: 'React' },
-      { color: '#32cd32', text: 'PM' },
-    ],
-    message: '개발을 배우고 있어요!',
-    image: dummy,
-  },
-  {
-    id: 5,
-    name: '정아무개',
-    role: '기타',
-    career: '',
-    tags: [
-      { color: '#ff7f50', text: 'UI/UX' },
-      { color: '#6a5acd', text: 'React' },
-      { color: '#32cd32', text: 'PM' },
-    ],
-    message: '프로젝트 열정 가득!',
-    image: dummy,
-  },
-  {
-    id: 6,
-    name: '최아무개',
-    role: '기타',
-    career: '',
-    tags: [
-      { color: '#ff7f50', text: 'UI/UX' },
-      { color: '#6a5acd', text: 'React' },
-      { color: '#32cd32', text: 'PM' },
-    ],
-    message: '프로젝트 열정 가득!',
-    image: dummy,
-  },
-];
+import { useUserStore } from '@/stores/useUserStore';
 
 const BottomSheet: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
@@ -103,6 +22,8 @@ const BottomSheet: React.FC = () => {
   const career = useFilterStore((state) => state.career);
   const chatTab = useBottomSheetStore((state) => state.chatTab);
   const setChatTab = useBottomSheetStore((state) => state.setChatTab);
+
+  const users = useUserStore((state) => state.users);
 
   const handleUserSelect = useCallback((userId: number) => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
@@ -152,7 +73,7 @@ const BottomSheet: React.FC = () => {
       const matchCareer = !career || user.career === career;
       return matchRole && matchCareer;
     });
-  }, [role, career]);
+  }, [users, role, career]);
 
   const memoizedUserCards = useMemo(
     () =>
