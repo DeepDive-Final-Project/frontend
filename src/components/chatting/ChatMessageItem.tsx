@@ -6,13 +6,13 @@ import { formatTime } from '@/utils/chat/formatTime';
 interface ChatMessageItemProps {
   roomId: number;
   chatParticipants: string[];
-  currentUser: string | null;
+  nickName: string;
 }
 
 const ChatMessageItem = ({
   roomId,
   //chatParticipants,
-  currentUser,
+  nickName,
 }: ChatMessageItemProps) => {
   const rawMessages = useChatMessageStore(
     (state) => state.messagesByRoom[roomId],
@@ -24,7 +24,7 @@ const ChatMessageItem = ({
   return (
     <>
       {messages.map((msg, index) => {
-        const isMyMessage = msg.senderNickname === currentUser;
+        const isMyMessage = msg.senderNickname === nickName;
 
         const isJoin = msg.type === 'JOIN';
         const isLeave = msg.type === 'LEAVE';

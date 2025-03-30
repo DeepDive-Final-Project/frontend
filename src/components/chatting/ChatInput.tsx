@@ -8,10 +8,10 @@ import { useChatListStore } from '@/stores/useChatListStore';
 interface ChatInputProps {
   roomId: number;
   socketRef: { current: Client | null };
-  currentUser: string | null;
+  nickName: string;
 }
 
-const ChatInput = ({ roomId, socketRef, currentUser }: ChatInputProps) => {
+const ChatInput = ({ roomId, socketRef, nickName }: ChatInputProps) => {
   const [message, setMessage] = useState('');
   const maxLength = 1000;
 
@@ -19,7 +19,7 @@ const ChatInput = ({ roomId, socketRef, currentUser }: ChatInputProps) => {
   const { updateLastMessage } = useChatListStore();
 
   const handleSend = () => {
-    if (!socketRef.current || !socketRef.current.connected || !currentUser) {
+    if (!socketRef.current || !socketRef.current.connected || !nickName) {
       return;
     }
     const trimmed = message.trim();
@@ -29,7 +29,7 @@ const ChatInput = ({ roomId, socketRef, currentUser }: ChatInputProps) => {
     const chatMessage: ChatMessageType = {
       messageId: Date.now(),
       roomId,
-      senderNickname: currentUser,
+      senderNickname: nickName,
       content: trimmed,
       timeStamp: new Date().toISOString(),
       type: 'CHAT',
