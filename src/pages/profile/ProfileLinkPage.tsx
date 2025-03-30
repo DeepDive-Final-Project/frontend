@@ -1,29 +1,33 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TopNav from '@/components/profile/TopNav';
 import ProgressBar from '@/components/profile/ProgressBar';
 import NextButton from '@/components/profile/NextButton';
 import InputFieldLabel from '@/components/profile/InputFieldLabel';
 import LinkInput from '@/components/profile/LinkInput';
 import { Plus, Minus } from 'react-feather';
+import { useProfileStore } from '@/stores/useProfileStore';
 
 const ProfileLinkPage = () => {
-  const [links, setLinks] = useState([{ title: '', url: '' }]);
+  const [localLinks, setLocalLinks] = useState([{ title: '', url: '' }]);
   const [isAdding, setIsAdding] = useState<number | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
+  const { setLinks } = useProfileStore();
+  const navigate = useNavigate();
 
   const handleAddLink = () => {
-    if (links.length < 2) {
-      setLinks([...links, { title: '', url: '' }]);
+    if (localLinks.length < 2) {
+      setLocalLinks([...localLinks, { title: '', url: '' }]);
       setIsAdding(1);
       setTimeout(() => setIsAdding(null), 200);
     }
   };
 
   const handleRemoveLink = () => {
-    if (links.length > 1) {
+    if (localLinks.length > 1) {
       setIsRemoving(true);
       setTimeout(() => {
-        setLinks(links.slice(0, 1));
+        setLocalLinks(localLinks.slice(0, 1));
         setIsRemoving(false);
       }, 300);
     }
@@ -34,13 +38,17 @@ const ProfileLinkPage = () => {
     field: 'title' | 'url',
     value: string,
   ) => {
-    const updatedLinks = [...links];
+    const updatedLinks = [...localLinks];
     updatedLinks[index][field] = value;
-    setLinks(updatedLinks);
+    setLocalLinks(updatedLinks);
   };
 
   const handleSubmitLinks = () => {
-    console.log('등록된 링크:', links);
+    console.log('링크:', localLinks);
+    console.log(localLinks.map((l) => typeof l));
+
+    setLinks(localLinks);
+    navigate('/profile6');
   };
 
   return (
@@ -63,7 +71,7 @@ const ProfileLinkPage = () => {
         <main className="flex flex-col items-center px-4 w-full flex-grow gap-2">
           <InputFieldLabel textLabel="나의 링크는" rightText="선택입력" />
 
-          {links.map((link, index) => (
+          {localLinks.map((link, index) => (
             <div
               key={index}
               className={`
@@ -90,7 +98,7 @@ const ProfileLinkPage = () => {
             </div>
           ))}
 
-          {links.length === 1 ? (
+          {localLinks.length === 1 ? (
             <button
               type="button"
               onClick={handleAddLink}
