@@ -1,20 +1,10 @@
 import React, { useMemo } from 'react';
 import avatarIcon from '@/assets/images/avatarMapin.svg';
-
-const users = [
-  { id: 1, name: '김아무개', role: '디자이너' },
-  { id: 2, name: '이아무개', role: '개발자' },
-  { id: 3, name: '박아무개', role: 'PM' },
-  { id: 4, name: '최아무개', role: '학생' },
-  { id: 5, name: '정아무개', role: '기타' },
-  { id: 6, name: '한아무개', role: '개발자' },
-  { id: 7, name: '홍아무개', role: '디자이너' },
-  { id: 8, name: '서아무개', role: '기획자' },
-  { id: 9, name: '류아무개', role: 'PM' },
-  { id: 10, name: '문아무개', role: '기타' },
-];
+import { useUserStore } from '@/stores/useUserStore';
 
 const UserLocation = () => {
+  const users = useUserStore((state) => state.users);
+
   const smallR = 20;
   const midR = 32;
   const bigR = 45;
@@ -85,24 +75,26 @@ const UserLocation = () => {
             }}
           />
         ))}
-        {userPositions.map(({ x, y, user }, index) => (
+        {userPositions.map(({ x, y, user }) => (
           <div
-            key={index}
+            key={user.id}
             className="absolute flex flex-col items-center"
             style={{
               left: `${x}%`,
               top: `${y}%`,
               transform: 'translate(-50%, -50%)',
             }}>
-            <div className="w-[28px] h-[28px]">
+            <div
+              className="w-[28px] h-[28px] relative bg-center bg-contain bg-no-repeat"
+              style={{ backgroundImage: `url(${avatarIcon})` }}>
               <img
-                src={avatarIcon}
+                src={user.image}
                 alt="user"
-                className="w-full h-full object-contain"
+                className=" absolute inset-0 w-full h-full object-cover rounded-full"
               />
             </div>
             <p className="text-[10px] text-white whitespace-nowrap">
-              {user.name}
+              {user.nickname}
             </p>
           </div>
         ))}

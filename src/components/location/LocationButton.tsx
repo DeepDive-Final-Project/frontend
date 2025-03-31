@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useUserStore } from '@/stores/useUserStore';
 
@@ -6,37 +6,41 @@ const LocationButton: React.FC = () => {
   const setUsers = useUserStore((state) => state.setUsers);
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
+  const [myImage, setMyImage] = useState<string>('');
 
-  const handleSendLocation = () => {
-    const fixedLat = 37.2986736;
-    const fixedLng = 126.9957758;
+  const fetchMyInfo = async () => {
+    try {
+      const response = await axios.get('https://api.i-contacts.link/auth/me', {
+        withCredentials: true,
+      });
 
-    setLatitude(fixedLat);
-    setLongitude(fixedLng);
+      const id = response.data.id;
+      setUserId(id);
+      console.log('내 정보:', response.data);
 
-    sendLocationToServer(fixedLat, fixedLng);
-
-    /*
-    if (!navigator.geolocation) {
-      alert('위치 정보를 지원하지 않는 브라우저입니다.');
-      return;
+      fetchMyProfileImage([id]);
+    } catch (error) {
+      console.error('내 정보 요청 실패:', error);
     }
+  };
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
+  const fetchMyProfileImage = async (userIds: number[]) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/client/profile/profile-images`,
+        {
+          params: { userIds },
+          withCredentials: true,
+        },
+      );
 
-        setLatitude(lat);
-        setLongitude(lng);
-
-        sendLocationToServer(lat, lng);
-      },
-      (error) => {
-        console.error('위치 정보를 가져올 수 없습니다:', error);
-      },
-    );
-    */
+      const imageUrl = response.data[userIds[0]];
+      console.log('내 프로필 이미지 URL:', imageUrl);
+      setMyImage(imageUrl);
+    } catch (error) {
+      console.error('프로필 이미지 요청 실패:', error);
+    }
   };
   const parseInterestString = (interest: string) => {
     const colors = ['#ff7f50', '#6a5acd', '#32cd32'];
@@ -57,12 +61,8 @@ const LocationButton: React.FC = () => {
     return tags;
   };
 
-  const sendLocationToServer = async (lat: number, lng: number) => {
-    const payload = {
-      id: 98,
-      latitude: lat,
-      longitude: lng,
-    };
+  const sendLocationToServer = async (lat: number, lng: number, id: number) => {
+    const payload = { id, latitude: lat, longitude: lng };
 
     try {
       await axios.post(
@@ -71,8 +71,8 @@ const LocationButton: React.FC = () => {
         {
           headers: {
             'Content-Type': 'application/json',
-            accept: 'application/json',
           },
+          withCredentials: true,
         },
       );
 
@@ -80,7 +80,7 @@ const LocationButton: React.FC = () => {
 
       const nearbyResponse = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/api/location/nearby`,
-        { id: 98 },
+        { id },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -102,16 +102,35 @@ const LocationButton: React.FC = () => {
           role: user.role,
           career: user.career,
           introduction: user.introduction,
-          // image:'image.jpg',
+          image: '',
           tags: parseInterestString(user.interest),
         }),
       );
-      console.log('받은 유저 리스트:', nearbyResponse.data);
+
+      console.log('받은 유저 리스트:', parsedUsers);
       setUsers(parsedUsers);
     } catch (error) {
       console.error('위치 전송 실패:', error);
     }
   };
+
+  const handleSendLocation = () => {
+    const fixedLat = 37.2986736;
+    const fixedLng = 126.9957758;
+
+    setLatitude(fixedLat);
+    setLongitude(fixedLng);
+
+    if (userId) {
+      sendLocationToServer(fixedLat, fixedLng, userId);
+    } else {
+      console.warn('유저 ID가 없습니다. /auth/me 요청을 먼저 확인해주세요.');
+    }
+  };
+
+  useEffect(() => {
+    fetchMyInfo();
+  }, []);
 
   return (
     <div className="flex flex-col items-start gap-2 text-white">
@@ -128,6 +147,17 @@ const LocationButton: React.FC = () => {
           위도: <span className="text-white">{latitude}</span>
           <br />
           경도: <span className="text-white">{longitude}</span>
+        </div>
+      )}
+
+      {myImage && (
+        <div className="mt-4">
+          <p className="text-sm text-gray-300"> 내 프로필 이미지:</p>
+          <img
+            src={myImage}
+            alt="내 프로필"
+            className="w-20 h-20 rounded-full mt-1 border border-white"
+          />
         </div>
       )}
     </div>
