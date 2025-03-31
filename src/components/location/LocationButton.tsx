@@ -15,9 +15,9 @@ const LocationButton: React.FC = () => {
         withCredentials: true,
       });
 
-      const id = response.data.id ?? response.data?.data?.id;
+      const id = response.data.id;
       setUserId(id);
-      console.log('내 정보:', response.data.data);
+      console.log('내 정보:', response.data);
 
       // fetchMyProfileImage([id]);
     } catch (error) {
