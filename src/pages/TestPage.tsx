@@ -15,8 +15,6 @@ import { ChatRequestType } from '@/types/chatRequestType';
 import { UserProfileType } from '@/types/userProfileType';
 import { api } from '@/utils/api';
 
-// 임시
-
 // 사용자 정보 가져오기
 const fetchUsers = async () => {
   const response = await api.get('/api/client/profile/all');
@@ -26,8 +24,8 @@ const fetchUsers = async () => {
 const TestPage = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { sent, received } = useChatRequestStore();
   const { nickName, isLoading } = useChatMyInfo();
+  const { sent, received } = useChatRequestStore();
 
   useChatRequestFetch(nickName ?? '');
 

@@ -1,7 +1,6 @@
-import axios from 'axios';
+import { api } from '@/utils/api';
 
 export const fetchAuthApi = async () => {
-  const { data } = await axios.get('https://api.i-contacts.link/auth/me');
-  console.log(data);
+  const { data } = await api.get('/auth/me');
   return data;
 };
