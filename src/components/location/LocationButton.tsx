@@ -2,11 +2,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useUserStore } from '@/stores/useUserStore';
 
-const getCookie = (name: string) => {
-  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
-  return match ? match[2] : null;
-};
-
 const LocationButton: React.FC = () => {
   const setUsers = useUserStore((state) => state.setUsers);
   const [latitude, setLatitude] = useState<number | null>(null);
@@ -15,18 +10,10 @@ const LocationButton: React.FC = () => {
   // const [myImage, setMyImage] = useState<string>('');
 
   const fetchMyInfo = async () => {
-    const token = getCookie('Authorization');
-    if (!token) {
-      console.log('쿠키 없음');
-      return;
-    }
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/me`,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await axios.get('https://api.i-contacts.link/auth/me', {
+        withCredentials: true,
+      });
 
       const id = response.data.id;
       setUserId(id);
