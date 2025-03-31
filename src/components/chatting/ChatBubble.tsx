@@ -4,11 +4,12 @@ import { ChevronRight } from 'react-feather';
 interface ChatBubbleProps {
   content: string;
   isMyMessage: boolean;
+  onExpand?: (content: string) => void;
 }
 
 const MAX_HEIGHT = 136;
 
-const ChatBubble = ({ content, isMyMessage }: ChatBubbleProps) => {
+const ChatBubble = ({ content, isMyMessage, onExpand }: ChatBubbleProps) => {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
 
@@ -43,6 +44,7 @@ const ChatBubble = ({ content, isMyMessage }: ChatBubbleProps) => {
       {isOverflowing && (
         <button
           type="button"
+          onClick={() => onExpand?.(content)}
           className={`flex items-center justify-center w-full py-[9px] text-white text-sm
         ${
           isMyMessage

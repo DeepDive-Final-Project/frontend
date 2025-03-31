@@ -3,17 +3,20 @@ import { useChatMessageStore } from '@/stores/useChatMessageStore';
 import { formatTime } from '@/utils/chat/formatTime';
 import Button from '@/components/common/Button';
 import { LogOut } from 'react-feather';
+import { motion } from 'framer-motion';
 
 interface ChatMessageItemProps {
   roomId: number;
   chatParticipants: string[];
   nickName: string;
+  onExpand?: (content: string) => void;
 }
 
 const ChatMessageItem = ({
   roomId,
   chatParticipants,
   nickName,
+  onExpand,
 }: ChatMessageItemProps) => {
   const rawMessages = useChatMessageStore(
     (state) => state.messagesByRoom[roomId],
@@ -65,12 +68,21 @@ const ChatMessageItem = ({
             <div
               className={`flex ${isMyMessage ? 'justify-end' : 'justify-start'}`}>
               <div className="flex flex-col max-w-[640px]">
-                <ChatBubble content={msg.content} isMyMessage={isMyMessage} />
-                {msg.timeStamp && (
-                  <p className="my-2 text-[#A2A4AA] text-right text-xs">
-                    {formatTime(msg.timeStamp)}
-                  </p>
-                )}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}>
+                  <ChatBubble
+                    content={msg.content}
+                    isMyMessage={isMyMessage}
+                    onExpand={onExpand}
+                  />
+                  {msg.timeStamp && (
+                    <p className="my-2 text-[#A2A4AA] text-right text-xs">
+                      {formatTime(msg.timeStamp)}
+                    </p>
+                  )}
+                </motion.div>
               </div>
             </div>
           </div>

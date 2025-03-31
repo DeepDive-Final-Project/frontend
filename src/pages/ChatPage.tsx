@@ -5,6 +5,7 @@ import ChatList from '@/components/chatting/ChatList';
 import ChatHeader from '@/components/chatting/ChatHeader';
 import ChatRoom from '@/components/chatting/ChatRoom';
 import ChatFilter from '@/components/chatting/ChatFilter';
+import FullMessageViewer from '@/components/chatting/FullMessageViewer';
 import { useChatListStore } from '@/stores/useChatListStore';
 import { useChatMyInfo } from '@/stores/useChatMyInfoStore';
 import { fetchChatListApi } from '@/services/chatListApi';
@@ -22,6 +23,9 @@ const ChatPage = () => {
   const { userId, nickName } = useChatMyInfo();
   const { chatList, selectedRoom, setSelectedRoom } = useChatListStore();
   const { connect, isConnected } = useSocketStore();
+
+  // 채팅 메시지 전체보기 상태
+  const [expandedMessage, setExpandedMessage] = useState<string | null>(null);
 
   // 채팅방 정렬 상태 저장
   const [selectedOption, setSelectedOption] = useState<ChatFilterOption>(
@@ -73,7 +77,14 @@ const ChatPage = () => {
   return (
     <div className="max-w-[1440px] m-auto flex h-screen overflow-hidden">
       <div
-        className={`flex flex-col w-full h-full desktop:max-w-[400px] tablet:max-w-[320px] flex-shrink-0 overflow-y-auto border border-l-0 border-t-0 border-b-0 border-[#222325] bg-[#0A0A0B] ${selectedRoom ? 'hidden tablet:flex' : 'flex'}`}>
+        className={`
+    flex flex-col h-full
+    ${expandedMessage ? 'w-[33.33%]' : 'desktop:max-w-[400px] tablet:max-w-[320px]'}
+    flex-shrink-0 overflow-y-auto
+    border border-l-0 border-t-0 border-b-0 border-[#222325] bg-[#0A0A0B]
+    ${selectedRoom ? 'hidden tablet:flex' : 'flex w-full'}
+    ${expandedMessage ? 'hidden tablet:flex' : ''}
+  `}>
         <ChatFilter
           filter={{
             options: filterOptions,
@@ -90,17 +101,29 @@ const ChatPage = () => {
         />
       </div>
       <div
-        className={`relative flex-auto flex-col ${
-          selectedRoom ? 'flex' : 'hidden tablet:flex'
-        }`}>
+        className={`
+    relative flex-auto flex-col
+    ${selectedRoom ? 'flex' : 'hidden tablet:flex'}
+    ${expandedMessage ? 'w-[33.33%]' : ''}
+  `}>
         <ChatHeader
           otherUser={otherUser}
           roomId={selectedRoom?.roomId ?? 0}
           userId={userId}
           onBackToList={onBackToList}
         />
-        <ChatRoom room={selectedRoom} />
+        <ChatRoom
+          room={selectedRoom}
+          onExpandMessage={(content) => setExpandedMessage(content)}
+        />
       </div>
+      {/* 메세지 전체보기 */}
+      {expandedMessage && (
+        <FullMessageViewer
+          expandedMessage={expandedMessage}
+          onClose={() => setExpandedMessage(null)}
+        />
+      )}
     </div>
   );
 };
