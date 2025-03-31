@@ -8,16 +8,14 @@ import { useAcceptRequest } from '@/hooks/useAcceptRequest';
 import { useRejectRequest } from '@/hooks/useRejectRequest';
 import { useChatRequestFetch } from '@/hooks/useChatRequestFetch';
 import { useChatRequestStore } from '@/stores/useChatRequestStore';
+import { useChatMyInfo } from '@/stores/useChatMyInfoStore';
 import { getChatButtonState } from '@/utils/chat/getChatButtonState';
 import { chatRoomRequestId } from '@/utils/chat/chatRoomRequestId';
 import { ChatRequestType } from '@/types/chatRequestType';
+import { UserProfileType } from '@/types/userProfileType';
 import { api } from '@/utils/api';
 
 // 임시
-interface UserType {
-  id: string;
-  nickName: string;
-}
 
 // 사용자 정보 가져오기
 const fetchUsers = async () => {
@@ -25,18 +23,16 @@ const fetchUsers = async () => {
   return response.data;
 };
 
-const currentUser = localStorage.getItem('userNickname');
-
 const TestPage = () => {
   const queryClient = useQueryClient();
-  const { sent, received } = useChatRequestStore();
-
   const navigate = useNavigate();
+  const { sent, received } = useChatRequestStore();
+  const { nickName } = useChatMyInfo();
 
-  useChatRequestFetch(currentUser ?? '');
+  useChatRequestFetch(nickName ?? '');
 
   // 참가자 조회
-  const { data: users = [] } = useQuery<UserType[]>({
+  const { data: users = [] } = useQuery<UserProfileType[]>({
     queryKey: ['users'],
     queryFn: fetchUsers,
   });
@@ -44,16 +40,16 @@ const TestPage = () => {
   // 채팅 요청
   const { mutate: chatRequest } = useChatRequest();
   const onChatRequest = (receiverNickname: string) => {
-    if (!currentUser) return;
+    if (!nickName) return;
 
     chatRequest(
-      { senderNickname: currentUser, receiverNickname },
+      { senderNickname: nickName, receiverNickname },
       {
         onSuccess: () => {
           toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
 
           queryClient.invalidateQueries({
-            queryKey: ['chatSentList', currentUser, 'PENDING'],
+            queryKey: ['chatSentList', nickName, 'PENDING'],
           });
         },
       },
@@ -76,7 +72,7 @@ const TestPage = () => {
         }, 600);
 
         queryClient.invalidateQueries({
-          queryKey: ['chatReceivedList', currentUser, 'PENDING'],
+          queryKey: ['chatReceivedList', nickName, 'PENDING'],
         });
       },
     });
@@ -90,7 +86,7 @@ const TestPage = () => {
         toast.success(`${req.senderNickname}님의 요청을 거절했습니다.`);
 
         queryClient.invalidateQueries({
-          queryKey: ['chatReceivedList', currentUser, 'PENDING'],
+          queryKey: ['chatReceivedList', nickName, 'PENDING'],
         });
       },
     });
@@ -98,13 +94,13 @@ const TestPage = () => {
 
   return (
     <div className="max-w-[1440px] m-auto">
-      <p className="text-2xl">현재 로그인 : {currentUser}</p>
+      <p className="text-2xl">현재 로그인 : {nickName}</p>
       <hr className="my-4" />
       <section>
         <p className="mb-1">주변 참가자 리스트</p>
         <ul>
           {users.map((user) => {
-            if (user.nickName === currentUser) return null;
+            if (user.nickName === nickName) return null;
 
             const state = getChatButtonState(user.nickName, sent, received);
 

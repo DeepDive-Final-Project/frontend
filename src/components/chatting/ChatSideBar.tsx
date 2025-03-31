@@ -9,17 +9,10 @@ interface ChatSideBarProps {
   isOpen: boolean;
   onClose: () => void;
   roomId: number;
-  currentUserId: number;
-  currentUserNickname: string;
+  userId: number;
 }
 
-const ChatSideBar = ({
-  isOpen,
-  onClose,
-  roomId,
-  currentUserId,
-  //  currentUserNickname,
-}: ChatSideBarProps) => {
+const ChatSideBar = ({ isOpen, onClose, roomId, userId }: ChatSideBarProps) => {
   const queryClient = useQueryClient();
   const { disconnect } = useSocketStore.getState();
   const { removeChatRoom } = useChatListStore();
@@ -59,7 +52,7 @@ const ChatSideBar = ({
       // 서버에 퇴장 요청
       await api.post('/api/chat/exit', {
         roomId,
-        clientId: currentUserId,
+        clientId: userId,
       });
       // console.log('API 응답:', response);
       // console.log('응답 상태 코드:', response.status);
@@ -68,10 +61,10 @@ const ChatSideBar = ({
       removeChatRoom(roomId);
 
       queryClient.invalidateQueries({
-        queryKey: ['chatSentList', currentUserId ?? '', 'ACCEPTED'],
+        queryKey: ['chatSentList', userId ?? '', 'ACCEPTED'],
       });
       queryClient.invalidateQueries({
-        queryKey: ['chatReceivedList', currentUserId ?? '', 'ACCEPTED'],
+        queryKey: ['chatReceivedList', userId ?? '', 'ACCEPTED'],
       });
 
       disconnect();

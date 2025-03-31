@@ -6,6 +6,7 @@ import ChatInput from '@/components/chatting/ChatInput';
 import ChatMessageItem from '@/components/chatting/ChatMessageItem';
 import { ChatRoomType } from '@/types/chatRoomType';
 import { useChatListStore } from '@/stores/useChatListStore';
+import { useChatMyInfo } from '@/stores/useChatMyInfoStore';
 import { fetchMessagesApi } from '@/services/chatMessageApi';
 
 interface ChatRoomProps {
@@ -14,19 +15,17 @@ interface ChatRoomProps {
 
 const ChatRoom = ({ room }: ChatRoomProps) => {
   const { stompClient } = useSocketStore();
-  const clientId = localStorage.getItem('userId');
-  const currentUser = localStorage.getItem('userNickname');
-
+  const { userId, nickName } = useChatMyInfo();
   const { appendMessage, setMessages, clearMessages } = useChatMessageStore();
   const { updateLastMessage } = useChatListStore();
 
   // 이전 메시지 불러오기
   useEffect(() => {
-    if (!room || !clientId) return;
+    if (!room || !userId) return;
 
     const fetchMessages = async () => {
       try {
-        const messages = await fetchMessagesApi(room.roomId, Number(clientId));
+        const messages = await fetchMessagesApi(room.roomId, Number(userId));
         setMessages(room.roomId, messages);
       } catch (error) {
         console.error('메시지 불러오기 실패', error);
@@ -34,7 +33,7 @@ const ChatRoom = ({ room }: ChatRoomProps) => {
     };
 
     fetchMessages();
-  }, [room?.roomId, clientId, setMessages]);
+  }, [room?.roomId, userId, setMessages]);
 
   useEffect(() => {
     if (!room || !stompClient || !stompClient.connected) return;
@@ -79,13 +78,13 @@ const ChatRoom = ({ room }: ChatRoomProps) => {
           <ChatMessageItem
             roomId={room.roomId}
             chatParticipants={room.participants}
-            currentUser={localStorage.getItem('userNickname')}
+            nickName={nickName ?? ''}
           />
         </div>
       </div>
       <ChatInput
         roomId={room.roomId}
-        currentUser={currentUser}
+        nickName={nickName ?? ''}
         socketRef={{ current: stompClient }}
       />
     </>

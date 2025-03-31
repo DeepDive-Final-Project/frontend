@@ -6,16 +6,14 @@ interface ChatHeaderProps {
   otherUser?: string;
   onBackToList: () => void;
   roomId: number;
-  currentUserId: number;
-  currentUserNickname: string;
+  userId: number;
 }
 
 const ChatHeader = ({
   otherUser,
   onBackToList,
   roomId,
-  currentUserId,
-  currentUserNickname,
+  userId,
 }: ChatHeaderProps) => {
   const [isBellOff, setBellOff] = useState(true);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -33,7 +31,7 @@ const ChatHeader = ({
           <ArrowLeft />
         </button>
         <p className="absolute left-1/2 transform -translate-x-1/2">
-          {otherUser ?? '채팅방'}
+          {otherUser ?? ''}
         </p>
         <div className="flex space-x-4 ml-auto">
           <button
@@ -51,8 +49,7 @@ const ChatHeader = ({
         isOpen={isSidebarOpen}
         onClose={() => setSidebarOpen(false)}
         roomId={roomId}
-        currentUserId={currentUserId}
-        currentUserNickname={currentUserNickname}
+        userId={userId}
       />
     </>
   );
