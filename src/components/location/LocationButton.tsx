@@ -11,9 +11,12 @@ const LocationButton: React.FC = () => {
 
   const fetchMyInfo = async () => {
     try {
-      const response = await axios.get('https://api.i-contacts.link/auth/me', {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
+        {
+          withCredentials: true,
+        },
+      );
 
       const id = response.data.id;
       setUserId(id);
