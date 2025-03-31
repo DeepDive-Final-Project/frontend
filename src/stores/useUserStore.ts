@@ -24,6 +24,9 @@ interface UserStore {
   latitude: number | null;
   longitude: number | null;
   setUserLocation: (lat: number, lng: number) => void;
+
+  selectedUser: number | null;
+  setSelectedUser: (id: number | null) => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -32,4 +35,6 @@ export const useUserStore = create<UserStore>((set) => ({
   latitude: null,
   longitude: null,
   setUserLocation: (lat, lng) => set({ latitude: lat, longitude: lng }),
+  selectedUser: null,
+  setSelectedUser: (id) => set({ selectedUser: id }),
 }));

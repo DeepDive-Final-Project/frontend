@@ -8,7 +8,6 @@ import { useUserStore } from '@/stores/useUserStore';
 
 const BottomSheet: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [requestedUserIds, setRequestedUserIds] = useState<number[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -24,10 +23,8 @@ const BottomSheet: React.FC = () => {
   const setChatTab = useBottomSheetStore((state) => state.setChatTab);
 
   const users = useUserStore((state) => state.users);
-
-  const handleUserSelect = useCallback((userId: number) => {
-    setSelectedUserId((prev) => (prev === userId ? null : userId));
-  }, []);
+  const setSelectedUser = useUserStore((state) => state.setSelectedUser);
+  const selectedUser = useUserStore((state) => state.selectedUser);
 
   const handleRequest = useCallback((userId: number) => {
     setRequestedUserIds((prev) =>
@@ -37,7 +34,7 @@ const BottomSheet: React.FC = () => {
 
   const handleDeselectUser = useCallback((e: React.MouseEvent) => {
     if (!(e.target as HTMLElement).closest('.user-card')) {
-      setSelectedUserId(null);
+      setSelectedUser(null);
     }
   }, []);
 
@@ -56,6 +53,13 @@ const BottomSheet: React.FC = () => {
       setHeight(window.innerHeight - 100);
     }
   };
+
+  const handleUserSelect = useCallback(
+    (userId: number) => {
+      setSelectedUser(selectedUser === userId ? null : userId);
+    },
+    [selectedUser, setSelectedUser],
+  );
 
   const handleListScroll = useCallback((e: React.TouchEvent) => {
     e.stopPropagation();
@@ -84,7 +88,7 @@ const BottomSheet: React.FC = () => {
             <UserCard
               user={user}
               onSelect={handleUserSelect}
-              selectedUserId={selectedUserId}
+              selectedUserId={selectedUser}
               isRequested={isRequested}
               onRequest={() => handleRequest(user.id)}
             />
@@ -93,7 +97,7 @@ const BottomSheet: React.FC = () => {
       }),
     [
       filteredUsers,
-      selectedUserId,
+      selectedUser,
       requestedUserIds,
       handleUserSelect,
       handleRequest,
