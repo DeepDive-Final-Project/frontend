@@ -4,7 +4,8 @@ import { useUserStore } from '@/stores/useUserStore';
 
 const UserLocation = () => {
   const users = useUserStore((state) => state.users);
-
+  const selectedUser = useUserStore((state) => state.selectedUser);
+  const setSelectedUser = useUserStore((state) => state.setSelectedUser);
   const smallR = 20;
   const midR = 32;
   const bigR = 45;
@@ -20,10 +21,7 @@ const UserLocation = () => {
     });
   };
 
-  const getRandomFromArray = (
-    arr: { x: number; y: number }[],
-    count: number,
-  ) => {
+  const getRandomArray = (arr: { x: number; y: number }[], count: number) => {
     return [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
   };
 
@@ -33,9 +31,9 @@ const UserLocation = () => {
     const midCount = Math.min(4, Math.max(0, total - smallCount));
     const bigCount = Math.max(0, total - smallCount - midCount);
 
-    const smallPoints = getRandomFromArray(getCirclePoints(smallR), smallCount);
-    const midPoints = getRandomFromArray(getCirclePoints(midR), midCount);
-    const bigPoints = getRandomFromArray(getCirclePoints(bigR), bigCount);
+    const smallPoints = getRandomArray(getCirclePoints(smallR), smallCount);
+    const midPoints = getRandomArray(getCirclePoints(midR), midCount);
+    const bigPoints = getRandomArray(getCirclePoints(bigR), bigCount);
 
     const positions = [...smallPoints, ...midPoints, ...bigPoints];
 
@@ -43,7 +41,7 @@ const UserLocation = () => {
       ...pos,
       user: users[i],
     }));
-  }, []);
+  }, [users]);
 
   return (
     <div className="w-full flex justify-center items-center bg-[#000000]">
@@ -78,6 +76,7 @@ const UserLocation = () => {
         {userPositions.map(({ x, y, user }) => (
           <div
             key={user.id}
+            onClick={() => setSelectedUser(user.id)}
             className="absolute flex flex-col items-center"
             style={{
               left: `${x}%`,
@@ -85,14 +84,9 @@ const UserLocation = () => {
               transform: 'translate(-50%, -50%)',
             }}>
             <div
-              className="w-[28px] h-[28px] relative bg-center bg-contain bg-no-repeat"
-              style={{ backgroundImage: `url(${avatarIcon})` }}>
-              <img
-                src={user.image}
-                alt="user"
-                className=" absolute inset-0 w-full h-full object-cover rounded-full"
-              />
-            </div>
+              className={`w-[28px] h-[28px] relative bg-center bg-contain bg-no-repeat ${selectedUser === user.id ? 'scale-125 ring-1 ring-blue-200' : ''}`}
+              style={{ backgroundImage: `url(${avatarIcon})` }}
+            />
             <p className="text-[10px] text-white whitespace-nowrap">
               {user.nickname}
             </p>
