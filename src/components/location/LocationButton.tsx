@@ -2,46 +2,59 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useUserStore } from '@/stores/useUserStore';
 
+const getCookie = (name: string) => {
+  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+  return match ? match[2] : null;
+};
+
 const LocationButton: React.FC = () => {
   const setUsers = useUserStore((state) => state.setUsers);
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
-  const [myImage, setMyImage] = useState<string>('');
+  // const [myImage, setMyImage] = useState<string>('');
 
   const fetchMyInfo = async () => {
+    const token = getCookie('Authorization');
+    if (!token) {
+      console.log('쿠키 없음');
+      return;
+    }
     try {
-      const response = await axios.get('https://api.i-contacts.link/auth/me', {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/me`,
+        {
+          withCredentials: true,
+        },
+      );
 
       const id = response.data.id;
       setUserId(id);
       console.log('내 정보:', response.data);
 
-      fetchMyProfileImage([id]);
+      // fetchMyProfileImage([id]);
     } catch (error) {
       console.error('내 정보 요청 실패:', error);
     }
   };
 
-  const fetchMyProfileImage = async (userIds: number[]) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/client/profile/profile-images`,
-        {
-          params: { userIds },
-          withCredentials: true,
-        },
-      );
+  // const fetchMyProfileImage = async (userIds: number[]) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${import.meta.env.VITE_API_BASE_URL}/api/client/profile/profile-images`,
+  //       {
+  //         params: { userIds },
+  //         withCredentials: true,
+  //       },
+  //     );
 
-      const imageUrl = response.data[userIds[0]];
-      console.log('내 프로필 이미지 URL:', imageUrl);
-      setMyImage(imageUrl);
-    } catch (error) {
-      console.error('프로필 이미지 요청 실패:', error);
-    }
-  };
+  //     const imageUrl = response.data[userIds[0]];
+  //     console.log('내 프로필 이미지 URL:', imageUrl);
+  //     setMyImage(imageUrl);
+  //   } catch (error) {
+  //     console.error('프로필 이미지 요청 실패:', error);
+  //   }
+  // };
   const parseInterestString = (interest: string) => {
     const colors = ['#ff7f50', '#6a5acd', '#32cd32'];
     const tags: { text: string; color: string }[] = [];
@@ -147,17 +160,6 @@ const LocationButton: React.FC = () => {
           위도: <span className="text-white">{latitude}</span>
           <br />
           경도: <span className="text-white">{longitude}</span>
-        </div>
-      )}
-
-      {myImage && (
-        <div className="mt-4">
-          <p className="text-sm text-gray-300"> 내 프로필 이미지:</p>
-          <img
-            src={myImage}
-            alt="내 프로필"
-            className="w-20 h-20 rounded-full mt-1 border border-white"
-          />
         </div>
       )}
     </div>
