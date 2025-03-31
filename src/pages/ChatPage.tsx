@@ -62,10 +62,6 @@ const ChatPage = () => {
   // 모바일: 뒤로가기 클릭 시
   const onBackToList = () => setSelectedRoom(null);
 
-  if (userId === undefined) {
-    return;
-  }
-
   if (isLoading || userId === undefined) {
     return (
       <div className="pt-10 text-center text-[#A2A4AA]">
