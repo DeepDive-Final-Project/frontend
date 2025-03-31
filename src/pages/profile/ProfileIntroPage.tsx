@@ -57,7 +57,7 @@ const ProfileIntroPage = () => {
         userData,
       });
 
-      await axios.post(
+      await axios.patch(
         `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/update/${clientId}`,
         formData,
         {
