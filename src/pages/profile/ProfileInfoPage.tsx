@@ -11,7 +11,7 @@ import axios from 'axios';
 const ProfileInfoPage = () => {
   const navigate = useNavigate();
 
-  const { name, email, setName, setEmail } = useProfileStore();
+  const { name, email, setName, setEmail, setClientId } = useProfileStore();
   const [localName, setLocalName] = useState(name);
   const [localEmail, setLocalEmail] = useState(email);
   const [isEmailValid, setIsEmailValid] = useState(true);
@@ -22,13 +22,16 @@ const ProfileInfoPage = () => {
           `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
           { withCredentials: true },
         );
-        const { email, name } = response.data;
+
+        const { id, email, name } = response.data;
 
         if (email) setEmail(email);
         if (name) setName(name);
-      } catch (error: any) {
-        console.error('사용자 정보를 불러오지 못했습니다:', error);
-        console.log('응답 상세:', error?.response?.data);
+        if (id) setClientId(id);
+
+        console.log('내 정보:', response.data);
+      } catch (error) {
+        console.error('내 정보 요청 실패:', error);
       }
     };
 

@@ -19,6 +19,7 @@ interface ProfileState {
   interests: Interest[];
   links: Link[];
   intro: string;
+  clientId: number;
 
   setProfileImage: (image: string) => void;
   setName: (name: string) => void;
@@ -28,6 +29,7 @@ interface ProfileState {
   setInterests: (interests: Interest[]) => void;
   setLinks: (links: Link[]) => void;
   setIntro: (intro: string) => void;
+  setClientId: (id: number) => void;
 }
 
 export const useProfileStore = create<ProfileState>((set) => ({
@@ -39,6 +41,7 @@ export const useProfileStore = create<ProfileState>((set) => ({
   interests: [],
   links: [],
   intro: '',
+  clientId: 0,
 
   setProfileImage: (image) => set({ profileImage: image }),
   setName: (name) => set({ name }),
@@ -48,4 +51,5 @@ export const useProfileStore = create<ProfileState>((set) => ({
   setInterests: (interests) => set({ interests }),
   setLinks: (links) => set({ links }),
   setIntro: (intro) => set({ intro }),
+  setClientId: (id) => set({ clientId: id }),
 }));

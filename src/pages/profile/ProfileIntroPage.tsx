@@ -20,6 +20,7 @@ const ProfileIntroPage = () => {
     links,
     interests,
     setIntro: setIntroGlobal,
+    clientId,
   } = useProfileStore();
 
   const handleSubmit = async () => {
@@ -57,12 +58,13 @@ const ProfileIntroPage = () => {
       });
 
       await axios.post(
-        `${import.meta.env.VITE_BASE_API_URL}/api/client/profile`,
+        `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/update/${clientId}`,
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
+          withCredentials: true,
         },
       );
 
