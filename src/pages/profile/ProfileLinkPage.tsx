@@ -48,13 +48,19 @@ const ProfileLinkPage = () => {
     console.log(localLinks.map((l) => typeof l));
 
     setLinks(localLinks);
-    navigate('/profile6');
+    navigate('/profile/6');
+  };
+  const handleSkip = () => {
+    navigate('/profile/6');
   };
 
+  const canSubmit = localLinks.some(
+    (link) => link.title.trim() && link.url.trim(),
+  );
+
   return (
-    <div className="flex min-h-screen">
-      <div className="hidden tablet:flex flex-grow"></div>
-      <div className="w-full tablet:w-[375px] desktop:w-[375px] desktop:mx-20 min-h-screen flex flex-col items-center">
+    <>
+      <div className="w-full max-w-full tablet:w-[360px] desktop:w-[375px] flex flex-col flex-grow justify-between">
         <TopNav />
         <ProgressBar currentStep={5} />
 
@@ -119,11 +125,20 @@ const ProfileLinkPage = () => {
           )}
         </main>
 
-        <footer className="w-full tablet:w-[320px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center">
-          <NextButton text={'링크등록하기'} onClick={handleSubmitLinks} />
+        <footer className="w-full tablet:w-[360px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center desktop:pb-60">
+          <NextButton
+            text={'링크등록하기'}
+            onClick={handleSubmitLinks}
+            disabled={!canSubmit}
+          />
+          <div
+            className="mt-2 text-[#B7B9BD] cursor-pointer"
+            onClick={handleSkip}>
+            건너뛰기
+          </div>
         </footer>
       </div>
-    </div>
+    </>
   );
 };
 

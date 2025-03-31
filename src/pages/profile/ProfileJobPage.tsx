@@ -16,24 +16,26 @@ const ProfileJobPage = () => {
     { key: string; description: string }[]
   >([]);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [selectedCareer, setSelectedCareer] = useState<string | null>(null);
   const [showCareerInput, setShowCareerInput] = useState(false);
   const navigate = useNavigate();
 
   const { setRole, setCareer } = useProfileStore();
+  const canProceed = selectedRole !== null && selectedCareer !== null;
 
   useEffect(() => {
     const fetchRoles = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/client/enums/roles`,
+          `${import.meta.env.VITE_BASE_API_URL}/api/client/enums/roles`,
         );
-        setRoles(response.data);
+        setRoles(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
-        console.error('Error fetching roles:', error);
+        console.error('Error fetching roles::', error);
       }
     };
 
-    fetchRoles();
+    void fetchRoles();
   }, []);
 
   useEffect(() => {
@@ -41,43 +43,41 @@ const ProfileJobPage = () => {
       const fetchCareers = async () => {
         try {
           const response = await axios.get(
-            `${import.meta.env.VITE_API_BASE_URL}/api/client/enums/careers?role=${selectedRole}`,
+            `${import.meta.env.VITE_BASE_API_URL}/api/client/enums/careers?role=${selectedRole}`,
           );
-          setCareers(response.data);
+          setCareers(Array.isArray(response.data) ? response.data : []);
+
           setShowCareerInput(true);
         } catch (error) {
           console.error('Error fetching careers:', error);
         }
       };
 
-      fetchCareers();
+      void fetchCareers();
     }
   }, [selectedRole]);
 
   const handleSkip = () => {
-    navigate('/profile4');
+    if (!canProceed) return;
+    console.log('선택한 직무:', selectedRole);
+    console.log('선택한 학력:', selectedCareer);
+    navigate('/profile/4');
   };
 
   return (
-    <>
-      <div className="flex min-h-screen">
-        <div className="hidden tablet:flex flex-grow"></div>
-        <div className="w-full tablet:w-[375px] desktop:w-[375px] desktop:mx-20 min-h-screen flex flex-col items-center">
-          <TopNav />
-          <ProgressBar currentStep={3} />
-          <header className="py-[20px]">
-            <div className="text-center mobile:text-[16px] mobile:text-[#cccccc]">
-              About You
-            </div>
-            <div className="text-center mobile:text-[24px]">
-              무엇을 하고 계신가요
-            </div>
-            <div className="text-center mobile:text-[16px] mobile:text-[#cccccc]">
-              조금 더 알려주세요
-            </div>
+    <div className="w-full max-w-full tablet:w-[360px] desktop:w-[375px] flex flex-col flex-grow">
+      <TopNav />
+      <ProgressBar currentStep={3} />
+
+      <div className="flex flex-col justify-between flex-grow">
+        <div>
+          <header className="py-[20px] text-center">
+            <div className="text-[16px] text-[#cccccc]">About You</div>
+            <div className="text-[24px]">무엇을 하고 계신가요</div>
+            <div className="text-[16px] text-[#cccccc]">조금 더 알려주세요</div>
           </header>
 
-          <main className="flex flex-col items-center px-4 w-full flex-grow gap-4">
+          <main className="flex flex-col gap-4 w-full px-4">
             <InputFieldLabel textLabel="나의 직무는" />
             <Dropdown
               label="직무를 선택해주세요"
@@ -85,30 +85,43 @@ const ProfileJobPage = () => {
               onSelect={(roleKey) => {
                 setSelectedRole(roleKey);
                 setRole(roleKey);
+                setSelectedCareer(null);
               }}
             />
-
             {showCareerInput && (
               <>
-                <InputFieldLabel textLabel="현재 학력은" />
+                <InputFieldLabel
+                  textLabel={
+                    selectedRole === 'STUDENT' ? '현재 학력은' : '현재 경력은'
+                  }
+                />
                 <Dropdown
-                  label="현재 혹은 최종 학력을 선택해주세요"
+                  label={
+                    selectedRole === 'STUDENT'
+                      ? '현재 혹은 최종 학력을 선택해주세요'
+                      : '현재 혹은 최종 경력을 선택해주세요'
+                  }
                   options={careers}
                   onSelect={(careerKey) => {
+                    setSelectedCareer(careerKey);
                     setCareer(careerKey);
                   }}
+                  resetKey={selectedRole}
                 />
               </>
             )}
           </main>
-
-          <footer className="w-full tablet:w-[320px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center">
-            <NextButton text={'다음으로 진행하기'} onClick={handleSkip} />
-            <div className="h-[42px]" />
-          </footer>
         </div>
+
+        <footer className="w-full px-4 pb-6 tablet:w-[360px] desktop:w-[375px] flex flex-col items-center desktop:pb-60">
+          <NextButton
+            text="다음으로 진행하기"
+            onClick={handleSkip}
+            disabled={!canProceed}
+          />
+        </footer>
       </div>
-    </>
+    </div>
   );
 };
 

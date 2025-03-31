@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import ChatPage from '@/pages/ChatPage';
-import LoginPage from '@/pages/LoginPage';
+import LoginPage from '@/pages/profile/LoginPage.tsx';
 import ProfileImgPage from '@/pages/profile/ProfileImgPage';
 import ProfileInfoPage from '@/pages/profile/ProfileInfoPage';
 import ProfileJobPage from '@/pages/profile/ProfileJobPage';
@@ -10,20 +10,23 @@ import ProfileInterestPage from '@/pages/profile/ProfileInterestPage';
 import ProfileIntroPage from '@/pages/profile/ProfileIntroPage';
 import LocationPage from '@/pages/LocationPage';
 import TestPage from '@/pages/TestPage';
+import ProfileLayout from '@/pages/profile/layout/ProfileLayout.tsx';
 import LandingPage from '@/pages/LandingPage.tsx';
 export default function App() {
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="login" element={<LoginPage />} />
           <Route path="/chat" element={<ChatPage />} />
-          <Route path="/profile1" element={<ProfileImgPage />} />
-          <Route path="/profile2" element={<ProfileInfoPage />} />
-          <Route path="/profile3" element={<ProfileJobPage />} />
-          <Route path="/profile4" element={<ProfileInterestPage />} />
-          <Route path="/profile5" element={<ProfileLinkPage />} />
-          <Route path="/profile6" element={<ProfileIntroPage />} />
+          <Route path="/profile" element={<ProfileLayout />}>
+            <Route path="1" element={<ProfileImgPage />} />
+            <Route path="2" element={<ProfileInfoPage />} />
+            <Route path="3" element={<ProfileJobPage />} />
+            <Route path="4" element={<ProfileInterestPage />} />
+            <Route path="5" element={<ProfileLinkPage />} />
+            <Route path="6" element={<ProfileIntroPage />} />
+          </Route>
           <Route path="/home" element={<LocationPage />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/test" element={<TestPage />} />

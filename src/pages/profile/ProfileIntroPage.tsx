@@ -57,7 +57,7 @@ const ProfileIntroPage = () => {
       });
 
       await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/client/profile`,
+        `${import.meta.env.VITE_BASE_API_URL}/api/client/profile`,
         formData,
         {
           headers: {
@@ -72,14 +72,9 @@ const ProfileIntroPage = () => {
     }
   };
 
-  const handleSkip = () => {
-    navigate('/home');
-  };
-
   return (
-    <div className="flex min-h-screen">
-      <div className="hidden tablet:flex flex-grow"></div>
-      <div className="w-full tablet:w-[320px] desktop:w-[375px] desktop:mx-20 min-h-screen flex flex-col items-center">
+    <>
+      <div className="w-full max-w-full tablet:w-[360px] desktop:w-[375px] flex flex-col flex-grow justify-between">
         <TopNav />
         <ProgressBar currentStep={6} />
         <header className="py-[20px]">
@@ -115,16 +110,11 @@ const ProfileIntroPage = () => {
           </div>
         </main>
 
-        <footer className="w-full tablet:w-[320px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center">
+        <footer className="w-full tablet:w-[360px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center desktop:pb-60">
           <NextButton text={'작성완료'} onClick={handleSubmit} />
-          <div
-            className="mt-2 text-[#B7B9BD] cursor-pointer"
-            onClick={handleSkip}>
-            건너뛰기
-          </div>
         </footer>
       </div>
-    </div>
+    </>
   );
 };
 
