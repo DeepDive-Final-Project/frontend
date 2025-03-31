@@ -27,7 +27,7 @@ const TestPage = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { sent, received } = useChatRequestStore();
-  const { nickName } = useChatMyInfo();
+  const { nickName, isLoading } = useChatMyInfo();
 
   useChatRequestFetch(nickName ?? '');
 
@@ -91,6 +91,14 @@ const TestPage = () => {
       },
     });
   };
+
+  if (isLoading || !nickName) {
+    return (
+      <div className="text-center py-10 text-white">
+        사용자 정보를 불러오는 중입니다...
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-[1440px] m-auto">
