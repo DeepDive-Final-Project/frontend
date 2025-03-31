@@ -55,6 +55,10 @@ const ChatInput = ({ roomId, socketRef, nickName }: ChatInputProps) => {
     updateLastMessage(roomId, chatMessage);
 
     setMessage('');
+
+    if (textarea.current) {
+      textarea.current.style.height = 'auto';
+    }
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
