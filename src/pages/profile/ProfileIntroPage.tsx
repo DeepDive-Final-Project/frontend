@@ -113,7 +113,16 @@ const ProfileIntroPage = () => {
         </main>
 
         <footer className="w-full tablet:w-[360px] desktop:w-[375px] px-4 pb-6 flex flex-col items-center desktop:pb-60">
-          <NextButton text={'작성완료'} onClick={handleSubmit} />
+          <NextButton
+            text={'작성완료'}
+            onClick={handleSubmit}
+            disabled={intro.trim() === ''}
+          />
+          <div
+            className="mt-2 text-[#B7B9BD] cursor-pointer"
+            onClick={handleSubmit}>
+            건너뛰기
+          </div>
         </footer>
       </div>
     </>
