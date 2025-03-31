@@ -31,7 +31,7 @@ const LocationButton: React.FC = () => {
   const fetchMyProfileImage = async (id: number) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/client/profile/profile-images`,
+        `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/profile-images`,
         {
           params: { userIds: [id] },
           withCredentials: true,
