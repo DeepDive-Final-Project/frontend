@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown } from 'react-feather';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { useUserStore } from '@/stores/useUserStore';
+// import { useUserStore } from '@/stores/useUserStore';
 
 const roles = ['디자이너', '개발자', '프로젝트 매니저', '학생', '기타'];
 const careers = ['취준생', '주니어', '미들', '시니어', '총괄 및 오너'];
