@@ -24,10 +24,10 @@ const LoginPage = () => {
         <div className="hidden tablet:flex flex-grow">
           <OnboardingContents />
         </div>
-        <div className="w-full tablet:w-[360px] desktop:w-[375px] desktop:mr-auto flex flex-col">
+        <div className="w-full tablet:w-[360px] desktop:w-[375px] desktop:mr-20 flex flex-col">
           <TopNav />
           <div className="flex flex-grow">
-            <div className="w-full tablet:w-[370px] desktop:w-[375px] desktop:mx-20 flex flex-col">
+            <div className="w-full tablet:w-[370px] desktop:w-[375px] flex flex-col">
               <header className="pt-[120px] text-center">
                 <div className="text-[24px]">Welcome</div>
                 <div className="mobile:text-[16px] text-[#B7B9BD]">
