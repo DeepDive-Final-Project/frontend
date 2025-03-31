@@ -36,17 +36,17 @@ const LoginPage = () => {
               </header>
               <main className="flex flex-col items-center px-4 w-full gap-[16px] pt-[120px]">
                 <LoginButton
-                  text="Google로 가입하기"
+                  text="Google로 로그인하기"
                   icon={<img src={Google} />}
                   onClick={handleGoogle}
                 />
                 <LoginButton
-                  text="Github로 가입하기"
+                  text="Github로 로그인하기"
                   icon={<img src={Github} />}
                   onClick={handleGit}
                 />
                 <LoginButton
-                  text="Kakao로 가입하기"
+                  text="Kakao로 로그인하기"
                   icon={<img src={Kakao} />}
                   onClick={handleKakao}
                 />
