@@ -3,6 +3,7 @@ import UserCard from './UserCard';
 import { useBottomSheetStore } from '@/stores/useBottomSheetStore';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useUserStore } from '@/stores/useUserStore';
+import { useMemo } from 'react';
 
 const RightSheet = () => {
   const mode = useBottomSheetStore((state) => state.mode);
@@ -13,12 +14,24 @@ const RightSheet = () => {
   const career = useFilterStore((state) => state.career);
   const users = useUserStore((state) => state.users);
 
-  const filteredUsers = users.filter((user) => {
-    const matchRole = !role || user.role === role;
-    const matchCareer = !career || user.career === career;
-    return matchRole && matchCareer;
-  });
+  const selectedUser = useUserStore((state) => state.selectedUser);
+  const setSelectedUser = useUserStore((state) => state.setSelectedUser);
 
+  const filteredUsers = useMemo(() => {
+    const filtered = users.filter((user) => {
+      const matchRole = !role || user.role === role;
+      const matchCareer = !career || user.career === career;
+      return matchRole && matchCareer;
+    });
+
+    if (selectedUser != null) {
+      const selected = filtered.find((u) => u.id === selectedUser);
+      const rest = filtered.filter((u) => u.id !== selectedUser);
+      return selected ? [selected, ...rest] : filtered;
+    }
+
+    return filtered;
+  }, [users, role, career, selectedUser]);
   return (
     <div className="hidden tablet:flex flex-col w-full h-full bg-[#141415] rounded-lg text-white">
       <div className="flex flex-col gap-1 mb-4">
@@ -66,8 +79,10 @@ const RightSheet = () => {
           <div key={user.id} className={`${index % 2 === 1 ? 'mt-6' : ''}`}>
             <UserCard
               user={user}
-              onSelect={() => {}}
-              selectedUserId={null}
+              onSelect={() => {
+                setSelectedUser(user.id);
+              }}
+              selectedUserId={selectedUser}
               isRequested={false}
               onRequest={() => {}}
             />

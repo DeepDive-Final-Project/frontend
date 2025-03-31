@@ -72,12 +72,18 @@ const BottomSheet: React.FC = () => {
   }, [resetHeight, resetFilters, setActiveIndex]);
 
   const filteredUsers = useMemo(() => {
-    return users.filter((user) => {
+    const filtered = users.filter((user) => {
       const matchRole = !role || user.role === role;
       const matchCareer = !career || user.career === career;
       return matchRole && matchCareer;
     });
-  }, [users, role, career]);
+    if (selectedUser) {
+      const selected = filtered.find((u) => u.id === selectedUser);
+      const rest = filtered.filter((u) => u.id !== selectedUser);
+      return selected ? [selected, ...rest] : filtered;
+    }
+    return filtered;
+  }, [users, role, career, selectedUser]);
 
   const memoizedUserCards = useMemo(
     () =>

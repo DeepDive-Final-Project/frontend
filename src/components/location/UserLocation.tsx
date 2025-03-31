@@ -83,9 +83,10 @@ const UserLocation = () => {
               top: `${y}%`,
               transform: 'translate(-50%, -50%)',
             }}>
-            <div
-              className={`w-[28px] h-[28px] relative bg-center bg-contain bg-no-repeat ${selectedUser === user.id ? 'scale-125 ring-1 ring-blue-200' : ''}`}
-              style={{ backgroundImage: `url(${avatarIcon})` }}
+            <img
+              src={avatarIcon}
+              alt="avatar"
+              className={`w-[28px] h-[28px]  ${selectedUser === user.id ? 'scale-125 ring-1 ring-blue-200' : ''}`}
             />
             <p className="text-[10px] text-white whitespace-nowrap">
               {user.nickname}
