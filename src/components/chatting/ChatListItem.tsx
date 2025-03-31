@@ -1,4 +1,5 @@
 import { useUserProfile } from '@/hooks/useUserProfile';
+import { useChatMyInfo } from '@/stores/useChatMyInfoStore';
 import { ChatRoomType } from '@/types/chatRoomType';
 import { formatTime } from '@/utils/chat/formatTime';
 
@@ -11,9 +12,10 @@ const ChatListItem = ({ room, onClick }: ChatListItemProps) => {
   const { participants, lastMessage, lastMessageTime, unreadCount } = room;
 
   const { profile } = useUserProfile(room.otherId);
+  const { nickName } = useChatMyInfo();
 
   const otherUser = participants.find(
-    (nickname) => nickname !== localStorage.getItem('userNickname'),
+    (userNickname) => userNickname !== nickName,
   );
 
   return (
@@ -36,7 +38,7 @@ const ChatListItem = ({ room, onClick }: ChatListItemProps) => {
           <p className="text-lg">{otherUser}</p>
           <span className="text-xs">{formatTime(lastMessageTime ?? '')}</span>
         </div>
-        <div className="relative pr-[66px] mt-1">
+        <div className="relative pr-[50px] mt-1">
           <p className="text-[#B7B9BD] text-sm line-clamp-2 leading-relaxed">
             {lastMessage}
           </p>

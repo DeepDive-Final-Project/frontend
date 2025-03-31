@@ -7,7 +7,7 @@ interface ChatBubbleProps {
   onExpand?: (content: string) => void;
 }
 
-const MAX_HEIGHT = 136;
+const MAX_HEIGHT = 135;
 
 const ChatBubble = ({ content, isMyMessage, onExpand }: ChatBubbleProps) => {
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -27,7 +27,7 @@ const ChatBubble = ({ content, isMyMessage, onExpand }: ChatBubbleProps) => {
       <div
         ref={contentRef}
         className={`
-      inline-block p-2 px-4 break-all leading-normal max-h-[133px]
+      inline-block p-2 px-4 break-all leading-normal max-h-[132px]
       overflow-hidden whitespace-pre-line break-words text-white
       ${
         isMyMessage
