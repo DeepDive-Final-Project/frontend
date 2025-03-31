@@ -1,13 +1,14 @@
 import { ChevronDown } from 'react-feather';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface DropdownProps {
   label: string;
   options: { key: string; description: string }[];
   onSelect: (selectedKey: string) => void;
+  resetKey?: string | null;
 }
 
-const Dropdown = ({ label, options, onSelect }: DropdownProps) => {
+const Dropdown = ({ label, options, onSelect, resetKey }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
@@ -16,6 +17,10 @@ const Dropdown = ({ label, options, onSelect }: DropdownProps) => {
     onSelect(optionKey);
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    setSelectedOption(null);
+  }, [resetKey]);
 
   return (
     <div className="relative w-full">
