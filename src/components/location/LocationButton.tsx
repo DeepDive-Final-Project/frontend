@@ -15,7 +15,7 @@ const LocationButton: React.FC = () => {
         withCredentials: true,
       });
 
-      const id = response.data.id;
+      const id = response.data.id ?? response.data?.data?.id;
       setUserId(id);
       console.log('내 정보:', response.data);
 
