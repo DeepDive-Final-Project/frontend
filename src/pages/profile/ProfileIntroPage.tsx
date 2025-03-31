@@ -51,7 +51,7 @@ const ProfileIntroPage = () => {
       };
 
       formData.append('userData', JSON.stringify(userData));
-
+      console.log('clientId:', clientId);
       console.log('FormData:', {
         profileImage: imageUrl,
         userData,
