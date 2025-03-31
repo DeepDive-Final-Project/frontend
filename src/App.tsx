@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import ChatPage from '@/pages/ChatPage';
-import LoginPage from '@/pages/LoginPage';
+import LoginPage from '@/pages/profile/LoginPage.tsx';
 import ProfileImgPage from '@/pages/profile/ProfileImgPage';
 import ProfileInfoPage from '@/pages/profile/ProfileInfoPage';
 import ProfileJobPage from '@/pages/profile/ProfileJobPage';
@@ -17,9 +17,9 @@ export default function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="login" element={<LoginPage />} />
           <Route path="/chat" element={<ChatPage />} />
-          <Route path="/profile" element={<ProfileLayout />} >
+          <Route path="/profile" element={<ProfileLayout />}>
             <Route path="1" element={<ProfileImgPage />} />
             <Route path="2" element={<ProfileInfoPage />} />
             <Route path="3" element={<ProfileJobPage />} />
