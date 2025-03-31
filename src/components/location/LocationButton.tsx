@@ -66,7 +66,7 @@ const LocationButton: React.FC = () => {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/location/save`,
+        `${import.meta.env.VITE_BASE_API_URL}/api/location/save`,
         payload,
         {
           headers: {
@@ -79,7 +79,7 @@ const LocationButton: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       const nearbyResponse = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/location/nearby`,
+        `${import.meta.env.VITE_BASE_API_URL}/api/location/nearby`,
         { id },
         {
           headers: {
