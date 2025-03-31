@@ -1,15 +1,20 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import ProgressBar from '@/components/profile/ProgressBar';
 import TopNav from '@/components/profile/TopNav';
 import NextButton from '@/components/profile/NextButton';
 import Profile1 from '@/assets/images/profile1.svg';
 import { useProfileStore } from '@/stores/useProfileStore';
+import ImgCropWrapper from '@/components/profile/ImgCropWrapper';
+import { base64ToFile } from '@/utils/base64ToFile';
 
 const ProfileImgPage = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { setProfileImage } = useProfileStore();
+  const { setProfileImage, setProfileImageFile } = useProfileStore();
+
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [showCropper, setShowCropper] = useState(false);
 
   const handleSkip = () => {
     navigate('/profile/2');
@@ -18,17 +23,34 @@ const ProfileImgPage = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const timestamp = Date.now();
-      const randomId = Math.floor(Math.random() * 10000);
-      const extension = file.name.split('.').pop();
-      const imgUrl = `/uploads/${timestamp}_${randomId}.${extension}`;
-      setProfileImage(imgUrl);
-      console.log('임시 이미지 URL:', imgUrl);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result as string); // base64로 저장
+        setShowCropper(true); // 이미지 크롭 모달 띄우기
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleCropComplete = (croppedImg: string) => {
+    console.log('크롭된 이미지 base64:', croppedImg);
+
+    const file = base64ToFile(croppedImg, 'profile.png');
+    console.log('변환된 파일 객체:', file);
+
+    setProfileImage(croppedImg);
+    setProfileImageFile(file);
+    setShowCropper(false);
+    navigate('/profile/2');
+  };
+
+  const handleCropCancel = () => {
+    setShowCropper(false);
+    setSelectedImage(null);
   };
 
   return (
@@ -67,6 +89,14 @@ const ProfileImgPage = () => {
           프로필 이미지 건너뛰기
         </div>
       </footer>
+
+      {showCropper && selectedImage && (
+        <ImgCropWrapper
+          imageSrc={selectedImage}
+          onComplete={handleCropComplete}
+          onCancel={handleCropCancel}
+        />
+      )}
     </div>
   );
 };
