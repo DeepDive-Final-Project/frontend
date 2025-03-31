@@ -29,9 +29,9 @@ const ProfileIntroPage = () => {
 
       const formData = new FormData();
 
-      const imageUrl = useProfileStore.getState().profileImage;
-      if (imageUrl) {
-        formData.append('profileImage', imageUrl);
+      const { profileImageFile } = useProfileStore.getState();
+      if (profileImageFile) {
+        formData.append('profileImage', profileImageFile);
       }
 
       const userData = {
@@ -53,7 +53,7 @@ const ProfileIntroPage = () => {
       formData.append('userData', JSON.stringify(userData));
       console.log('clientId:', clientId);
       console.log('FormData:', {
-        profileImage: imageUrl,
+        profileImage: profileImageFile,
         userData,
       });
 
