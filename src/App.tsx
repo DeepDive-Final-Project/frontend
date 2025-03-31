@@ -10,7 +10,7 @@ import ProfileInterestPage from '@/pages/profile/ProfileInterestPage';
 import ProfileIntroPage from '@/pages/profile/ProfileIntroPage';
 import LocationPage from '@/pages/LocationPage';
 import TestPage from '@/pages/TestPage';
-
+import LandingPage from '@/pages/LandingPage.tsx';
 export default function App() {
   return (
     <>
@@ -25,11 +25,12 @@ export default function App() {
           <Route path="/profile5" element={<ProfileLinkPage />} />
           <Route path="/profile6" element={<ProfileIntroPage />} />
           <Route path="/home" element={<LocationPage />} />
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/test" element={<TestPage />} />
         </Routes>
         <ToastContainer
           position="top-right"
+          autoClose={1500}
           hideProgressBar={true}
           newestOnTop
           closeOnClick
