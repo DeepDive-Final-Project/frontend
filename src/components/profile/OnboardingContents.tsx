@@ -30,7 +30,7 @@ const OnboardingContents = () => {
   }, []);
 
   return (
-    <div className="w-full h-screen bg-black overflow-hidden">
+    <div className="w-full h-screen bg-[#0A0A0B] overflow-hidden">
       <div
         className="flex transition-transform duration-700 ease-in-out w-full min-h-screen"
         style={{

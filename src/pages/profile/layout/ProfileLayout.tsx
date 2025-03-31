@@ -5,7 +5,6 @@ import Logo from '@/assets/images/logo.svg';
 const ProfileLayout = () => {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
-      {/* 고정된 nav 영역 */}
       <nav className="h-[64px] flex items-center px-4 shrink-0">
         <img src={Logo} alt="Logo" className="h-[40px]" />
       </nav>
