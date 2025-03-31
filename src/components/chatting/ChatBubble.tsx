@@ -21,7 +21,8 @@ const ChatBubble = ({ content, isMyMessage }: ChatBubbleProps) => {
   }, [content]);
 
   return (
-    <>
+    <div
+      className={`flex flex-col ${isMyMessage ? 'ml-8 self-end' : 'mr-8 self-start'}`}>
       <div
         ref={contentRef}
         className={`
@@ -53,7 +54,7 @@ const ChatBubble = ({ content, isMyMessage }: ChatBubbleProps) => {
           <ChevronRight size={14} className="ml-1" />
         </button>
       )}
-    </>
+    </div>
   );
 };
 
