@@ -6,14 +6,37 @@ import NextButton from '@/components/profile/NextButton';
 import InputField from '@/components/profile/InputField';
 import InputFieldLabel from '@/components/profile/InputFieldLabel';
 import { useProfileStore } from '@/stores/useProfileStore';
+import axios from 'axios';
 
 const ProfileInfoPage = () => {
   const navigate = useNavigate();
 
-  const { name, email, setName, setEmail } = useProfileStore();
+  const { name, email, setName, setEmail, setClientId } = useProfileStore();
   const [localName, setLocalName] = useState(name);
   const [localEmail, setLocalEmail] = useState(email);
   const [isEmailValid, setIsEmailValid] = useState(true);
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
+          { withCredentials: true },
+        );
+
+        const { id, email, name } = response.data;
+
+        if (email) setEmail(email);
+        if (name) setName(name);
+        if (id) setClientId(id);
+
+        console.log('내 정보:', response.data);
+      } catch (error) {
+        console.error('내 정보 요청 실패:', error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   useEffect(() => {
     setLocalName(name);
