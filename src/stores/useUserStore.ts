@@ -7,14 +7,14 @@ export interface Tag {
 
 export interface User {
   id: number;
-  name: string;
+  nickname: string;
   role: string;
   career: string;
-  message: string;
+  introduction: string;
+  tags: Tag[];
+  image: string;
   latitude?: number;
   longitude?: number;
-  image: string;
-  tags: Tag[];
 }
 
 interface UserStore {

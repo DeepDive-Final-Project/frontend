@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown } from 'react-feather';
 import { useFilterStore } from '@/stores/useFilterStore';
+import { useUserStore } from '@/stores/useUserStore';
 
 const roles = ['디자이너', '개발자', '프로젝트 매니저', '학생', '기타'];
 const careers = ['취준생', '주니어', '미들', '시니어', '총괄 및 오너'];
@@ -22,7 +23,7 @@ const Filter: React.FC = () => {
         <button
           onClick={() => setShowRoleDropdown((prev) => !prev)}
           className="w-full flex items-center justify-between gap-2 px-4 py-2 rounded-lg border border-gray-500 bg-[#222222] text-white text-sm">
-          <span>{role || '분야 선택'}</span>
+          <span>{role || '분야'}</span>
           <span className="border border-gray-500 rounded-md">
             <ChevronDown size={16} />
           </span>
@@ -53,10 +54,10 @@ const Filter: React.FC = () => {
           }}
           className={`w-full flex justify-between items-center gap-2 px-4 py-2 rounded-lg border ${
             isCareerDisabled
-              ? 'border-gray-700 bg-[#333333] text-gray-500 cursor-not-allowed'
+              ? 'border-gray-700 bg-[#4E5157] text-gray-500 cursor-not-allowed'
               : 'border-gray-500 bg-[#222222] text-white'
           } text-sm`}>
-          <span>{career || '경력 선택'}</span>
+          <span>{career || '경력'}</span>
           <span className="border border-gray-500 rounded-md ">
             <ChevronDown size={16} />
           </span>

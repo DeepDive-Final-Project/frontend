@@ -11,6 +11,7 @@ import {
   RotateCw,
 } from 'react-feather';
 import radar from '@/assets/images/radar.svg';
+import LocationImg from '@/assets/images/request_modal.png';
 
 const LocationNavBar: React.FC = () => {
   const setHeight = useBottomSheetStore((state) => state.setHeight);
@@ -167,14 +168,25 @@ const LocationNavBar: React.FC = () => {
         )}
       </div>
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-          <div className="bg-white rounded-lg p-6 text-center shadow-lg w-[80%] max-w-xs">
-            <p className="text-gray-800 text-sm font-medium mb-4">
-              위치 정보 활용에 동의해야 서비스를 이용할 수 있어요.
+        <div className="fixed inset-0 bg-black border bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-[#0c0a09] border border-gray-500 rounded-xl p-6 text-center shadow-lg w-[80%] max-w-xs">
+            <p className="text-white text-sm text-left font-semibold leading-loose mb-4">
+              잠깐! 위치권한을 허용해주세요
             </p>
+            <p className="text-xs text-left text-gray-400">
+              원할한 네트워킹 매칭을 위해
+            </p>
+            <p className="text-xs text-left text-gray-400">
+              브라우저 설정에서 위치정보 권한을 허용해주세요
+            </p>
+            <img
+              src={LocationImg}
+              alt="위치 권한"
+              className="w-full rounded-md mt-4 mb-4"
+            />
             <button
               onClick={() => setShowModal(false)}
-              className="mt-2 px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600">
+              className="mt-2 px-1 py-1 w-full bg-blue-500 text-white text-lg rounded-3xl hover:bg-blue-600">
               확인
             </button>
           </div>

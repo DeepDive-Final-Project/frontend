@@ -41,7 +41,7 @@ const UserCard: React.FC<UserCardProps> = ({
     <div className="relative w-full">
       <div
         className={`user-card rounded-xl flex flex-col text-white relative overflow-hidden
-        border-2 border-white mobile:w-[90%] tablet:w-[80%] desktop:w-[60%] mx-auto bg-[#0A0A0B]
+        border-2 border-gray-600 mobile:w-[90%] tablet:w-[80%] desktop:w-[60%] mx-auto bg-[#0A0A0B]
         min-h-[295px]`}
         onClick={handleCardClick}>
         <div className="relative w-full h-48 rounded-lg overflow-hidden">
@@ -58,7 +58,7 @@ const UserCard: React.FC<UserCardProps> = ({
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-xs mobile:text-sm tablet:text-base">
-                  {user.name}
+                  {user.nickname}
                 </p>
                 <p className="text-xs">
                   {user.role} • {user.career}
@@ -86,7 +86,7 @@ const UserCard: React.FC<UserCardProps> = ({
             <div className="p-2 mt-2 flex flex-col gap-2 bg-[#0A0A0B] rounded-b-lg transition-all">
               <button
                 onClick={(e) => e.stopPropagation()}
-                className="w-full px-2 py-2 rounded-full text-white bg-gray-700 hover:bg-blue-500 text-xs mobile:text-sm tablet:text-base">
+                className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] hover:bg-blue-500 text-xs mobile:text-sm tablet:text-base">
                 상세 프로필 보기
               </button>
               <button
@@ -96,23 +96,23 @@ const UserCard: React.FC<UserCardProps> = ({
                 }}
                 className={`w-full px-2 py-2 rounded-3xl text-white transition-all
                 text-xs mobile:text-sm tablet:text-base
-                ${isRequested ? 'bg-blue-500' : 'bg-gray-700 hover:bg-blue-500'}`}>
+                ${isRequested ? 'bg-blue-500' : 'bg-[#0A0A0B] hover:bg-blue-500'}`}>
                 대화 요청하기
               </button>
             </div>
           ) : (
             <div className="p-2 mt-2 bg-[#0A0A0B] rounded-b-lg transition-all">
               <p className="text-xs text-gray-300 mobile:text-sm tablet:text-base">
-                {user.message}
+                {user.introduction}
               </p>
             </div>
           ))}
         {mode === 'chat' && (
           <div className="p-2 mt-2 flex flex-col gap-2 bg-[#0A0A0B] rounded-b-lg transition-all">
-            <button className="w-full px-2 py-2 rounded-full text-white bg-gray-700 hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
+            <button className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
               상세 프로필 보기
             </button>
-            <button className="w-full px-2 py-2 rounded-full text-white bg-gray-700 hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
+            <button className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
               채팅방으로 이동
             </button>
           </div>
