@@ -11,17 +11,32 @@ const LocationButton: React.FC = () => {
 
   const fetchMyInfo = async () => {
     try {
-      const response = await axios.get('https://api.i-contacts.link/auth/me', {
-        withCredentials: true,
+      const token = localStorage.getItem('accessToken');
+
+      if (!token) {
+        console.warn('⚠️ accessToken 없음');
+        return;
+      }
+
+      const response = await fetch('https://api.i-contacts.link/auth/me', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'omit', // 쿠키 미전송 (헤더로만 인증)
       });
 
-      const id = response.data.id;
-      setUserId(id);
-      console.log('내 정보:', response.data);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
 
-      // fetchMyProfileImage([id]);
+      const data = await response.json();
+      const id = data.id;
+      setUserId(id);
+      console.log('내 정보:', data);
     } catch (error) {
-      console.error('내 정보 요청 실패:', error);
+      console.error('❌ 내 정보 요청 실패:', error);
     }
   };
 
