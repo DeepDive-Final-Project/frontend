@@ -7,41 +7,44 @@ const LocationButton: React.FC = () => {
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
-  // const [myImage, setMyImage] = useState<string>('');
+  const [myImage, setMyImage] = useState<string>('');
 
   const fetchMyInfo = async () => {
     try {
-      const response = await axios.get('https://api.i-contacts.link/auth/me', {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
+        {
+          withCredentials: true,
+        },
+      );
 
       const id = response.data.id;
       setUserId(id);
       console.log('내 정보:', response.data);
 
-      // fetchMyProfileImage([id]);
+      fetchMyProfileImage(id);
     } catch (error) {
       console.error('내 정보 요청 실패:', error);
     }
   };
 
-  // const fetchMyProfileImage = async (userIds: number[]) => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${import.meta.env.VITE_API_BASE_URL}/api/client/profile/profile-images`,
-  //       {
-  //         params: { userIds },
-  //         withCredentials: true,
-  //       },
-  //     );
+  const fetchMyProfileImage = async (id: number) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/client/profile/profile-images`,
+        {
+          params: { userIds: [id] },
+          withCredentials: true,
+        },
+      );
 
-  //     const imageUrl = response.data[userIds[0]];
-  //     console.log('내 프로필 이미지 URL:', imageUrl);
-  //     setMyImage(imageUrl);
-  //   } catch (error) {
-  //     console.error('프로필 이미지 요청 실패:', error);
-  //   }
-  // };
+      const imageUrl = response.data[id];
+      console.log('내 프로필 이미지 URL:', imageUrl);
+      setMyImage(imageUrl);
+    } catch (error) {
+      console.error('프로필 이미지 요청 실패:', error);
+    }
+  };
   const parseInterestString = (interest: string) => {
     const colors = ['#ff7f50', '#6a5acd', '#32cd32'];
     const tags: { text: string; color: string }[] = [];
@@ -142,13 +145,20 @@ const LocationButton: React.FC = () => {
 
       {latitude && longitude && (
         <div className="text-sm text-gray-300">
-          📍 현재 위치:
+          현재 위치:
           <br />
           위도: <span className="text-white">{latitude}</span>
           <br />
           경도: <span className="text-white">{longitude}</span>
         </div>
       )}
+      <div>
+        {myImage && (
+          <div>
+            <img src={myImage} alt="profile" />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
