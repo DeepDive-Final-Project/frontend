@@ -11,22 +11,15 @@ const LocationButton: React.FC = () => {
 
   const fetchMyInfo = async () => {
     try {
-      const token = localStorage.getItem('accessToken');
-
-      if (!token) {
-        throw new Error('JWT 토큰이 없습니다!');
-      }
-
       const response = await axios.get('https://api.i-contacts.link/auth/me', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: false, // ❌ 꼭 false로 설정 (쿠키랑 같이 쓰면 안 보낼 수 있음)
+        withCredentials: true,
       });
 
       const id = response.data.id;
       setUserId(id);
       console.log('내 정보:', response.data);
+
+      // fetchMyProfileImage([id]);
     } catch (error) {
       console.error('내 정보 요청 실패:', error);
     }
