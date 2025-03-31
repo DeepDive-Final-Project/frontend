@@ -14,4 +14,13 @@ export default defineConfig({
   build: {
     outDir: 'build',
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://api.i-contact.link',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });
