@@ -13,11 +13,10 @@ const ModalContent = ({ onClose, onSave }: ModalContentProps) => {
 
   const handleSelect = (key: string, description: string) => {
     const isAlreadySelected = selectedItems.some((item) => item.key === key);
-    if (!isAlreadySelected) {
+    if (!isAlreadySelected && selectedItems.length < 3) {
       setSelectedItems((prev) => [...prev, { key, description }]);
     }
   };
-
   const handleRemove = (key: string) => {
     setSelectedItems((prev) => prev.filter((item) => item.key !== key));
   };
@@ -30,17 +29,17 @@ const ModalContent = ({ onClose, onSave }: ModalContentProps) => {
       </div>
       <Accordian
         label="개발 직무 선택"
-        apiUrl={`${import.meta.env.VITE_API_BASE_URL}/api/client/enums/interests?category=DEV`}
+        apiUrl={`${import.meta.env.VITE_BASE_API_URL}/api/client/enums/interests?category=DEV`}
         onSelect={handleSelect}
       />
       <Accordian
         label="기획 직무 선택"
-        apiUrl={`${import.meta.env.VITE_API_BASE_URL}/api/client/enums/interests?category=PD`}
+        apiUrl={`${import.meta.env.VITE_BASE_API_URL}/api/client/enums/interests?category=PD`}
         onSelect={handleSelect}
       />
       <Accordian
         label="데이터 직무 선택"
-        apiUrl={`${import.meta.env.VITE_API_BASE_URL}/api/client/enums/interests?category=DS`}
+        apiUrl={`${import.meta.env.VITE_BASE_API_URL}/api/client/enums/interests?category=DS`}
         onSelect={handleSelect}
       />
 
