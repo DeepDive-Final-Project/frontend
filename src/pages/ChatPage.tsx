@@ -78,12 +78,10 @@ const ChatPage = () => {
     <div className="max-w-[1440px] m-auto flex h-screen overflow-hidden">
       <div
         className={`
-    flex flex-col h-full
-    ${expandedMessage ? 'w-[33.33%]' : 'desktop:max-w-[400px] tablet:max-w-[320px]'}
-    flex-shrink-0 overflow-y-auto
-    border border-l-0 border-t-0 border-b-0 border-[#222325] bg-[#0A0A0B]
-    ${selectedRoom ? 'hidden tablet:flex' : 'flex w-full'}
-    ${expandedMessage ? 'hidden tablet:flex' : ''}
+    flex flex-col flex-shrink-0 h-full
+    ${expandedMessage ? 'hidden tablet: w-[33.33%]' : 'desktop:w-[320px]'}
+    ${selectedRoom ? 'hidden tablet:flex w-[320px] desktop:w-[400px]' : 'flex w-full'}
+     overflow-y-auto border border-[#222325] bg-[#0A0A0B]
   `}>
         <ChatFilter
           filter={{
@@ -102,9 +100,9 @@ const ChatPage = () => {
       </div>
       <div
         className={`
-    relative flex-auto flex-col
-    ${selectedRoom ? 'flex' : 'hidden tablet:flex'}
-    ${expandedMessage ? 'w-[33.33%]' : ''}
+    relative flex flex-col flex-auto
+    ${selectedRoom ? 'flex' : 'hidden tablet:flex flex-auto'}
+    ${expandedMessage ? 'tablet:w-[33.33%]' : ''}
   `}>
         <ChatHeader
           otherUser={otherUser}
