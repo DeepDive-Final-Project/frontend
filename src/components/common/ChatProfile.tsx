@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProfileCard from '@/components/common/ProfileCard';
-import Logo from '@/assets/images/logo.svg';
+import CommonNav from '@/components/common/CommomNav.tsx';
 
 interface ProfileData {
   nickName: string;
@@ -80,10 +80,7 @@ const ChatProfile = () => {
 
   return (
     <div className="max-w-[1440px] m-auto">
-      <nav className="h-[64px] flex items-center px-4 shrink-0">
-        <img src={Logo} alt="Logo" className="h-[40px]" />
-      </nav>
-
+      <CommonNav />
       <div className="flex flex-row px-4 tablet:px-8  mt-4">
         <div className="tablet: w-full">
           <ProfileCard

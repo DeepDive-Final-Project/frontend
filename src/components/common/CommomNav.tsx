@@ -7,7 +7,9 @@ const CommonNav = () => {
 
   return (
     <nav className="h-[64px] flex items-center justify-between px-4 shrink-0 border-b border-[#1f1f1f]">
-      <img src={Logo} alt="Logo" className="h-[40px]" />
+      <button onClick={() => navigate('/home')}>
+        <img src={Logo} alt="Logo" className="h-[40px]" />
+      </button>
 
       <div className="flex flex-row items-center gap-4">
         <button
