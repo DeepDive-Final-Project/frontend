@@ -117,7 +117,16 @@ const LocationNavBar: React.FC = () => {
         { withCredentials: true },
       );
 
-      const imageMap = imageResponse.data;
+      const imageArray: { clientId: number; profileImageUrl: string }[] =
+        imageResponse.data;
+
+      const imageMap = imageArray.reduce(
+        (acc, curr) => {
+          acc[curr.clientId] = curr.profileImageUrl;
+          return acc;
+        },
+        {} as Record<number, string>,
+      );
 
       const usersWithImages = parsedUsers.map((user) => ({
         ...user,

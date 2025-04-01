@@ -87,8 +87,6 @@ const UserCard: React.FC<UserCardProps> = ({
             )}
           </div>
         </div>
-
-        {/* explore 모드: 소개 or 요청하기 */}
         {mode === 'explore' &&
           (isSelected ? (
             <div className="p-2 mt-2 flex flex-col gap-2 bg-[#0A0A0B] rounded-b-lg transition-all">
@@ -121,7 +119,6 @@ const UserCard: React.FC<UserCardProps> = ({
             </div>
           ))}
 
-        {/* chat 모드: 수락 or 채팅방 이동 */}
         {mode === 'chat' && (
           <div className="p-2 mt-2 flex flex-col gap-2 bg-[#0A0A0B] rounded-b-lg transition-all">
             <button className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
