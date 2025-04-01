@@ -24,15 +24,15 @@ const EditMyPage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        // const meRes = await axios.get(
-        //   `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
-        //   { withCredentials: true },
-        // );
-        // const clientId = meRes.data.id;
-        // console.log('✅ clientId:', clientId);
+        const meRes = await axios.get(
+          `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
+          { withCredentials: true },
+        );
+        const clientId = meRes.data.id;
+        console.log('✅ clientId:', clientId);
 
         const imageRes = await axios.get(
-          `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/profile-images?clientIds=67`,
+          `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/profile-images?clientIds=${clientId}`,
           { withCredentials: true },
         );
 
@@ -42,7 +42,7 @@ const EditMyPage = () => {
         console.log(imageUrl);
         setProfileImage(imageUrl);
         const profileRes = await axios.get(
-          `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/67`,
+          `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/${clientId}`,
           { withCredentials: true },
         );
         setProfile(profileRes.data);
