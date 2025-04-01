@@ -18,6 +18,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 const BottomSheet: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -35,6 +36,7 @@ const BottomSheet: React.FC = () => {
   const receivedPending = received.PENDING;
 
   const height = useBottomSheetStore((state) => state.height);
+  const setHeight = useBottomSheetStore((state) => state.setHeight);
   const resetHeight = useBottomSheetStore((state) => state.resetHeight);
   const mode = useBottomSheetStore((state) => state.mode);
   const chatTab = useBottomSheetStore((state) => state.chatTab);
@@ -95,6 +97,22 @@ const BottomSheet: React.FC = () => {
     },
     [rejectRequest, queryClient],
   );
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+    const touchY = e.touches[0].clientY;
+    const newHeight = window.innerHeight - touchY;
+    setHeight(Math.max(100, Math.min(newHeight, window.innerHeight - 150)));
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    if (height < window.innerHeight / 3) {
+      setHeight(100);
+    } else {
+      setHeight(window.innerHeight - 100);
+    }
+  };
 
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
@@ -208,10 +226,15 @@ const BottomSheet: React.FC = () => {
       className="fixed bottom-0 left-0 w-full bg-[#141415] rounded-t-lg transition-all duration-100"
       style={{ height: `${height}px` }}>
       <div className="w-full h-full flex flex-col overflow-hidden">
-        <div className="flex justify-center py-2">
+        <div
+          className="flex justify-center py-2"
+          onTouchStart={() => setIsDragging(true)}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}>
           <div className="w-10 h-1 rounded-full bg-gray-400" />
         </div>
 
+        {/* 헤더 */}
         <div className="flex justify-between items-start bg-[#141415] p-3 rounded-t-lg gap-2">
           <div className="flex flex-col flex-1 min-w-0">
             <span className="text-gray-100 text-sm tablet:text-lg">
@@ -262,7 +285,6 @@ const BottomSheet: React.FC = () => {
             </button>
           </div>
         )}
-
         <div className="flex-1 overflow-y-auto px-4 pb-4">
           <div className="grid grid-cols-2 gap-4 w-full max-w-full">
             {visibleCards}

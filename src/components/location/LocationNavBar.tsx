@@ -1,7 +1,8 @@
 import { useBottomSheetStore } from '@/stores/useBottomSheetStore';
 import { useNavBarStore } from '@/stores/useNavBarStore';
 import { useFilterStore } from '@/stores/useFilterStore';
-import { useState } from 'react';
+import { useUserStore } from '@/stores/useUserStore';
+import { useEffect, useState } from 'react';
 import {
   Mail,
   Users,
@@ -12,6 +13,7 @@ import {
 } from 'react-feather';
 import radar from '@/assets/images/radar.svg';
 import LocationImg from '@/assets/images/request_modal.png';
+import axios from 'axios';
 
 const LocationNavBar: React.FC = () => {
   const setHeight = useBottomSheetStore((state) => state.setHeight);
@@ -20,10 +22,122 @@ const LocationNavBar: React.FC = () => {
   const activeIndex = useNavBarStore((state) => state.activeIndex);
   const setActiveIndex = useNavBarStore((state) => state.setActiveIndex);
   const resetFilters = useFilterStore((state) => state.resetFilters);
+  const setUsers = useUserStore((state) => state.setUsers);
 
   const [moreSetting, setMoreSetting] = useState(false);
   const [shareLocation, setShareLocation] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [userId, setUserId] = useState<number | null>(null);
+
+  const fetchMyInfo = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
+        { withCredentials: true },
+      );
+      setUserId(response.data.id);
+    } catch (error) {
+      console.error('내 정보 요청 실패:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMyInfo();
+  }, []);
+
+  const parseInterestString = (interest: string) => {
+    const colors = ['#ff7f50', '#6a5acd', '#32cd32'];
+    const tags: { text: string; color: string }[] = [];
+
+    const parts = interest.split(',').map((part) => part.trim());
+    parts.forEach((part, index) => {
+      const [, value] = part.split(':').map((s) => s.trim());
+      if (value) {
+        tags.push({ text: value, color: colors[index % colors.length] });
+      }
+    });
+
+    return tags;
+  };
+
+  const sendLocationToServer = async (lat: number, lng: number, id: number) => {
+    const payload = { id, latitude: lat, longitude: lng };
+
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BASE_API_URL}/api/location/save`,
+        payload,
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        },
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      const nearbyResponse = await axios.post(
+        `${import.meta.env.VITE_BASE_API_URL}/api/location/nearby`,
+        { id },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+
+      const parsedUsers = nearbyResponse.data.data.map(
+        (user: {
+          id: number;
+          nickname: string;
+          role: string;
+          career: string;
+          introduction: string;
+          interest: string;
+        }) => ({
+          id: user.id,
+          nickname: user.nickname,
+          role: user.role,
+          career: user.career,
+          introduction: user.introduction,
+          image: '',
+          tags: parseInterestString(user.interest),
+        }),
+      );
+
+      console.log('받은 유저 리스트:', parsedUsers);
+      setUsers(parsedUsers);
+    } catch (error) {
+      console.error('위치 전송 실패:', error);
+    }
+  };
+
+  const handleLocationPermission = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+
+    if (checked) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+
+          console.log('위치 허용됨', lat, lng);
+          setShareLocation(true);
+
+          if (userId) {
+            await sendLocationToServer(lat, lng, userId);
+          }
+
+          setTimeout(() => {
+            setShowModal(true);
+          }, 500);
+        },
+        (error) => {
+          console.error('위치 권한 거절됨:', error);
+          setShareLocation(false);
+        },
+      );
+    } else {
+      setShareLocation(false);
+    }
+  };
 
   const buttons = [
     {
@@ -80,31 +194,6 @@ const LocationNavBar: React.FC = () => {
     },
   ];
 
-  const handleLocationPermission = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked;
-    if (checked) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-
-          console.log('위치 허용', lat, lng);
-          setShareLocation(true);
-          setShowModal(true);
-        },
-        (error) => {
-          console.error('위치 거부됨', error);
-          setShareLocation(false);
-        },
-      );
-      setTimeout(() => {
-        setShowModal(true);
-      }, 500);
-    } else {
-      setShareLocation(false);
-    }
-  };
-
   return (
     <div className="w-full flex justify-center">
       <div className="flex flex-col items-center">
@@ -121,14 +210,14 @@ const LocationNavBar: React.FC = () => {
                   btn.onClick();
                 }}
                 className={`w-10 h-10 flex items-center justify-center rounded-lg transition-colors
-        ${
-          isMoreButton && isActive
-            ? 'bg-[#e5e5e5] text-[#1d4ed8]'
-            : isActive
-              ? 'bg-blue-500 text-white shadow-[inset_0px_1px_8px_0px_rgba(255,255,255,0.30)]'
-              : 'bg-[#111111] text-gray-400'
-        }
-        ${index === 2 || index === 3 ? 'border-r border-[#333333]' : ''}`}>
+                ${
+                  isMoreButton && isActive
+                    ? 'bg-[#e5e5e5] text-[#1d4ed8]'
+                    : isActive
+                      ? 'bg-blue-500 text-white shadow-[inset_0px_1px_8px_0px_rgba(255,255,255,0.30)]'
+                      : 'bg-[#111111] text-gray-400'
+                }
+                ${index === 2 || index === 3 ? 'border-r border-[#333333]' : ''}`}>
                 {btn.icon}
               </button>
             );
@@ -160,6 +249,7 @@ const LocationNavBar: React.FC = () => {
                 <div className="absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-all duration-200 peer-checked:translate-x-5" />
               </label>
             </div>
+
             <button className="flex items-center gap-1 text-sm hover:text-blue-500 mt-2">
               <LogOut />
               로그아웃
