@@ -15,7 +15,7 @@ interface ProfileData {
   topic3: string;
 }
 
-const MyPage = () => {
+const EditMyPage = () => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -131,4 +131,4 @@ const Section = ({ title, value }: { title: string; value: string }) => (
   </section>
 );
 
-export default MyPage;
+export default EditMyPage;

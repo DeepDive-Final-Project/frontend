@@ -1,4 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Chat from '@/pages/ChatPage';
+import ChatProfile from '@/components/common/ChatProfile.tsx';
+
 import { ToastContainer } from 'react-toastify';
 import ChatPage from '@/pages/ChatPage';
 import LoginPage from '@/pages/profile/LoginPage.tsx';
@@ -12,7 +15,7 @@ import LocationPage from '@/pages/LocationPage';
 import TestPage from '@/pages/TestPage';
 import ProfileLayout from '@/pages/profile/layout/ProfileLayout.tsx';
 import LandingPage from '@/pages/LandingPage.tsx';
-import MyPage from '@/pages/MyPage.tsx';
+import EditMyPage from '@/pages/EditMyPage.tsx';
 export default function App() {
   return (
     <>
@@ -31,7 +34,9 @@ export default function App() {
           <Route path="/home" element={<LocationPage />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/test" element={<TestPage />} />
-          <Route path="/my" element={<MyPage />} />
+          <Route path="/editmy" element={<EditMyPage />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/chatProfile" element={<ChatProfile />} />
         </Routes>
         <ToastContainer
           position="top-right"
