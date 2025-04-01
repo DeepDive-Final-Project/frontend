@@ -99,7 +99,7 @@ const UserLocation = () => {
                 className={`w-[28px] h-[28px]`}
               />
               <p className="text-[10px] text-white whitespace-nowrap">
-                {user.nickname}
+                {user.nickName}
               </p>
             </div>
           ))}
