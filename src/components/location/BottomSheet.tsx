@@ -134,11 +134,19 @@ const BottomSheet: React.FC = () => {
         user={user}
         onSelect={handleUserSelect}
         selectedUserId={selectedUserId}
-        isRequested={false}
+        isRequested={sent.PENDING.some(
+          (s) => s.receiverNickname === user.nickname,
+        )}
         onRequest={() => handleRequest(user.nickname)}
       />
     ));
-  }, [filteredUsers, selectedUserId, handleRequest, handleUserSelect]);
+  }, [
+    filteredUsers,
+    selectedUserId,
+    sent.PENDING,
+    handleRequest,
+    handleUserSelect,
+  ]);
 
   const visibleCards =
     mode === 'chat'
