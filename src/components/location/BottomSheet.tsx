@@ -9,16 +9,16 @@ import { useChatMyInfo } from '@/stores/useChatMyInfoStore';
 import { useChatRequest } from '@/hooks/useChatRequest';
 import { toast } from 'react-toastify';
 import { useReceivedChatRequests } from '@/hooks/useReceivedChatRequests';
+import { useQueryClient } from '@tanstack/react-query';
 
 const BottomSheet: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
-  const [requestedUserNicknames, setRequestedUserNicknames] = useState<
-    string[]
-  >([]);
   const { nickName } = useChatMyInfo();
   const { mutate: chatRequest } = useChatRequest();
+  const queryClient = useQueryClient();
+
   const { data: receivedRequests = [] } = useReceivedChatRequests(
     nickName || '',
   );
@@ -33,7 +33,6 @@ const BottomSheet: React.FC = () => {
   const career = useFilterStore((state) => state.career);
   const chatTab = useBottomSheetStore((state) => state.chatTab);
   const setChatTab = useBottomSheetStore((state) => state.setChatTab);
-
   const users = useUserStore((state) => state.users);
 
   const handleRequest = useCallback(
@@ -45,11 +44,9 @@ const BottomSheet: React.FC = () => {
         {
           onSuccess: () => {
             toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
-            setRequestedUserNicknames((prev) =>
-              prev.includes(receiverNickname)
-                ? prev
-                : [...prev, receiverNickname],
-            );
+            queryClient.invalidateQueries({
+              queryKey: ['chatReceivedList'],
+            });
           },
           onError: () => {
             toast.error('요청에 실패했습니다.');
@@ -57,8 +54,9 @@ const BottomSheet: React.FC = () => {
         },
       );
     },
-    [nickName, chatRequest],
+    [nickName, chatRequest, queryClient],
   );
+
   const handleUserSelect = useCallback((userId: number) => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
   }, []);
@@ -102,11 +100,13 @@ const BottomSheet: React.FC = () => {
       return matchRole && matchCareer;
     });
   }, [users, role, career]);
+
   const receivedUsers = useMemo(() => {
     return receivedRequests
       .map((req) => users.find((u) => u.nickname === req.senderNickname))
       .filter((u): u is NonNullable<typeof u> => !!u);
   }, [receivedRequests, users]);
+
   const receivedUserCards = useMemo(
     () =>
       receivedUsers.map((user, index) => (
@@ -115,17 +115,18 @@ const BottomSheet: React.FC = () => {
             user={user}
             onSelect={handleUserSelect}
             selectedUserId={selectedUserId}
-            isRequested={false} // 받은 요청이라 요청 안보냄
-            onRequest={() => {}} // disable
+            isRequested={false}
+            onRequest={() => {}}
           />
         </div>
       )),
     [receivedUsers, selectedUserId, handleUserSelect],
   );
+
   const memoizedUserCards = useMemo(
     () =>
       filteredUsers.map((user, index) => {
-        const isRequested = requestedUserNicknames.includes(user.nickname);
+        const isRequested = false; // 상태관리 예정 or 고정값
         return (
           <div key={user.id} className={`${index % 2 === 1 ? 'mt-6' : ''}`}>
             <UserCard
@@ -138,13 +139,7 @@ const BottomSheet: React.FC = () => {
           </div>
         );
       }),
-    [
-      filteredUsers,
-      selectedUserId,
-      requestedUserNicknames,
-      handleUserSelect,
-      handleRequest,
-    ],
+    [filteredUsers, selectedUserId, handleUserSelect, handleRequest],
   );
 
   return (
@@ -156,7 +151,7 @@ const BottomSheet: React.FC = () => {
       onTouchStart={() => setIsDragging(true)}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}>
-      <div className="w-full h-full flex flex-col  overflow-hidden">
+      <div className="w-full h-full flex flex-col overflow-hidden">
         <div className="flex justify-center py-2">
           <div className="w-10 h-1 rounded-full bg-gray-400" />
         </div>
