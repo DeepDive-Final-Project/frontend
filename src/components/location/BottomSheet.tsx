@@ -8,7 +8,8 @@ import { useUserStore } from '@/stores/useUserStore';
 import { useChatMyInfo } from '@/stores/useChatMyInfoStore';
 import { useChatRequest } from '@/hooks/useChatRequest';
 import { toast } from 'react-toastify';
-import { useReceivedChatRequests } from '@/hooks/useReceivedChatRequests';
+import { useChatRequestStore } from '@/stores/useChatRequestStore';
+import { useChatRequestFetch } from '@/hooks/useChatRequestFetch';
 import { useQueryClient } from '@tanstack/react-query';
 
 const BottomSheet: React.FC = () => {
@@ -19,9 +20,9 @@ const BottomSheet: React.FC = () => {
   const { mutate: chatRequest } = useChatRequest();
   const queryClient = useQueryClient();
 
-  const { data: receivedRequests = [] } = useReceivedChatRequests(
-    nickName || '',
-  );
+  // ✅ 받은 요청 fetch & 상태 가져오기
+  useChatRequestFetch(nickName ?? '');
+  const { received } = useChatRequestStore();
 
   const height = useBottomSheetStore((state) => state.height);
   const setHeight = useBottomSheetStore((state) => state.setHeight);
@@ -45,7 +46,7 @@ const BottomSheet: React.FC = () => {
           onSuccess: () => {
             toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
             queryClient.invalidateQueries({
-              queryKey: ['chatReceivedList'],
+              queryKey: ['chatRequestList'],
             });
           },
           onError: () => {
@@ -101,11 +102,12 @@ const BottomSheet: React.FC = () => {
     });
   }, [users, role, career]);
 
+  // ✅ Zustand에서 받은 요청 리스트 기반으로 받은 유저 추출
   const receivedUsers = useMemo(() => {
-    return receivedRequests
-      .map((req) => users.find((u) => u.nickname === req.senderNickname))
-      .filter((u): u is NonNullable<typeof u> => !!u);
-  }, [receivedRequests, users]);
+    return received.PENDING.map((req) =>
+      users.find((u) => u.nickname === req.senderNickname),
+    ).filter((u): u is NonNullable<typeof u> => !!u);
+  }, [received.PENDING, users]);
 
   const receivedUserCards = useMemo(
     () =>
@@ -126,7 +128,7 @@ const BottomSheet: React.FC = () => {
   const memoizedUserCards = useMemo(
     () =>
       filteredUsers.map((user, index) => {
-        const isRequested = false; // 상태관리 예정 or 고정값
+        const isRequested = false; // 이후 상태 연동 가능
         return (
           <div key={user.id} className={`${index % 2 === 1 ? 'mt-6' : ''}`}>
             <UserCard
