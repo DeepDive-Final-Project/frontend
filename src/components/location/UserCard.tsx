@@ -64,7 +64,7 @@ const UserCard: React.FC<UserCardProps> = ({
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-xs mobile:text-sm tablet:text-base">
-                  {user.nickname}
+                  {user.nickName}
                 </p>
                 <p className="text-xs">
                   {user.role} • {user.career}

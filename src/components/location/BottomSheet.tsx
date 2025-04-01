@@ -133,9 +133,9 @@ const BottomSheet: React.FC = () => {
         onSelect={handleUserSelect}
         selectedUserId={selectedUserId}
         isRequested={sentPending.some(
-          (s) => s.receiverNickname === user.nickname,
+          (s) => s.receiverNickname === user.nickName,
         )}
-        onRequest={() => handleRequest(user.nickname)}
+        onRequest={() => handleRequest(user.nickName)}
       />
     ));
   }, [
@@ -149,7 +149,7 @@ const BottomSheet: React.FC = () => {
   const sentCards = useMemo(() => {
     return sentAccepted
       .map((req) => {
-        const user = users.find((u) => u.nickname === req.receiverNickname);
+        const user = users.find((u) => u.nickName === req.receiverNickname);
         if (!user) return null;
         return (
           <UserCard
@@ -170,7 +170,7 @@ const BottomSheet: React.FC = () => {
   const receivedPendingCards = useMemo(() => {
     return receivedPending
       .map((req) => {
-        const user = users.find((u) => u.nickname === req.senderNickname);
+        const user = users.find((u) => u.nickName === req.senderNickname);
         if (!user) return null;
         return (
           <UserCard
@@ -199,7 +199,7 @@ const BottomSheet: React.FC = () => {
   const receivedAcceptedCards = useMemo(() => {
     return receivedAccepted
       .map((req) => {
-        const user = users.find((u) => u.nickname === req.senderNickname);
+        const user = users.find((u) => u.nickName === req.senderNickname);
         if (!user) return null;
         return (
           <UserCard

@@ -7,7 +7,7 @@ export interface Tag {
 
 export interface User {
   id: number;
-  nickname: string;
+  nickName: string;
   role: string;
   career: string;
   introduction: string;
