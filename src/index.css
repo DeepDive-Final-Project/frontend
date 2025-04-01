@@ -18,3 +18,8 @@ body {
   background-color: #E6E6E6;
   border-radius: 10px;
 }
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background-color: #0F0F10;
+  border-radius: 9999px;
+}

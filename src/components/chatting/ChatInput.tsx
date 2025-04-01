@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Client } from '@stomp/stompjs';
 import { useChatMessageStore } from '@/stores/useChatMessageStore';
 import { ChatMessageType } from '@/types/chatMessageType';
@@ -17,6 +17,15 @@ const ChatInput = ({ roomId, socketRef, nickName }: ChatInputProps) => {
 
   const { appendMessage } = useChatMessageStore();
   const { updateLastMessage } = useChatListStore();
+
+  // 입력시 자동 높이 조절
+  const textarea = useRef<HTMLTextAreaElement | null>(null);
+  const handleResizeHei = () => {
+    if (textarea.current) {
+      textarea.current.style.height = 'auto';
+      textarea.current.style.height = `${textarea.current.scrollHeight}px`;
+    }
+  };
 
   const handleSend = () => {
     if (!socketRef.current || !socketRef.current.connected || !nickName) {
@@ -46,6 +55,10 @@ const ChatInput = ({ roomId, socketRef, nickName }: ChatInputProps) => {
     updateLastMessage(roomId, chatMessage);
 
     setMessage('');
+
+    if (textarea.current) {
+      textarea.current.style.height = 'auto';
+    }
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -66,7 +79,8 @@ const ChatInput = ({ roomId, socketRef, nickName }: ChatInputProps) => {
     <div className="pb-[66px]">
       <div className="relative flex-shrink-0 w-full px-5 flex items-end">
         <textarea
-          className={`w-full py-2 px-5 rounded-[20px] resize-none scrollbar-hide text-[#E6E6E6] text-sm placeholder-[#A2A4AA] bg-[#1E1E1F] border ${
+          ref={textarea}
+          className={`w-full py-2 px-5 max-h-[97.5px] rounded-[20px] resize-none scrollbar-hide text-[#E6E6E6] text-sm leading-normal placeholder-[#A2A4AA] bg-[#1E1E1F] border ${
             message.length > maxLength
               ? 'border-[#FF2B2B] focus:border-[#FF2B2B]'
               : 'border-[#1E1E1F]'
@@ -76,6 +90,7 @@ const ChatInput = ({ roomId, socketRef, nickName }: ChatInputProps) => {
           value={message}
           rows={1}
           onChange={(e) => setMessage(e.target.value)}
+          onInput={handleResizeHei}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
         />

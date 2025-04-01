@@ -12,6 +12,7 @@ interface Interest {
 
 interface ProfileState {
   profileImage: string;
+  profileImageFile: File | null;
   name: string;
   email: string;
   role: string;
@@ -22,6 +23,7 @@ interface ProfileState {
   clientId: number;
 
   setProfileImage: (image: string) => void;
+  setProfileImageFile: (file: File | null) => void;
   setName: (name: string) => void;
   setEmail: (email: string) => void;
   setRole: (role: string) => void;
@@ -34,6 +36,7 @@ interface ProfileState {
 
 export const useProfileStore = create<ProfileState>((set) => ({
   profileImage: '',
+  profileImageFile: null,
   name: '',
   email: '',
   role: '',
@@ -44,6 +47,7 @@ export const useProfileStore = create<ProfileState>((set) => ({
   clientId: 0,
 
   setProfileImage: (image) => set({ profileImage: image }),
+  setProfileImageFile: (file) => set({ profileImageFile: file }),
   setName: (name) => set({ name }),
   setEmail: (email) => set({ email }),
   setRole: (role) => set({ role }),
