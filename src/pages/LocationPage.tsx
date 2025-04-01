@@ -3,15 +3,13 @@ import BottomSheet from 'src/components/location/BottomSheet';
 import LocationButton from 'src/components/location/LocationButton';
 import LocationNavBar from 'src/components/location/LocationNavBar';
 import RightSheet from '@/components/location/RightSheet';
-import Logo from '@/assets/images/logo.svg';
+import CommonNav from "@/components/common/CommomNav.tsx";
 
 const LocationPage = () => {
+
   return (
     <div className="w-full min-h-screen bg-[#000000] flex flex-col">
-      <nav className="h-[64px] flex items-center px-4 shrink-0 border-b border-[#1f1f1f]">
-        <img src={Logo} alt="Logo" className="h-[40px]" />
-      </nav>
-
+      <CommonNav />
       <div className="flex flex-col tablet:flex-row px-4 gap-4 flex-1">
         <div className="w-full tablet:w-1/2 flex flex-col gap-2">
           <LocationNavBar />
