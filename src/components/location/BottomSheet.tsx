@@ -22,6 +22,7 @@ const BottomSheet: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const { userId } = useChatMyInfo();
   const { nickName } = useChatMyInfo();
   const { mutate: chatRequest } = useChatRequest();
   const { mutate: acceptRequest } = useAcceptRequest();
@@ -115,12 +116,14 @@ const BottomSheet: React.FC = () => {
   };
 
   const filteredUsers = useMemo(() => {
-    return users.filter((user) => {
-      const matchRole = !role || user.role === role;
-      const matchCareer = !career || user.career === career;
-      return matchRole && matchCareer;
-    });
-  }, [users, role, career]);
+    return users
+      .filter((user) => user.id !== userId)
+      .filter((user) => {
+        const matchRole = !role || user.role === role;
+        const matchCareer = !career || user.career === career;
+        return matchRole && matchCareer;
+      });
+  }, [users, role, career, userId]);
 
   const exploreCards = useMemo(() => {
     return filteredUsers.map((user) => (
@@ -234,7 +237,6 @@ const BottomSheet: React.FC = () => {
           <div className="w-10 h-1 rounded-full bg-gray-400" />
         </div>
 
-        {/* 헤더 */}
         <div className="flex justify-between items-start bg-[#141415] p-3 rounded-t-lg gap-2">
           <div className="flex flex-col flex-1 min-w-0">
             <span className="text-gray-100 text-sm tablet:text-lg">

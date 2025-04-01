@@ -17,6 +17,22 @@ import axios from 'axios';
 import { logout } from '@/hooks/useLogout';
 import { useNavigate } from 'react-router-dom';
 
+// 타입 선언
+type RawUser = {
+  id: number;
+  nickname: string;
+  role: string;
+  career: string;
+  introduction: string;
+  interest: string;
+};
+
+type Tag = { text: string; color: string };
+type ParsedUser = RawUser & {
+  image: string;
+  tags: Tag[];
+};
+
 const LocationNavBar: React.FC = () => {
   const setHeight = useBottomSheetStore((state) => state.setHeight);
   const setMode = useBottomSheetStore((state) => state.setMode);
@@ -47,9 +63,9 @@ const LocationNavBar: React.FC = () => {
     fetchMyInfo();
   }, []);
 
-  const parseInterestString = (interest: string) => {
+  const parseInterestString = (interest: string): Tag[] => {
     const colors = ['#ff7f50', '#6a5acd', '#32cd32'];
-    const tags: { text: string; color: string }[] = [];
+    const tags: Tag[] = [];
 
     const parts = interest.split(',').map((part) => part.trim());
     parts.forEach((part, index) => {
@@ -85,27 +101,32 @@ const LocationNavBar: React.FC = () => {
         },
       );
 
-      const parsedUsers = nearbyResponse.data.data.map(
-        (user: {
-          id: number;
-          nickname: string;
-          role: string;
-          career: string;
-          introduction: string;
-          interest: string;
-        }) => ({
-          id: user.id,
-          nickname: user.nickname,
-          role: user.role,
-          career: user.career,
-          introduction: user.introduction,
-          image: '',
-          tags: parseInterestString(user.interest),
-        }),
+      const rawUsers: RawUser[] = nearbyResponse.data.data;
+
+      const parsedUsers: ParsedUser[] = rawUsers.map((user) => ({
+        ...user,
+        image: '',
+        tags: parseInterestString(user.interest),
+      }));
+
+      const userIds = parsedUsers.map((user) => user.id);
+      const imageResponse = await axios.get(
+        `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/profile-images`,
+        {
+          params: { userIds },
+          withCredentials: true,
+        },
       );
 
-      console.log('받은 유저 리스트:', parsedUsers);
-      setUsers(parsedUsers);
+      const imageMap = imageResponse.data;
+
+      const usersWithImages = parsedUsers.map((user) => ({
+        ...user,
+        image: imageMap[user.id] || '',
+      }));
+
+      console.log('이미지 포함 유저 리스트:', usersWithImages);
+      setUsers(usersWithImages);
     } catch (error) {
       console.error('위치 전송 실패:', error);
     }
@@ -115,6 +136,8 @@ const LocationNavBar: React.FC = () => {
     const checked = e.target.checked;
 
     if (checked) {
+      setTimeout(() => setShowModal(true), 500);
+
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const lat = position.coords.latitude;
@@ -126,10 +149,6 @@ const LocationNavBar: React.FC = () => {
           if (userId) {
             await sendLocationToServer(lat, lng, userId);
           }
-
-          setTimeout(() => {
-            setShowModal(true);
-          }, 500);
         },
         (error) => {
           console.error('위치 권한 거절됨:', error);
@@ -140,6 +159,7 @@ const LocationNavBar: React.FC = () => {
       setShareLocation(false);
     }
   };
+
   const handleRefresh = async () => {
     if (!userId) {
       console.warn('userId가 없습니다.');
@@ -244,6 +264,7 @@ const LocationNavBar: React.FC = () => {
             );
           })}
         </div>
+
         {moreSetting && (
           <div className="mt-2 bg-[#0A0A0B] border border-[#B0B2B7] rounded-lg px-4 py-4 w-full shadow-lg z-50">
             <p className="text-sm font-semibold leading-tight border-b border-[#262626] ">
@@ -287,6 +308,7 @@ const LocationNavBar: React.FC = () => {
           </div>
         )}
       </div>
+
       {showModal && (
         <div className="fixed inset-0 bg-black border bg-opacity-50 z-50 flex justify-center items-center">
           <div className="bg-[#0c0a09] border border-gray-500 rounded-xl p-6 text-center shadow-lg w-[80%] max-w-xs">
