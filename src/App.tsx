@@ -32,7 +32,6 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/test" element={<TestPage />} />
           <Route path="/my" element={<MyPage />} />
-
         </Routes>
         <ToastContainer
           position="top-right"
