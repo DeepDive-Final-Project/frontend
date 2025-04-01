@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 // 타입 선언
 type RawUser = {
   id: number;
-  nickname: string;
+  nickName: string;
   role: string;
   career: string;
   introduction: string;
