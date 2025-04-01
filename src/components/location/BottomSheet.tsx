@@ -5,12 +5,23 @@ import { useBottomSheetStore } from '@/stores/useBottomSheetStore';
 import { useNavBarStore } from '@/stores/useNavBarStore';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useUserStore } from '@/stores/useUserStore';
+import { useChatMyInfo } from '@/stores/useChatMyInfoStore';
+import { useChatRequest } from '@/hooks/useChatRequest';
+import { toast } from 'react-toastify';
+import { useReceivedChatRequests } from '@/hooks/useReceivedChatRequests';
 
 const BottomSheet: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-  const [requestedUserIds, setRequestedUserIds] = useState<number[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
+  const [requestedUserNicknames, setRequestedUserNicknames] = useState<
+    string[]
+  >([]);
+  const { nickName } = useChatMyInfo();
+  const { mutate: chatRequest } = useChatRequest();
+  const { data: receivedRequests = [] } = useReceivedChatRequests(
+    nickName || '',
+  );
 
   const height = useBottomSheetStore((state) => state.height);
   const setHeight = useBottomSheetStore((state) => state.setHeight);
@@ -25,14 +36,31 @@ const BottomSheet: React.FC = () => {
 
   const users = useUserStore((state) => state.users);
 
+  const handleRequest = useCallback(
+    (receiverNickname: string) => {
+      if (!nickName) return;
+
+      chatRequest(
+        { senderNickname: nickName, receiverNickname },
+        {
+          onSuccess: () => {
+            toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
+            setRequestedUserNicknames((prev) =>
+              prev.includes(receiverNickname)
+                ? prev
+                : [...prev, receiverNickname],
+            );
+          },
+          onError: () => {
+            toast.error('요청에 실패했습니다.');
+          },
+        },
+      );
+    },
+    [nickName, chatRequest],
+  );
   const handleUserSelect = useCallback((userId: number) => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
-  }, []);
-
-  const handleRequest = useCallback((userId: number) => {
-    setRequestedUserIds((prev) =>
-      prev.includes(userId) ? prev : [...prev, userId],
-    );
   }, []);
 
   const handleDeselectUser = useCallback((e: React.MouseEvent) => {
@@ -74,11 +102,30 @@ const BottomSheet: React.FC = () => {
       return matchRole && matchCareer;
     });
   }, [users, role, career]);
-
+  const receivedUsers = useMemo(() => {
+    return receivedRequests
+      .map((req) => users.find((u) => u.nickname === req.senderNickname))
+      .filter((u): u is NonNullable<typeof u> => !!u);
+  }, [receivedRequests, users]);
+  const receivedUserCards = useMemo(
+    () =>
+      receivedUsers.map((user, index) => (
+        <div key={user.id} className={`${index % 2 === 1 ? 'mt-6' : ''}`}>
+          <UserCard
+            user={user}
+            onSelect={handleUserSelect}
+            selectedUserId={selectedUserId}
+            isRequested={false} // 받은 요청이라 요청 안보냄
+            onRequest={() => {}} // disable
+          />
+        </div>
+      )),
+    [receivedUsers, selectedUserId, handleUserSelect],
+  );
   const memoizedUserCards = useMemo(
     () =>
       filteredUsers.map((user, index) => {
-        const isRequested = requestedUserIds.includes(user.id);
+        const isRequested = requestedUserNicknames.includes(user.nickname);
         return (
           <div key={user.id} className={`${index % 2 === 1 ? 'mt-6' : ''}`}>
             <UserCard
@@ -86,7 +133,7 @@ const BottomSheet: React.FC = () => {
               onSelect={handleUserSelect}
               selectedUserId={selectedUserId}
               isRequested={isRequested}
-              onRequest={() => handleRequest(user.id)}
+              onRequest={() => handleRequest(user.nickname)}
             />
           </div>
         );
@@ -94,7 +141,7 @@ const BottomSheet: React.FC = () => {
     [
       filteredUsers,
       selectedUserId,
-      requestedUserIds,
+      requestedUserNicknames,
       handleUserSelect,
       handleRequest,
     ],
@@ -165,7 +212,9 @@ const BottomSheet: React.FC = () => {
           ref={listRef}
           onTouchMove={handleListScroll}>
           <div className="grid grid-cols-2 gap-4 w-full max-w-full">
-            {memoizedUserCards}
+            {mode === 'chat' && chatTab === 'received'
+              ? receivedUserCards
+              : memoizedUserCards}
           </div>
         </div>
       </div>
