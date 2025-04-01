@@ -74,14 +74,14 @@ const LocationButton: React.FC = () => {
       const parsedUsers = nearbyResponse.data.data.map(
         (user: {
           id: number;
-          nickname: string;
+          nickName: string;
           role: string;
           career: string;
           introduction: string;
           interest: string;
         }) => ({
           id: user.id,
-          nickname: user.nickname,
+          nickname: user.nickName,
           role: user.role,
           career: user.career,
           introduction: user.introduction,
