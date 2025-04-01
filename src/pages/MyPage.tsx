@@ -28,6 +28,8 @@ const MyPage = () => {
           { withCredentials: true },
         );
         const clientId = meRes.data.clientId;
+        console.log('✅ clientId:', clientId);
+
         const imageRes = await axios.get(
           `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/profile-images?clientIds=${clientId}`,
           { withCredentials: true },
