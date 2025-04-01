@@ -1,7 +1,7 @@
 import { ElementType } from 'react';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-import { buttonVariants } from '@/components/Common/buttonVariants';
+import { buttonVariants } from '@/components/common/buttonVariants';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'basic';
@@ -26,7 +26,7 @@ const Button = ({
       className={clsx(
         buttonVariants({ size, variant }),
         icon && 'flex items-center justify-center gap-2',
-        Component === Link && 'block',
+        Component === Link && 'inline-block',
         className,
       )}
       {...(Component === Link ? { to } : {})}
