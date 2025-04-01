@@ -14,6 +14,8 @@ import {
 import radar from '@/assets/images/radar.svg';
 import LocationImg from '@/assets/images/request_modal.png';
 import axios from 'axios';
+import { logout } from '@/hooks/useLogout';
+import { useNavigate } from 'react-router-dom';
 
 const LocationNavBar: React.FC = () => {
   const setHeight = useBottomSheetStore((state) => state.setHeight);
@@ -23,7 +25,7 @@ const LocationNavBar: React.FC = () => {
   const setActiveIndex = useNavBarStore((state) => state.setActiveIndex);
   const resetFilters = useFilterStore((state) => state.resetFilters);
   const setUsers = useUserStore((state) => state.setUsers);
-
+  const navigate = useNavigate();
   const [moreSetting, setMoreSetting] = useState(false);
   const [shareLocation, setShareLocation] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -138,6 +140,25 @@ const LocationNavBar: React.FC = () => {
       setShareLocation(false);
     }
   };
+  const handleRefresh = async () => {
+    if (!userId) {
+      console.warn('userId가 없습니다.');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        console.log('새로고침 위치:', lat, lng);
+        await sendLocationToServer(lat, lng, userId);
+      },
+      (error) => {
+        console.error('위치 권한 오류:', error);
+      },
+    );
+  };
 
   const buttons = [
     {
@@ -180,7 +201,7 @@ const LocationNavBar: React.FC = () => {
       icon: <RotateCw />,
       label: '새로고침',
       onClick: () => {
-        window.location.reload();
+        handleRefresh();
         setActiveIndex(3);
       },
     },
@@ -250,7 +271,16 @@ const LocationNavBar: React.FC = () => {
               </label>
             </div>
 
-            <button className="flex items-center gap-1 text-sm hover:text-blue-500 mt-2">
+            <button
+              onClick={async () => {
+                try {
+                  await logout();
+                  navigate('/login');
+                } catch (err) {
+                  console.error('로그아웃 실패', err);
+                }
+              }}
+              className="flex items-center gap-1 text-sm hover:text-blue-500 mt-2">
               <LogOut />
               로그아웃
             </button>
