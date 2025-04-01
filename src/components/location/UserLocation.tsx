@@ -42,7 +42,7 @@ const UserLocation = () => {
       ...pos,
       user: users[i],
     }));
-  }, []);
+  }, [users]);
 
   return (
     <div className="w-full flex justify-center items-center bg-[#000000]">
@@ -88,7 +88,6 @@ const UserLocation = () => {
               alt="avatar"
               className={`w-[28px] h-[28px] `}
             />
-
             <p className="text-[10px] text-white whitespace-nowrap">
               {user.nickname}
             </p>
