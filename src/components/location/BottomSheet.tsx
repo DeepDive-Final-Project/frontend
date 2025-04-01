@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import UserCard from './UserCard';
 import Filter from './Filter';
 import { useBottomSheetStore } from '@/stores/useBottomSheetStore';
@@ -7,22 +8,24 @@ import { useFilterStore } from '@/stores/useFilterStore';
 import { useUserStore } from '@/stores/useUserStore';
 import { useChatMyInfo } from '@/stores/useChatMyInfoStore';
 import { useChatRequest } from '@/hooks/useChatRequest';
-import { toast } from 'react-toastify';
 import { useChatRequestStore } from '@/stores/useChatRequestStore';
 import { useChatRequestFetch } from '@/hooks/useChatRequestFetch';
+import { chatRoomRequestId } from '@/utils/chat/chatRoomRequestId';
+import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
 
 const BottomSheet: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
   const { nickName } = useChatMyInfo();
   const { mutate: chatRequest } = useChatRequest();
   const queryClient = useQueryClient();
 
-  // ✅ 받은 요청 fetch & 상태 가져오기
   useChatRequestFetch(nickName ?? '');
-  const { received } = useChatRequestStore();
+  const { sent, received } = useChatRequestStore();
 
   const height = useBottomSheetStore((state) => state.height);
   const setHeight = useBottomSheetStore((state) => state.setHeight);
@@ -62,12 +65,6 @@ const BottomSheet: React.FC = () => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
   }, []);
 
-  const handleDeselectUser = useCallback((e: React.MouseEvent) => {
-    if (!(e.target as HTMLElement).closest('.user-card')) {
-      setSelectedUserId(null);
-    }
-  }, []);
-
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return;
     const touchY = e.touches[0].clientY;
@@ -84,16 +81,6 @@ const BottomSheet: React.FC = () => {
     }
   };
 
-  const handleListScroll = useCallback((e: React.TouchEvent) => {
-    e.stopPropagation();
-  }, []);
-
-  const handleClose = useCallback(() => {
-    resetHeight();
-    resetFilters();
-    setActiveIndex(0);
-  }, [resetHeight, resetFilters, setActiveIndex]);
-
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
       const matchRole = !role || user.role === role;
@@ -102,54 +89,68 @@ const BottomSheet: React.FC = () => {
     });
   }, [users, role, career]);
 
-  // ✅ Zustand에서 받은 요청 리스트 기반으로 받은 유저 추출
-  const receivedUsers = useMemo(() => {
-    return received.PENDING.map((req) =>
-      users.find((u) => u.nickname === req.senderNickname),
-    ).filter((u): u is NonNullable<typeof u> => !!u);
-  }, [received.PENDING, users]);
+  const receivedCards = useMemo(() => {
+    return received.ACCEPTED.map((req) => {
+      const user = users.find((u) => u.nickname === req.senderNickname);
+      if (!user) return null;
+      return (
+        <UserCard
+          key={user.id}
+          user={user}
+          onSelect={handleUserSelect}
+          selectedUserId={selectedUserId}
+          isRequested={false}
+          onRequest={() => {}}
+          buttonLabel="채팅방으로 이동"
+          onButtonClick={() => chatRoomRequestId(req.id, navigate)}
+        />
+      );
+    }).filter(Boolean);
+  }, [received.ACCEPTED, users, selectedUserId, handleUserSelect, navigate]);
 
-  const receivedUserCards = useMemo(
-    () =>
-      receivedUsers.map((user, index) => (
-        <div key={user.id} className={`${index % 2 === 1 ? 'mt-6' : ''}`}>
-          <UserCard
-            user={user}
-            onSelect={handleUserSelect}
-            selectedUserId={selectedUserId}
-            isRequested={false}
-            onRequest={() => {}}
-          />
-        </div>
-      )),
-    [receivedUsers, selectedUserId, handleUserSelect],
-  );
+  const sentCards = useMemo(() => {
+    return sent.ACCEPTED.map((req) => {
+      const user = users.find((u) => u.nickname === req.receiverNickname);
+      if (!user) return null;
+      return (
+        <UserCard
+          key={user.id}
+          user={user}
+          onSelect={handleUserSelect}
+          selectedUserId={selectedUserId}
+          isRequested={false}
+          onRequest={() => {}}
+          buttonLabel="채팅방으로 이동"
+          onButtonClick={() => chatRoomRequestId(req.id, navigate)}
+        />
+      );
+    }).filter(Boolean);
+  }, [sent.ACCEPTED, users, selectedUserId, handleUserSelect, navigate]);
 
-  const memoizedUserCards = useMemo(
-    () =>
-      filteredUsers.map((user, index) => {
-        const isRequested = false; // 이후 상태 연동 가능
-        return (
-          <div key={user.id} className={`${index % 2 === 1 ? 'mt-6' : ''}`}>
-            <UserCard
-              user={user}
-              onSelect={handleUserSelect}
-              selectedUserId={selectedUserId}
-              isRequested={isRequested}
-              onRequest={() => handleRequest(user.nickname)}
-            />
-          </div>
-        );
-      }),
-    [filteredUsers, selectedUserId, handleUserSelect, handleRequest],
-  );
+  const exploreCards = useMemo(() => {
+    return filteredUsers.map((user) => (
+      <UserCard
+        key={user.id}
+        user={user}
+        onSelect={handleUserSelect}
+        selectedUserId={selectedUserId}
+        isRequested={false}
+        onRequest={() => handleRequest(user.nickname)}
+      />
+    ));
+  }, [filteredUsers, selectedUserId, handleRequest, handleUserSelect]);
+
+  const visibleCards =
+    mode === 'chat'
+      ? chatTab === 'sent'
+        ? sentCards
+        : receivedCards
+      : exploreCards;
 
   return (
     <div
-      className="fixed bottom-0 left-0 w-full bg-[#141415] rounded-t-lg transition-all duration-100
-      mobile:h-[50vh] tablet:h-[60vh] desktop:h-[70vh]"
+      className="fixed bottom-0 left-0 w-full bg-[#141415] rounded-t-lg transition-all duration-100"
       style={{ height: `${height}px` }}
-      onClick={handleDeselectUser}
       onTouchStart={() => setIsDragging(true)}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}>
@@ -170,7 +171,11 @@ const BottomSheet: React.FC = () => {
           </div>
           <button
             className="text-white px-2 py-1 rounded-md text-sm border border-gray-500"
-            onClick={handleClose}>
+            onClick={() => {
+              resetHeight();
+              resetFilters();
+              setActiveIndex(0);
+            }}>
             닫기
           </button>
         </div>
@@ -204,14 +209,9 @@ const BottomSheet: React.FC = () => {
           </div>
         )}
 
-        <div
-          className="flex-1 overflow-y-auto scroll-smooth"
-          ref={listRef}
-          onTouchMove={handleListScroll}>
+        <div className="flex-1 overflow-y-auto scroll-smooth" ref={listRef}>
           <div className="grid grid-cols-2 gap-4 w-full max-w-full">
-            {mode === 'chat' && chatTab === 'received'
-              ? receivedUserCards
-              : memoizedUserCards}
+            {visibleCards}
           </div>
         </div>
       </div>
