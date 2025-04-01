@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProfileCard from '@/components/common/ProfileCard';
+import Logo from '@/assets/images/logo.svg';
 
 interface ProfileData {
   nickName: string;
@@ -56,6 +57,9 @@ const ChatProfile = () => {
   return (
     <div className="max-w-[1440px] m-auto mt-5">
       <div className="max-w-[420px] m-auto">
+        <nav className="h-[64px] flex items-center px-4 shrink-0">
+          <img src={Logo} alt="Logo" className="h-[40px]" />
+        </nav>
         <ProfileCard
           name={profile.nickName}
           job={profile.role}
