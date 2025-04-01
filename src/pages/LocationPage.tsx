@@ -1,6 +1,6 @@
 import UserLocation from 'src/components/location/UserLocation';
 import BottomSheet from 'src/components/location/BottomSheet';
-import LocationButton from 'src/components/location/LocationButton';
+// import LocationButton from 'src/components/location/LocationButton';
 import LocationNavBar from 'src/components/location/LocationNavBar';
 import RightSheet from '@/components/location/RightSheet';
 import Logo from '@/assets/images/logo.svg';
@@ -15,7 +15,7 @@ const LocationPage = () => {
       <div className="flex flex-col tablet:flex-row px-4 gap-4 flex-1">
         <div className="w-full tablet:w-1/2 flex flex-col gap-2">
           <LocationNavBar />
-          <LocationButton />
+          {/* <LocationButton /> */}
           <div className="w-full flex justify-center items-center">
             <UserLocation />
           </div>
