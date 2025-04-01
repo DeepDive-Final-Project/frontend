@@ -9,5 +9,6 @@ export const useReceivedChatRequests = (nickname: string) => {
       const res = await api.get(`/api/chat/received?nickname=${nickname}`);
       return res.data;
     },
+    enabled: !!nickname,
   });
 };
