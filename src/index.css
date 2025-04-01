@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-black text-[#E6E6E6] font-pretendard;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1E1E1F; 
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #E6E6E6;
+  border-radius: 10px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background-color: #0F0F10;
+  border-radius: 9999px;
+}

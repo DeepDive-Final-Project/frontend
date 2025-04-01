@@ -1,0 +1,25 @@
+{
+  "redirects": [
+    {
+      "source": "/oauth2/authorization/kakao",
+      "destination": "https://api.i-contacts.link/oauth2/authorization/kakao",
+      "permanent": false
+    },
+    {
+      "source": "/oauth2/authorization/google",
+      "destination": "https://api.i-contacts.link/oauth2/authorization/google",
+      "permanent": false
+    },
+    {
+      "source": "/oauth2/authorization/github",
+      "destination": "https://api.i-contacts.link/oauth2/authorization/github",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
