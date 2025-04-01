@@ -78,9 +78,9 @@ const ProfileJobPage = () => {
           </header>
 
           <main className="flex flex-col gap-4 w-full px-4">
-            <InputFieldLabel textLabel="나의 직무는" />
+            <InputFieldLabel textLabel="나의 분야는" />
             <Dropdown
-              label="직무를 선택해주세요"
+              label="분야를 선택해주세요"
               options={roles}
               onSelect={(roleKey) => {
                 setSelectedRole(roleKey);

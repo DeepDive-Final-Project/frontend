@@ -79,7 +79,7 @@ const EditMyPage = () => {
 
       <Section title="닉네임" value={profile.nickName} />
       <Section title="이메일" value={profile.email} />
-      <Section title="직무" value={profile.role} />
+      <Section title="분야" value={profile.role} />
       <Section title="소개글" value={profile.introduction} />
       <Section title="경력" value={profile.career} />
 

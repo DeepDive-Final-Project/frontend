@@ -37,7 +37,7 @@ const ProfileCard = ({
   const isOwner = userId === profileId;
 
   return (
-    <div className="relative mobile:p-10 p-5 rounded-[4px] text-sm border border-[#222325] bg-[#1E1E1F]">
+    <div className="relative max-w-[375px] m-auto mobile:p-10 p-5 rounded-[4px] text-sm border border-[#222325] bg-[#1E1E1F]">
       {isOwner && (
         <button
           type="button"
@@ -76,12 +76,12 @@ const ProfileCard = ({
         ))}
       </div>
 
-      <div className="mobile:mt-3 flex flex-col gap-4 tablet:flex-row tablet:gap-6 border-t border-[#222325] pt-4">
+      <div className="mobile:mt-3 flex flex-row gap-6 border-t border-[#222325] pt-4">
         <div className="flex-1">
           <p className="mb-2 text-[#B7B9BD]">경력</p>
           <p>{career}</p>
         </div>
-        <div className="flex-1">
+        <div className="flex-1 pl-6">
           <p className="mb-2 text-[#B7B9BD]">링크</p>
           <div className="flex flex-col gap-1">
             {links.map((link, idx) => (
@@ -90,7 +90,7 @@ const ProfileCard = ({
                 to={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center text-[#E6E6E6] font-medium leading-relaxed text-sm px-2 py-1 rounded-[4px] bg-[#0F0F10]">
+                className="flex w-fit items-center text-[#E6E6E6] font-medium leading-relaxed text-sm px-2 py-1 rounded-[4px] bg-[#0F0F10]">
                 <Link2 size={16} className="mr-2 text-[#E6E6E6]" />
                 {link.title}
               </Link>
@@ -98,6 +98,8 @@ const ProfileCard = ({
           </div>
         </div>
       </div>
+
+
 
 
       {/* ✅ 소유자일 경우 대화요청 버튼 숨기기 */}
