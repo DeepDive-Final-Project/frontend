@@ -78,8 +78,8 @@ const ChatPage = () => {
     <div className="max-w-[1440px] m-auto flex h-screen overflow-hidden">
       <div
         className={`
-    flex flex-col flex-shrink-0 h-full
-    ${expandedMessage ? 'hidden tablet: w-[33.33%]' : 'desktop:w-[320px]'}
+    flex flex-col flex-shrink-0  h-full
+    ${expandedMessage ? 'hidden desktop:w-[33.33%] tablet:w-[320px]' : 'desktop:w-[400px]'}
     ${selectedRoom ? 'hidden tablet:flex w-[320px] desktop:w-[400px]' : 'flex w-full'}
      overflow-y-auto border border-[#222325] bg-[#0A0A0B]
   `}>
