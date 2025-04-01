@@ -81,7 +81,7 @@ const LocationButton: React.FC = () => {
           interest: string;
         }) => ({
           id: user.id,
-          nickname: user.nickName,
+          nickName: user.nickName,
           role: user.role,
           career: user.career,
           introduction: user.introduction,
