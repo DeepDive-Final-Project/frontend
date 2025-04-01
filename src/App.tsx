@@ -12,6 +12,7 @@ import LocationPage from '@/pages/LocationPage';
 import TestPage from '@/pages/TestPage';
 import ProfileLayout from '@/pages/profile/layout/ProfileLayout.tsx';
 import LandingPage from '@/pages/LandingPage.tsx';
+import MyPage from '@/pages/MyPage.tsx';
 export default function App() {
   return (
     <>
@@ -30,6 +31,8 @@ export default function App() {
           <Route path="/home" element={<LocationPage />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/test" element={<TestPage />} />
+          <Route path="/my" element={<MyPage />} />
+
         </Routes>
         <ToastContainer
           position="top-right"

@@ -25,8 +25,8 @@ const ProfileImgPage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setSelectedImage(reader.result as string); // base64로 저장
-        setShowCropper(true); // 이미지 크롭 모달 띄우기
+        setSelectedImage(reader.result as string);
+        setShowCropper(true);
       };
       reader.readAsDataURL(file);
     }
