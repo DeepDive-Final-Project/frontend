@@ -4,7 +4,6 @@ import { useUserStore } from '@/stores/useUserStore';
 
 const UserLocation = () => {
   const users = useUserStore((state) => state.users);
-
   const smallR = 20;
   const midR = 32;
   const bigR = 45;
@@ -84,15 +83,12 @@ const UserLocation = () => {
               top: `${y}%`,
               transform: 'translate(-50%, -50%)',
             }}>
-            <div
-              className="w-[28px] h-[28px] relative bg-center bg-contain bg-no-repeat"
-              style={{ backgroundImage: `url(${avatarIcon})` }}>
-              <img
-                src={user.image}
-                alt="user"
-                className=" absolute inset-0 w-full h-full object-cover rounded-full"
-              />
-            </div>
+            <img
+              src={avatarIcon}
+              alt="avatar"
+              className={`w-[28px] h-[28px] `}
+            />
+
             <p className="text-[10px] text-white whitespace-nowrap">
               {user.nickname}
             </p>
