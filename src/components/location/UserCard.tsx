@@ -13,6 +13,7 @@ interface UserCardProps {
   onRequest: () => void;
   buttonLabel?: string;
   onButtonClick?: () => void;
+  onRejectClick?: () => void;
 }
 
 const UserCard: React.FC<UserCardProps> = ({
@@ -23,6 +24,7 @@ const UserCard: React.FC<UserCardProps> = ({
   onRequest,
   buttonLabel,
   onButtonClick,
+  onRejectClick,
 }) => {
   const [showTags, setShowTags] = useState(false);
   const isSelected = selectedUserId === user.id;
@@ -102,12 +104,12 @@ const UserCard: React.FC<UserCardProps> = ({
                   onRequest();
                 }}
                 className={`w-full px-2 py-2 rounded-3xl text-white transition-all
-        text-xs mobile:text-sm tablet:text-base
-        ${
-          isRequested
-            ? 'bg-gray-600 cursor-not-allowed'
-            : 'bg-[#0A0A0B] hover:bg-blue-500'
-        }`}>
+                text-xs mobile:text-sm tablet:text-base
+                ${
+                  isRequested
+                    ? 'bg-gray-600 cursor-not-allowed'
+                    : 'bg-[#0A0A0B] hover:bg-blue-500'
+                }`}>
                 {isRequested ? '요청 완료' : '대화 요청하기'}
               </button>
             </div>
@@ -119,20 +121,44 @@ const UserCard: React.FC<UserCardProps> = ({
             </div>
           ))}
 
-        {/* chat 모드: 채팅방 이동 */}
+        {/* chat 모드: 수락 or 채팅방 이동 */}
         {mode === 'chat' && (
           <div className="p-2 mt-2 flex flex-col gap-2 bg-[#0A0A0B] rounded-b-lg transition-all">
             <button className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
               상세 프로필 보기
             </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onButtonClick) onButtonClick();
-              }}
-              className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
-              {buttonLabel || '채팅방으로 이동'}
-            </button>
+
+            {buttonLabel === '수락하기' && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (onButtonClick) onButtonClick();
+                  }}
+                  className="w-full px-2 py-2 rounded-full text-white bg-green-600 hover:bg-green-700 text-xs mobile:text-sm tablet:text-base">
+                  수락하기
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (onRejectClick) onRejectClick();
+                  }}
+                  className="w-full px-2 py-2 rounded-full text-white bg-red-600 hover:bg-red-700 text-xs mobile:text-sm tablet:text-base">
+                  거절하기
+                </button>
+              </>
+            )}
+
+            {buttonLabel === '채팅방으로 이동' && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onButtonClick) onButtonClick();
+                }}
+                className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
+                채팅방으로 이동
+              </button>
+            )}
           </div>
         )}
       </div>
