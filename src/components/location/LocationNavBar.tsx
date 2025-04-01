@@ -110,12 +110,11 @@ const LocationNavBar: React.FC = () => {
       }));
 
       const userIds = parsedUsers.map((user) => user.id);
+      const query = userIds.map((id) => `userIds=${id}`).join('&');
+
       const imageResponse = await axios.get(
-        `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/profile-images`,
-        {
-          params: { userIds },
-          withCredentials: true,
-        },
+        `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/profile-images?${query}`,
+        { withCredentials: true },
       );
 
       const imageMap = imageResponse.data;
