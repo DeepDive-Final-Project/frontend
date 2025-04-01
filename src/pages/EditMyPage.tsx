@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, Link2 } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Edit3 } from 'react-feather';
 
 interface ProfileData {
   nickName: string;
@@ -23,15 +24,15 @@ const EditMyPage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const meRes = await axios.get(
-          `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
-          { withCredentials: true },
-        );
-        const clientId = meRes.data.id;
-        console.log('✅ clientId:', clientId);
+        // const meRes = await axios.get(
+        //   `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
+        //   { withCredentials: true },
+        // );
+        // const clientId = meRes.data.id;
+        // console.log('✅ clientId:', clientId);
 
         const imageRes = await axios.get(
-          `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/profile-images?clientIds=${clientId}`,
+          `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/profile-images?clientIds=67`,
           { withCredentials: true },
         );
 
@@ -41,7 +42,7 @@ const EditMyPage = () => {
         console.log(imageUrl);
         setProfileImage(imageUrl);
         const profileRes = await axios.get(
-          `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/${clientId}`,
+          `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/67`,
           { withCredentials: true },
         );
         setProfile(profileRes.data);
@@ -67,15 +68,18 @@ const EditMyPage = () => {
         </button>
         내 계정
       </div>
-      {profileImage && (
-        <div className="flex justify-center mb-6">
-          <img
-            src={profileImage}
-            alt="프로필 이미지"
-            className="w-[100px] h-[100px] rounded-full object-cover border border-[#2C2C2C]"
-          />
-        </div>
-      )}
+      <div className="relative flex justify-center mb-6">
+        <img
+          src={profileImage || undefined}
+          alt="프로필 이미지"
+          className="w-[100px] h-[100px] rounded-full object-cover border border-[#2C2C2C]"
+        />
+        <button
+          type="button"
+          className="absolute bottom-0 right-[calc(50%-50px)] translate-x-[50%] translate-y-[50%] bg-[#5A5C63] w-6 h-6 flex items-center justify-center rounded-full">
+          <Edit3 size={12} className="text-white" />
+        </button>
+      </div>
 
       <Section title="닉네임" value={profile.nickName} />
       <Section title="이메일" value={profile.email} />
@@ -84,7 +88,14 @@ const EditMyPage = () => {
       <Section title="경력" value={profile.career} />
 
       <section className="my-3">
-        <div className="text-sm text-[#A2A4AA] mb-2">관심사</div>
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm text-[#A2A4AA]">관심사</span>
+          <button
+            type="button"
+            className="w-6 h-6 flex items-center justify-center bg-[#5A5C63] rounded-full">
+            <Edit3 size={12} className="text-white" />
+          </button>
+        </div>
         <div className="flex flex-wrap gap-2 text-sm">
           {[profile.topic1, profile.topic2, profile.topic3]
             .filter(Boolean)
@@ -100,7 +111,14 @@ const EditMyPage = () => {
       </section>
 
       <section className="mb-4">
-        <div className="text-sm text-[#A2A4AA] mb-1">SNS 링크</div>
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-sm text-[#A2A4AA]">SNS 링크</span>
+          <button
+            type="button"
+            className="w-6 h-6 flex items-center justify-center bg-[#5A5C63] rounded-full">
+            <Edit3 size={12} className="text-white" />
+          </button>
+        </div>
         <div className="space-y-1">
           {profile.links.map((link, index) => (
             <div
@@ -111,7 +129,7 @@ const EditMyPage = () => {
                 href={link.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className=" text-[#E6E6E6] hover:underline text-sm block">
+                className="text-[#E6E6E6] hover:underline text-sm block">
                 {link.title}
               </a>
             </div>
@@ -122,10 +140,16 @@ const EditMyPage = () => {
     </div>
   );
 };
-
 const Section = ({ title, value }: { title: string; value: string }) => (
   <section className="flex flex-col gap-2 py-2">
-    <div className="text-sm font-medium text-[#A2A4AA]">{title}</div>
+    <div className="flex justify-between items-center">
+      <span className="text-sm font-medium text-[#A2A4AA]">{title}</span>
+      <button
+        type="button"
+        className="w-6 h-6 flex items-center justify-center bg-[#5A5C63] rounded-full">
+        <Edit3 size={12} className="text-white" />
+      </button>
+    </div>
     <div className="text-base font-semibold text-[#E6E6E6]">{value}</div>
     <hr className="border-[#2C2C2C]" />
   </section>
