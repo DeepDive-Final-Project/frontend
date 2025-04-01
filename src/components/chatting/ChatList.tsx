@@ -52,7 +52,7 @@ const ChatList = ({ isLoading, error, onSelectRoom }: ChatListProps) => {
   }
 
   return (
-    <ul className="space-y-2 overflow-y-auto px-4 py-2">
+    <ul className="space-y-2 overflow-y-auto py-2">
       {chatList.map((room) => (
         <ChatListItem
           key={room.roomId}

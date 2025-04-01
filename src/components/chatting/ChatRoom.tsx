@@ -11,9 +11,10 @@ import { fetchMessagesApi } from '@/services/chatMessageApi';
 
 interface ChatRoomProps {
   room: ChatRoomType | null;
+  onExpandMessage?: (content: string) => void;
 }
 
-const ChatRoom = ({ room }: ChatRoomProps) => {
+const ChatRoom = ({ room, onExpandMessage }: ChatRoomProps) => {
   const { stompClient } = useSocketStore();
   const { userId, nickName } = useChatMyInfo();
   const { appendMessage, setMessages, clearMessages } = useChatMessageStore();
@@ -79,6 +80,7 @@ const ChatRoom = ({ room }: ChatRoomProps) => {
             roomId={room.roomId}
             chatParticipants={room.participants}
             nickName={nickName ?? ''}
+            onExpand={onExpandMessage}
           />
         </div>
       </div>

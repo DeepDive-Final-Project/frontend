@@ -4,8 +4,6 @@ import { useUserStore } from '@/stores/useUserStore';
 
 const UserLocation = () => {
   const users = useUserStore((state) => state.users);
-  const selectedUser = useUserStore((state) => state.selectedUser);
-  const setSelectedUser = useUserStore((state) => state.setSelectedUser);
   const smallR = 20;
   const midR = 32;
   const bigR = 45;
@@ -21,7 +19,10 @@ const UserLocation = () => {
     });
   };
 
-  const getRandomArray = (arr: { x: number; y: number }[], count: number) => {
+  const getRandomFromArray = (
+    arr: { x: number; y: number }[],
+    count: number,
+  ) => {
     return [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
   };
 
@@ -31,9 +32,9 @@ const UserLocation = () => {
     const midCount = Math.min(4, Math.max(0, total - smallCount));
     const bigCount = Math.max(0, total - smallCount - midCount);
 
-    const smallPoints = getRandomArray(getCirclePoints(smallR), smallCount);
-    const midPoints = getRandomArray(getCirclePoints(midR), midCount);
-    const bigPoints = getRandomArray(getCirclePoints(bigR), bigCount);
+    const smallPoints = getRandomFromArray(getCirclePoints(smallR), smallCount);
+    const midPoints = getRandomFromArray(getCirclePoints(midR), midCount);
+    const bigPoints = getRandomFromArray(getCirclePoints(bigR), bigCount);
 
     const positions = [...smallPoints, ...midPoints, ...bigPoints];
 
@@ -76,7 +77,6 @@ const UserLocation = () => {
         {userPositions.map(({ x, y, user }) => (
           <div
             key={user.id}
-            onClick={() => setSelectedUser(user.id)}
             className="absolute flex flex-col items-center"
             style={{
               left: `${x}%`,
@@ -86,7 +86,7 @@ const UserLocation = () => {
             <img
               src={avatarIcon}
               alt="avatar"
-              className={`w-[28px] h-[28px]  ${selectedUser === user.id ? 'scale-125 ring-1 ring-blue-200' : ''}`}
+              className={`w-[28px] h-[28px] `}
             />
             <p className="text-[10px] text-white whitespace-nowrap">
               {user.nickname}

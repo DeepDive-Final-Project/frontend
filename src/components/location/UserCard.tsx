@@ -90,14 +90,19 @@ const UserCard: React.FC<UserCardProps> = ({
                 상세 프로필 보기
               </button>
               <button
+                disabled={isRequested}
                 onClick={(e) => {
                   e.stopPropagation();
                   onRequest();
                 }}
                 className={`w-full px-2 py-2 rounded-3xl text-white transition-all
-                text-xs mobile:text-sm tablet:text-base
-                ${isRequested ? 'bg-blue-500' : 'bg-[#0A0A0B] hover:bg-blue-500'}`}>
-                대화 요청하기
+        text-xs mobile:text-sm tablet:text-base
+        ${
+          isRequested
+            ? 'bg-gray-600 cursor-not-allowed'
+            : 'bg-[#0A0A0B] hover:bg-blue-500'
+        }`}>
+                {isRequested ? '요청 완료' : '대화 요청하기'}
               </button>
             </div>
           ) : (
