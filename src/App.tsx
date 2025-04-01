@@ -35,10 +35,13 @@ export default function App() {
           position="top-right"
           autoClose={1500}
           hideProgressBar={true}
-          newestOnTop
           closeOnClick
           pauseOnHover
-          theme="dark"
+          icon={false}
+          closeButton={false}
+          toastClassName={() =>
+            'rounded-sm border border-[#5A5C63] bg-[#262627] text-sm px-4 py-3 shadow-none'
+          }
         />
       </Router>
     </>
