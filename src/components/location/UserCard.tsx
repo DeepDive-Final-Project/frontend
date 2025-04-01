@@ -135,7 +135,7 @@ const UserCard: React.FC<UserCardProps> = ({
                     e.stopPropagation();
                     if (onButtonClick) onButtonClick();
                   }}
-                  className="w-full px-2 py-2 rounded-full text-white bg-green-600 hover:bg-green-700 text-xs mobile:text-sm tablet:text-base">
+                  className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B]  text-xs mobile:text-sm tablet:text-base">
                   수락하기
                 </button>
                 <button
@@ -143,7 +143,7 @@ const UserCard: React.FC<UserCardProps> = ({
                     e.stopPropagation();
                     if (onRejectClick) onRejectClick();
                   }}
-                  className="w-full px-2 py-2 rounded-full text-white bg-red-600 hover:bg-red-700 text-xs mobile:text-sm tablet:text-base">
+                  className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] text-xs mobile:text-sm tablet:text-base">
                   거절하기
                 </button>
               </>
