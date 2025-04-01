@@ -27,7 +27,7 @@ const MyPage = () => {
           `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
           { withCredentials: true },
         );
-        const clientId = meRes.data.clientId;
+        const clientId = meRes.data.id;
         console.log('✅ clientId:', clientId);
 
         const imageRes = await axios.get(
