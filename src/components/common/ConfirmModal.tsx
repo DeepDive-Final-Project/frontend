@@ -26,7 +26,7 @@ const ConfirmModal = ({
         )}
         <div className="flex justify-end space-x-3 mt-6">
           <Button
-            className="w-[74px] flex-shrink-0"
+            className="!w-[74px] !flex-shrink-0"
             onClick={onCancel}
             variant="secondary">
             {cancelText}
