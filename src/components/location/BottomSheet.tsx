@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserCard from './UserCard';
 import Filter from './Filter';
@@ -17,7 +17,6 @@ import { useQueryClient } from '@tanstack/react-query';
 const BottomSheet: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-  const listRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   const { nickName } = useChatMyInfo();
@@ -102,7 +101,9 @@ const BottomSheet: React.FC = () => {
           isRequested={false}
           onRequest={() => {}}
           buttonLabel="채팅방으로 이동"
-          onButtonClick={() => chatRoomRequestId(req.id, navigate)}
+          onButtonClick={async () => {
+            await chatRoomRequestId(req.id, navigate);
+          }}
         />
       );
     }).filter(Boolean);
@@ -121,7 +122,9 @@ const BottomSheet: React.FC = () => {
           isRequested={false}
           onRequest={() => {}}
           buttonLabel="채팅방으로 이동"
-          onButtonClick={() => chatRoomRequestId(req.id, navigate)}
+          onButtonClick={async () => {
+            await chatRoomRequestId(req.id, navigate);
+          }}
         />
       );
     }).filter(Boolean);
@@ -163,6 +166,7 @@ const BottomSheet: React.FC = () => {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}>
       <div className="w-full h-full flex flex-col overflow-hidden">
+        {/* 헤더 */}
         <div className="flex justify-center py-2">
           <div className="w-10 h-1 rounded-full bg-gray-400" />
         </div>
@@ -188,14 +192,16 @@ const BottomSheet: React.FC = () => {
           </button>
         </div>
 
+        {/* 필터 */}
         {mode === 'explore' && (
           <div className="pt-2 pb-3">
             <Filter />
           </div>
         )}
 
+        {/* 탭 */}
         {mode === 'chat' && (
-          <div className="flex justify-start gap-12 mt-4 mb-6">
+          <div className="flex justify-start gap-12 mt-4 mb-6 px-4">
             <button
               onClick={() => setChatTab('sent')}
               className={`px-4 py-1 rounded-full text-sm border ${
@@ -217,7 +223,8 @@ const BottomSheet: React.FC = () => {
           </div>
         )}
 
-        <div className="flex-1 overflow-y-auto scroll-smooth" ref={listRef}>
+        {/* 카드 리스트 - 스크롤 정상화 */}
+        <div className="flex-1 overflow-y-auto px-4 pb-4">
           <div className="grid grid-cols-2 gap-4 w-full max-w-full">
             {visibleCards}
           </div>
