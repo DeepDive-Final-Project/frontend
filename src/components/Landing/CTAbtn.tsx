@@ -23,7 +23,7 @@ const CTAbtn = () => {
              desktop:text-[32px] desktop:leading-[48px]
              font-medium text-center font-pretendard
              px-3 tablet:px-6 desktop:px-8 transition">
-          지금 연결되러 가기
+          네트워킹 시작하기
           <ChevronRight size={20} className="pl-1" />
         </button>
       </div>
