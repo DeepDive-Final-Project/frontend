@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import avatarIcon from '@/assets/images/avatarMapin.svg';
 import { useUserStore } from '@/stores/useUserStore';
+import NoneRadar from '@/assets/images/404.svg';
 
 const UserLocation = () => {
   const users = useUserStore((state) => state.users);
@@ -46,54 +47,64 @@ const UserLocation = () => {
 
   return (
     <div className="w-full flex justify-center items-center bg-[#000000]">
-      <div
-        className="relative rounded-full bg-[#111111] aspect-square"
-        style={{
-          width: 'min(100vw, 320px)',
-          height: 'min(100vw, 320px)',
-        }}>
+      {users.length === 0 ? (
+        <div className="flex flex-col items-center justify-center">
+          <img
+            src={NoneRadar}
+            alt="위치 정보 없음"
+            className="w-[240px] tablet:w-[300px] opacity-70"
+          />
+        </div>
+      ) : (
         <div
-          className="absolute bg-gray-500 rounded-full"
+          className="relative rounded-full bg-[#111111] aspect-square"
           style={{
-            width: '10px',
-            height: '10px',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}
-        />
-        {[smallR, midR, bigR].map((r, idx) => (
+            width: 'min(100vw, 320px)',
+            height: 'min(100vw, 320px)',
+          }}>
           <div
-            key={idx}
-            className="absolute border border-gray-500 rounded-full"
+            className="absolute bg-gray-500 rounded-full"
             style={{
-              width: `${r * 2}%`,
-              height: `${r * 2}%`,
-              left: `${50 - r}%`,
-              top: `${50 - r}%`,
+              width: '10px',
+              height: '10px',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
             }}
           />
-        ))}
-        {userPositions.map(({ x, y, user }) => (
-          <div
-            key={user.id}
-            className="absolute flex flex-col items-center"
-            style={{
-              left: `${x}%`,
-              top: `${y}%`,
-              transform: 'translate(-50%, -50%)',
-            }}>
-            <img
-              src={avatarIcon}
-              alt="avatar"
-              className={`w-[28px] h-[28px] `}
+          {[smallR, midR, bigR].map((r, idx) => (
+            <div
+              key={idx}
+              className="absolute border border-gray-500 rounded-full"
+              style={{
+                width: `${r * 2}%`,
+                height: `${r * 2}%`,
+                left: `${50 - r}%`,
+                top: `${50 - r}%`,
+              }}
             />
-            <p className="text-[10px] text-white whitespace-nowrap">
-              {user.nickname}
-            </p>
-          </div>
-        ))}
-      </div>
+          ))}
+          {userPositions.map(({ x, y, user }) => (
+            <div
+              key={user.id}
+              className="absolute flex flex-col items-center"
+              style={{
+                left: `${x}%`,
+                top: `${y}%`,
+                transform: 'translate(-50%, -50%)',
+              }}>
+              <img
+                src={avatarIcon}
+                alt="avatar"
+                className={`w-[28px] h-[28px]`}
+              />
+              <p className="text-[10px] text-white whitespace-nowrap">
+                {user.nickname}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
