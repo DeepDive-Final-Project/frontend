@@ -19,6 +19,8 @@ interface ProfileCardProps {
   onChat?: () => void;
   userId?: number;
   profileId?: number;
+  chatButtonState?: 'CHATTED' | 'MOVE' | 'WAITING' | 'REQUEST';
+  onMoveChat?: () => void;
 }
 
 const ProfileCard = ({
@@ -32,6 +34,8 @@ const ProfileCard = ({
   profileImageUrl,
   userId,
   profileId,
+  chatButtonState,
+  onMoveChat,
 }: ProfileCardProps) => {
   const navigate = useNavigate();
   const isOwner = userId === profileId;
@@ -99,17 +103,27 @@ const ProfileCard = ({
         </div>
       </div>
 
-
-
-
-      {/* ✅ 소유자일 경우 대화요청 버튼 숨기기 */}
       {!isOwner && (
-        <Button
-          className="mobile:mt-6 mt-1"
-          icon={<MessageCircle size={20} />}
-          onClick={onChat}>
-          대화 요청하기
-        </Button>
+        <div className="mt-10">
+          {chatButtonState === 'CHATTED' && (
+            <Button variant="secondary" disabled>
+              채팅 종료됨
+            </Button>
+          )}
+          {chatButtonState === 'MOVE' && (
+            <Button onClick={onMoveChat}>채팅방으로 이동하기</Button>
+          )}
+          {chatButtonState === 'WAITING' && (
+            <Button variant="secondary" disabled>
+              수락 대기중...
+            </Button>
+          )}
+          {chatButtonState === 'REQUEST' && (
+            <Button icon={<MessageCircle size={20} />} onClick={onChat}>
+              대화 요청하기
+            </Button>
+          )}
+        </div>
       )}
     </div>
   );
