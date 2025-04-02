@@ -30,7 +30,9 @@ const ChatProfileInfo = ({ otherId }: ChatProfileInfoProps) => {
       </div>
       <b className="mt-2 text-lg">{profile.nickName}</b>
       <p className="font-medium">{profile.role}</p>
-      <Link to="/" className="flex items-center mt-2 text-[#B7B9BD]">
+      <Link
+        to={`/profilePreview/${otherId}`}
+        className="flex items-center mt-2 text-[#B7B9BD]">
         프로필 보기
         <ChevronRight size={16} />
       </Link>

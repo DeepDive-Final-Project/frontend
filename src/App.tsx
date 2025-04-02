@@ -16,6 +16,8 @@ import TestPage from '@/pages/TestPage';
 import ProfileLayout from '@/pages/profile/layout/ProfileLayout.tsx';
 import LandingPage from '@/pages/LandingPage.tsx';
 import EditMyPage from '@/pages/EditMyPage.tsx';
+import ProfilePreviewPage from '@/pages/ProfilePreviewPage';
+
 export default function App() {
   return (
     <>
@@ -37,6 +39,10 @@ export default function App() {
           <Route path="/editmy" element={<EditMyPage />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/chatProfile" element={<ChatProfile />} />
+          <Route
+            path="/profilePreview/:otherId"
+            element={<ProfilePreviewPage />}
+          />
         </Routes>
         <ToastContainer
           position="top-right"
