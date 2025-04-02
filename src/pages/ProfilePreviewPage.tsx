@@ -1,10 +1,60 @@
-import { useParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { useParams, useNavigate } from 'react-router-dom';
 import ProfileCard from '@/components/common/ProfileCard';
+import { useChatRequest } from '@/hooks/useChatRequest';
 import { useUserProfile } from '@/hooks/useUserProfile';
+import { useChatRequestStore } from '@/stores/useChatRequestStore';
+import { useChatMyInfo } from '@/stores/useChatMyInfoStore';
+import { getChatButtonState } from '@/utils/chat/getChatButtonState';
+import { chatRoomRequestId } from '@/utils/chat/chatRoomRequestId';
+import { toast } from 'react-toastify';
 
 const ProfilePreviewPage = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { otherId } = useParams<{ otherId: string }>();
   const { profile, loading } = useUserProfile(Number(otherId));
+
+  // 버튼 상태값 가져오기
+  const { sent, received } = useChatRequestStore();
+  const { userId, nickName } = useChatMyInfo();
+
+  const chatButtonState = getChatButtonState(
+    profile?.nickName ?? '',
+    sent,
+    received,
+  );
+
+  const acceptedChat = [...sent.ACCEPTED, ...received.ACCEPTED].find(
+    (req) =>
+      req.senderNickname === profile?.nickName ||
+      req.receiverNickname === profile?.nickName,
+  );
+
+  const handleMoveChat = () => {
+    if (acceptedChat) {
+      chatRoomRequestId(acceptedChat.id, navigate);
+    }
+  };
+
+  // 채팅 요청
+  const { mutate: chatRequest } = useChatRequest();
+  const onChatRequest = (receiverNickname: string) => {
+    if (!nickName) return;
+
+    chatRequest(
+      { senderNickname: nickName, receiverNickname },
+      {
+        onSuccess: () => {
+          toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
+
+          queryClient.invalidateQueries({
+            queryKey: ['chatSentList', nickName, 'PENDING'],
+          });
+        },
+      },
+    );
+  };
 
   if (!otherId)
     return (
@@ -32,8 +82,11 @@ const ProfilePreviewPage = () => {
             url: link.link,
           }))}
           profileImageUrl={profile.profileImage}
+          userId={userId}
           profileId={profile.id}
-          onChat={() => console.log('대화 요청')}
+          chatButtonState={chatButtonState}
+          onChat={() => onChatRequest(profile.nickName)}
+          onMoveChat={handleMoveChat}
         />
       </div>
     </div>
