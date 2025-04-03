@@ -46,11 +46,11 @@ const UserCard: React.FC<UserCardProps> = ({
   return (
     <div className="relative w-full">
       <div
-        className={` user-card
+        className={` user-card aspect-[3/5]
     rounded-xl flex flex-col text-white relative overflow-hidden border-2 border-gray-600 bg-[#0A0A0B]
-    w-full max-w-[288px] min-w-[128px] min-h-[224px] max-h-[502px]
-    tablet:max-w-[320px] tablet:min-h-[280px]
-    desktop:max-w-[360px] desktop:min-h-[320px]
+    w-full max-w-[288px] min-w-[128px] 
+    tablet:max-w-[320px] 
+    desktop:max-w-[360px] 
     mx-auto `}
         onClick={handleCardClick}>
         <div className="relative w-full h-48 rounded-lg overflow-hidden">
