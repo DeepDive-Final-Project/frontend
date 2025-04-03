@@ -18,7 +18,7 @@ const Filter: React.FC = () => {
   const isCareerDisabled = role === '학생' || role === '기타';
 
   return (
-    <div className="flex gap-2 items-start w-full px-2">
+    <div className="flex gap-x-3 items-start w-full">
       <div className="relative w-1/2">
         <button
           onClick={() => setShowRoleDropdown((prev) => !prev)}

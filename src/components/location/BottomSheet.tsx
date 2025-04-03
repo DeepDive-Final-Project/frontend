@@ -316,7 +316,7 @@ const BottomSheet: React.FC = () => {
         </div>
 
         {mode === 'explore' && (
-          <div className="pt-2 pb-3">
+          <div className="pt-2 pb-3 px-5">
             <Filter />
           </div>
         )}
@@ -343,18 +343,20 @@ const BottomSheet: React.FC = () => {
             </button>
           </div>
         )}
-        <div className="grid grid-cols-2 gap-x-5 gap-y-5 w-full max-w-full">
-          {visibleCards.map((card, index) => {
-            const isLeftCol = index % 2 === 0;
-            const topMargin =
-              index < 2 ? (isLeftCol ? 'mt-[40px]' : 'mt-[60px]') : 'mt-5';
+        <div className="flex-1 overflow-y-auto px-4 pb-4">
+          <div className="grid grid-cols-2 gap-x-5 gap-y-5 px-5">
+            {visibleCards.map((card, index) => {
+              const isLeftCol = index % 2 === 0;
+              const topMargin =
+                index < 2 ? (isLeftCol ? 'mt-[40px]' : 'mt-[60px]') : 'mt-5';
 
-            return (
-              <div key={index} className={`${topMargin}`}>
-                {card}
-              </div>
-            );
-          })}
+              return (
+                <div key={index} className={`${topMargin}`}>
+                  {card}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
