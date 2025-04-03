@@ -2,7 +2,7 @@ import { useBottomSheetStore } from '@/stores/useBottomSheetStore';
 import { useNavBarStore } from '@/stores/useNavBarStore';
 import { useFilterStore } from '@/stores/useFilterStore';
 import { useUserStore } from '@/stores/useUserStore';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   Mail,
   Users,
@@ -46,6 +46,7 @@ const LocationNavBar: React.FC = () => {
   const [shareLocation, setShareLocation] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
+  const moreRef = useRef<HTMLDivElement | null>(null);
 
   const fetchMyInfo = async () => {
     try {
@@ -187,7 +188,22 @@ const LocationNavBar: React.FC = () => {
       },
     );
   };
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        moreSetting &&
+        moreRef.current &&
+        !moreRef.current.contains(e.target as Node)
+      ) {
+        setMoreSetting(false);
+      }
+    };
 
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [moreSetting]);
   const buttons = [
     {
       icon: (
@@ -287,7 +303,9 @@ const LocationNavBar: React.FC = () => {
         </div>
 
         {moreSetting && (
-          <div className="mt-2 bg-[#0A0A0B] border border-[#B0B2B7] rounded-lg px-4 py-4 w-full shadow-lg z-50">
+          <div
+            ref={moreRef}
+            className="mt-2 bg-[#0A0A0B] border border-[#B0B2B7] rounded-lg px-4 py-4 w-full shadow-lg z-50">
             <p className="text-sm font-semibold leading-tight border-b border-[#262626] ">
               설정하기
             </p>
