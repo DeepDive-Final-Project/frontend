@@ -351,7 +351,9 @@ const BottomSheet: React.FC = () => {
                 index < 2 ? (isLeftCol ? 'mt-[40px]' : 'mt-[60px]') : 'mt-5';
 
               return (
-                <div key={index} className={`${topMargin}`}>
+                <div
+                  key={index}
+                  className={`${topMargin} ${isLeftCol ? 'ml-[20px]' : 'mr-[20px]'}`}>
                   {card}
                 </div>
               );
