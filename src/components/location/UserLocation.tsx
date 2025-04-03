@@ -48,7 +48,16 @@ const UserLocation = () => {
   return (
     <div className="w-full flex justify-center items-center bg-[#000000]">
       {users.length === 0 ? (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center mt-14">
+          <div className="self-stretch text-center justify-start text-color-Base-white-2 text-base font-normal leading-normal">
+            Opps!
+          </div>
+          <div className="self-stretch text-center justify-start text-color-Base-white-1 text-2xl font-medium  leading-9">
+            어디에 계시나요?
+          </div>
+          <div className="self-stretch text-center justify-start text-color-Base-white-2 text-base font-normal leading-normal">
+            내 위치를 공개 해보아요요
+          </div>
           <img
             src={NoneRadar}
             alt="위치 정보 없음"

@@ -3,10 +3,9 @@ import BottomSheet from 'src/components/location/BottomSheet';
 // import LocationButton from 'src/components/location/LocationButton';
 import LocationNavBar from 'src/components/location/LocationNavBar';
 import RightSheet from '@/components/location/RightSheet';
-import CommonNav from "@/components/common/CommomNav.tsx";
+import CommonNav from '@/components/common/CommomNav.tsx';
 
 const LocationPage = () => {
-
   return (
     <div className="w-full min-h-screen bg-[#000000] flex flex-col">
       <CommonNav />
