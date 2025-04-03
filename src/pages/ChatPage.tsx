@@ -78,10 +78,11 @@ const ChatPage = () => {
     <div className="max-w-[1440px] m-auto flex h-screen overflow-hidden">
       <div
         className={`
-    flex flex-col flex-shrink-0  h-full
-    ${expandedMessage ? 'hidden desktop:w-[33.33%] tablet:w-[320px]' : 'desktop:w-[400px]'}
-    ${selectedRoom ? 'hidden tablet:flex w-[320px] desktop:w-[400px]' : 'flex w-full'}
-     overflow-y-auto border border-[#222325] bg-[#0A0A0B]
+    flex flex-col flex-shrink-0 h-full
+    overflow-y-auto border border-[#222325] bg-[#0A0A0B]
+    w-full tablet:w-[320px]
+    ${expandedMessage ? 'desktop:w-1/3' : 'desktop:w-[400px]'}
+    ${selectedRoom ? 'hidden tablet:flex' : 'flex'}
   `}>
         <ChatFilter
           filter={{
@@ -100,10 +101,9 @@ const ChatPage = () => {
       </div>
       <div
         className={`
-    relative flex flex-col flex-auto
-    ${selectedRoom ? 'flex' : 'hidden tablet:flex flex-auto'}
-    ${expandedMessage ? 'tablet:w-[33.33%]' : ''}
-  `}>
+      relative flex flex-col flex-auto
+      ${selectedRoom ? 'flex' : 'hidden'} tablet:flex
+    `}>
         <ChatHeader
           otherUser={otherUser}
           roomId={selectedRoom?.roomId ?? 0}
