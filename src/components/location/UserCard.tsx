@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import Tag from './Tag';
 import { ChevronUp, ChevronDown } from 'react-feather';
 import { useBottomSheetStore } from '@/stores/useBottomSheetStore';
 import { User } from '@/stores/useUserStore';
 import gradientOverlay from '@/assets/images/user_profile_radial_gradient.png';
+import Tag from './Tag';
 
 interface UserCardProps {
   user: User;
@@ -87,6 +87,7 @@ const UserCard: React.FC<UserCardProps> = ({
             )}
           </div>
         </div>
+
         {mode === 'explore' &&
           (isSelected ? (
             <div className="p-2 mt-2 flex flex-col gap-2 bg-[#0A0A0B] rounded-b-lg transition-all">
@@ -95,21 +96,43 @@ const UserCard: React.FC<UserCardProps> = ({
                 className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] hover:bg-blue-500 text-xs mobile:text-sm tablet:text-base">
                 상세 프로필 보기
               </button>
-              <button
-                disabled={isRequested}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRequest();
-                }}
-                className={`w-full px-2 py-2 rounded-3xl text-white transition-all
-                text-xs mobile:text-sm tablet:text-base
-                ${
-                  isRequested
-                    ? 'bg-gray-600 cursor-not-allowed'
-                    : 'bg-[#0A0A0B] hover:bg-blue-500'
-                }`}>
-                {isRequested ? '요청 완료' : '대화 요청하기'}
-              </button>
+
+              {buttonLabel === '채팅방으로 이동' && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onButtonClick?.();
+                  }}
+                  className="w-full px-2 py-2 rounded-3xl text-white bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
+                  채팅방으로 이동
+                </button>
+              )}
+
+              {buttonLabel === '수락 대기중...' && (
+                <button
+                  disabled
+                  className="w-full px-2 py-2 rounded-3xl text-white bg-gray-600 cursor-not-allowed text-xs mobile:text-sm tablet:text-base">
+                  수락 대기중...
+                </button>
+              )}
+
+              {!buttonLabel && (
+                <button
+                  disabled={isRequested}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onRequest();
+                  }}
+                  className={`w-full px-2 py-2 rounded-3xl text-white transition-all
+            text-xs mobile:text-sm tablet:text-base
+            ${
+              isRequested
+                ? 'bg-gray-600 cursor-not-allowed'
+                : 'bg-[#0A0A0B] hover:bg-[#146EF5]'
+            }`}>
+                  {isRequested ? '요청 완료' : '대화 요청하기'}
+                </button>
+              )}
             </div>
           ) : (
             <div className="p-2 mt-2 bg-[#0A0A0B] rounded-b-lg transition-all">
@@ -132,7 +155,7 @@ const UserCard: React.FC<UserCardProps> = ({
                     e.stopPropagation();
                     if (onButtonClick) onButtonClick();
                   }}
-                  className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B]  text-xs mobile:text-sm tablet:text-base">
+                  className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] text-xs mobile:text-sm tablet:text-base">
                   수락하기
                 </button>
                 <button
