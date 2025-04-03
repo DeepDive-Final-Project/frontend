@@ -283,8 +283,12 @@ const LocationNavBar: React.FC = () => {
                       : users.length === 0
                         ? 'bg-[#111111] text-gray-400 border border-[#146EF5]'
                         : 'bg-[#111111] text-gray-400'
-                    : index < 2
-                      ? 'bg-[#4E5157] text-#8D8F96'
+                    : index === 0 || index === 1
+                      ? users.length === 0
+                        ? 'bg-[#4E5157] text-[#8D8F96]'
+                        : isActive
+                          ? 'bg-blue-500 text-white shadow-[inset_0px_1px_8px_0px_rgba(255,255,255,0.30)]'
+                          : 'bg-[#111111] text-gray-400'
                       : isActive
                         ? 'bg-blue-500 text-white shadow-[inset_0px_1px_8px_0px_rgba(255,255,255,0.30)]'
                         : 'bg-[#111111] text-gray-400'
