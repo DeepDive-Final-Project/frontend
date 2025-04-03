@@ -18,7 +18,7 @@ const ConfirmModal = ({
   onCancel,
 }: ConfirmModalProps) => {
   return (
-    <div className="fixed z-10 inset-0 flex items-center justify-center bg-black bg-opacity-70">
+    <div className="fixed z-10 inset-0 flex p-5 items-center justify-center bg-black bg-opacity-70">
       <div className="w-full tablet:w-[400px] p-5 rounded-lg border border-[#222325] bg-[#141415]">
         <h3 className="font-semibold mb-2 leading-normal">{title}</h3>
         {description && (

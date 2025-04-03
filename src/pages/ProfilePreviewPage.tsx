@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ProfileCard from '@/components/common/ProfileCard';
 import { useChatRequest } from '@/hooks/useChatRequest';
 import { useUserProfile } from '@/hooks/useUserProfile';
+import { useChatRequestFetch } from '@/hooks/useChatRequestFetch';
 import { useChatRequestStore } from '@/stores/useChatRequestStore';
 import { useChatMyInfo } from '@/stores/useChatMyInfoStore';
 import { getChatButtonState } from '@/utils/chat/getChatButtonState';
@@ -55,6 +56,8 @@ const ProfilePreviewPage = () => {
       },
     );
   };
+
+  useChatRequestFetch(nickName ?? '');
 
   if (!otherId)
     return (

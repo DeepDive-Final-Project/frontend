@@ -78,7 +78,8 @@ const ChatMessageItem = ({
                     onExpand={onExpand}
                   />
                   {msg.timeStamp && (
-                    <p className="my-2 text-[#A2A4AA] text-right text-xs">
+                    <p
+                      className={`my-2 text-[#A2A4AA] text-xs ${isMyMessage ? 'text-right' : 'text-left'}`}>
                       {formatTime(msg.timeStamp)}
                     </p>
                   )}
