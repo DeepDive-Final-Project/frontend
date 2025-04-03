@@ -343,10 +343,18 @@ const BottomSheet: React.FC = () => {
             </button>
           </div>
         )}
-        <div className="flex-1 overflow-y-auto px-4 pb-4">
-          <div className="grid grid-cols-2 gap-4 w-full max-w-full">
-            {visibleCards}
-          </div>
+        <div className="grid grid-cols-2 gap-x-5 gap-y-5 w-full max-w-full">
+          {visibleCards.map((card, index) => {
+            const isLeftCol = index % 2 === 0;
+            const topMargin =
+              index < 2 ? (isLeftCol ? 'mt-[40px]' : 'mt-[60px]') : 'mt-5';
+
+            return (
+              <div key={index} className={`${topMargin}`}>
+                {card}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
