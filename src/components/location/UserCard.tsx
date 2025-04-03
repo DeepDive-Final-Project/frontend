@@ -93,7 +93,7 @@ const UserCard: React.FC<UserCardProps> = ({
             <div className="p-2 mt-2 flex flex-col gap-2 bg-[#0A0A0B] rounded-b-lg transition-all">
               <button
                 onClick={(e) => e.stopPropagation()}
-                className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] hover:bg-blue-500 text-xs mobile:text-sm tablet:text-base">
+                className="w-full px-2 py-2 rounded-full text-#E6E6E6 bg-[#0A0A0B] hover:bg-#146EF5 text-xs mobile:text-sm tablet:text-base">
                 상세 프로필 보기
               </button>
 
@@ -103,7 +103,7 @@ const UserCard: React.FC<UserCardProps> = ({
                     e.stopPropagation();
                     onButtonClick?.();
                   }}
-                  className="w-full px-2 py-2 rounded-3xl text-white bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
+                  className="w-full px-2 py-2 rounded-3xl text-#E6E6E6 bg-[#0A0A0B] hover:#146EF5 text-xs mobile:text-sm tablet:text-base">
                   채팅방으로 이동
                 </button>
               )}
@@ -111,7 +111,7 @@ const UserCard: React.FC<UserCardProps> = ({
               {buttonLabel === '수락 대기중...' && (
                 <button
                   disabled
-                  className="w-full px-2 py-2 rounded-3xl text-white bg-gray-600 cursor-not-allowed text-xs mobile:text-sm tablet:text-base">
+                  className="w-full px-2 py-2 rounded-3xl border border-#2C7DF6 text-#E6E6E6 bg-#0A0A0B cursor-not-allowed text-xs mobile:text-sm tablet:text-base">
                   수락 대기중...
                 </button>
               )}
@@ -123,7 +123,7 @@ const UserCard: React.FC<UserCardProps> = ({
                     e.stopPropagation();
                     onRequest();
                   }}
-                  className={`w-full px-2 py-2 rounded-3xl text-white transition-all
+                  className={`w-full px-2 py-2 rounded-3xl text-#E6E6E6 transition-all
             text-xs mobile:text-sm tablet:text-base
             ${
               isRequested
@@ -144,7 +144,7 @@ const UserCard: React.FC<UserCardProps> = ({
 
         {mode === 'chat' && (
           <div className="p-2 mt-2 flex flex-col gap-2 bg-[#0A0A0B] rounded-b-lg transition-all">
-            <button className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
+            <button className="w-full px-2 py-2 rounded-full text-#E6E6E6 bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
               상세 프로필 보기
             </button>
 
@@ -155,7 +155,7 @@ const UserCard: React.FC<UserCardProps> = ({
                     e.stopPropagation();
                     if (onButtonClick) onButtonClick();
                   }}
-                  className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] text-xs mobile:text-sm tablet:text-base">
+                  className="w-full px-2 py-2 rounded-full text-#E6E6E6 bg-[#0A0A0B] text-xs mobile:text-sm tablet:text-base">
                   수락하기
                 </button>
                 <button
@@ -163,7 +163,7 @@ const UserCard: React.FC<UserCardProps> = ({
                     e.stopPropagation();
                     if (onRejectClick) onRejectClick();
                   }}
-                  className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] text-xs mobile:text-sm tablet:text-base">
+                  className="w-full px-2 py-2 rounded-full text-#E6E6E6 bg-[#0A0A0B] text-xs mobile:text-sm tablet:text-base">
                   거절하기
                 </button>
               </>
@@ -175,7 +175,7 @@ const UserCard: React.FC<UserCardProps> = ({
                   e.stopPropagation();
                   if (onButtonClick) onButtonClick();
                 }}
-                className="w-full px-2 py-2 rounded-full text-white bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
+                className="w-full px-2 py-2 rounded-full text-#E6E6E6 bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
                 채팅방으로 이동
               </button>
             )}

@@ -17,7 +17,6 @@ import axios from 'axios';
 import { logout } from '@/hooks/useLogout';
 import { useNavigate } from 'react-router-dom';
 
-// 타입 선언
 type RawUser = {
   id: number;
   nickName: string;
@@ -41,6 +40,7 @@ const LocationNavBar: React.FC = () => {
   const setActiveIndex = useNavBarStore((state) => state.setActiveIndex);
   const resetFilters = useFilterStore((state) => state.resetFilters);
   const setUsers = useUserStore((state) => state.setUsers);
+  const users = useUserStore((state) => state.users);
   const navigate = useNavigate();
   const [moreSetting, setMoreSetting] = useState(false);
   const [shareLocation, setShareLocation] = useState(false);
@@ -252,23 +252,36 @@ const LocationNavBar: React.FC = () => {
             const isMoreButton = index === 4;
 
             return (
-              <button
-                key={btn.label}
-                onClick={() => {
-                  if (!isMoreButton) setMoreSetting(false);
-                  btn.onClick();
-                }}
-                className={`w-10 h-10 flex items-center justify-center rounded-lg transition-colors
+              <div key={btn.label} className="relative">
+                <button
+                  key={btn.label}
+                  onClick={() => {
+                    if (!isMoreButton) setMoreSetting(false);
+                    btn.onClick();
+                  }}
+                  className={`w-10 h-10 flex items-center justify-center rounded-lg transition-colors
                 ${
-                  isMoreButton && isActive
-                    ? 'bg-[#e5e5e5] text-[#1d4ed8]'
-                    : isActive
-                      ? 'bg-blue-500 text-white shadow-[inset_0px_1px_8px_0px_rgba(255,255,255,0.30)]'
-                      : 'bg-[#111111] text-gray-400'
+                  isMoreButton
+                    ? isActive
+                      ? 'bg-[#e5e5e5] text-[#1d4ed8]'
+                      : users.length === 0
+                        ? 'bg-[#111111] text-gray-400 border border-[#146EF5]'
+                        : 'bg-[#111111] text-gray-400'
+                    : index < 2
+                      ? 'bg-[#4E5157] text-#8D8F96'
+                      : isActive
+                        ? 'bg-blue-500 text-white shadow-[inset_0px_1px_8px_0px_rgba(255,255,255,0.30)]'
+                        : 'bg-[#111111] text-gray-400'
                 }
                 ${index === 2 || index === 3 ? 'border-r border-[#333333]' : ''}`}>
-                {btn.icon}
-              </button>
+                  {btn.icon}
+                </button>
+                {isMoreButton && users.length === 0 && (
+                  <span className="absolute left-1/2 -bottom-8 -translate-x-1/2 px-2 py-1 text-xs rounded-md bg-[#262627] text-#E6E6E6 whitespace-nowrap z-10">
+                    내 위치 공개는 여기에 있어요
+                  </span>
+                )}
+              </div>
             );
           })}
         </div>
