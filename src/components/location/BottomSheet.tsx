@@ -26,12 +26,8 @@ const BottomSheet: React.FC = () => {
 
   const { userId } = useChatMyInfo();
   const { nickName } = useChatMyInfo();
-  const { mutate: chatRequest } = useChatRequest();
-  const { mutate: acceptRequest } = useAcceptRequest();
-  const { mutate: rejectRequest } = useRejectRequest();
 
   const { sent, received } = useChatRequestStore();
-  const sentPending = sent.PENDING;
 
   const height = useBottomSheetStore((state) => state.height);
   const setHeight = useBottomSheetStore((state) => state.setHeight);
@@ -52,96 +48,83 @@ const BottomSheet: React.FC = () => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
   }, []);
 
-  const handleRequest = useCallback(
-    (receiverNickname: string) => {
-      if (!nickName) return;
-      chatRequest(
-        { senderNickname: nickName, receiverNickname },
-        {
-          onSuccess: (data) => {
-            toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
-            useChatRequestStore
-              .getState()
-              .setChatRequests('sent', 'PENDING', [
-                ...useChatRequestStore.getState().sent.PENDING,
-                data,
-              ]);
-
-            useBottomSheetStore.getState().setChatTab('sent');
-
-            queryClient.invalidateQueries({
-              queryKey: ['chatRequestList', nickName, 'PENDING'],
-            });
-          },
-          onError: () => {
-            toast.error('요청에 실패했습니다.');
-          },
-        },
-      );
-    },
-    [nickName, chatRequest, sentPending, queryClient],
-  );
-
-  const handleAcceptRequest = useCallback(
-    (req: ChatRequestType) => {
-      acceptRequest(req.id, {
-        onSuccess: (data) => {
-          toast.success(`${req.senderNickname}님의 요청을 수락했습니다.`);
-
-          useChatRequestStore.getState().setChatRequests(
-            'received',
-            'PENDING',
-            received.PENDING.filter((r) => r.id !== req.id),
-          );
-
-          useChatRequestStore
-            .getState()
-            .setChatRequests('received', 'ACCEPTED', [
-              ...received.ACCEPTED,
-              { ...req, status: 'ACCEPTED' },
-            ]);
-
-          useChatRequestStore
-            .getState()
-            .setChatRequests('sent', 'ACCEPTED', [
-              ...sent.ACCEPTED,
-              { ...req, status: 'ACCEPTED' },
-            ]);
-
-          queryClient.invalidateQueries({
-            queryKey: ['chatReceivedList', nickName, 'PENDING'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: ['chatSentList', nickName, 'ACCEPTED'],
-          });
-          if (data.roomId) {
-            navigate(`/chat?roomId=${data.roomId}`);
-          }
-        },
-      });
-    },
-    [
-      acceptRequest,
-      navigate,
-      queryClient,
-      nickName,
-      received.PENDING,
-      received.ACCEPTED,
-      sent.ACCEPTED,
-    ],
-  );
-
-  const handleRejectRequest = useCallback(
-    (requestId: number) => {
-      rejectRequest(requestId, {
+  const { mutate: chatRequest } = useChatRequest();
+  const handleRequest = (receiverNickname: string) => {
+    if (!nickName) return;
+    chatRequest(
+      { senderNickname: nickName, receiverNickname },
+      {
         onSuccess: () => {
-          toast.success('요청을 거절했습니다.');
-          queryClient.invalidateQueries({ queryKey: ['chatRequestList'] });
+          toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
+          useChatRequestStore
+            .getState()
+            .setChatRequests('sent', 'PENDING', [
+              ...useChatRequestStore.getState().sent.PENDING,
+            ]);
+
+          useBottomSheetStore.getState().setChatTab('sent');
+
+          queryClient.invalidateQueries({
+            queryKey: ['chatRequestList', nickName, 'PENDING'],
+          });
         },
-      });
-    },
-    [rejectRequest, queryClient],
-  );
+        onError: () => {
+          toast.error('요청에 실패했습니다.');
+        },
+      },
+    );
+  };
+
+  const { mutate: acceptRequest } = useAcceptRequest();
+  const handleAcceptRequest = (req: ChatRequestType) => {
+    acceptRequest(req.id, {
+      onSuccess: (data) => {
+        toast.success(`${req.senderNickname}님의 요청을 수락했습니다.`);
+
+        useChatRequestStore.getState().setChatRequests(
+          'received',
+          'PENDING',
+          received.PENDING.filter((r) => r.id !== req.id),
+        );
+
+        useChatRequestStore
+          .getState()
+          .setChatRequests('received', 'ACCEPTED', [
+            ...received.ACCEPTED,
+            { ...req, status: 'ACCEPTED' },
+          ]);
+
+        useChatRequestStore
+          .getState()
+          .setChatRequests('sent', 'ACCEPTED', [
+            ...sent.ACCEPTED,
+            { ...req, status: 'ACCEPTED' },
+          ]);
+        setTimeout(() => {
+          if (data.roomId) {
+            navigate(`/chat?roomId=${data.roomId}`, { replace: true });
+          }
+        }, 600);
+        queryClient.invalidateQueries({
+          queryKey: ['chatReceivedList', nickName, 'PENDING'],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['chatSentList', nickName, 'ACCEPTED'],
+        });
+      },
+    });
+  };
+  const { mutate: rejectRequest } = useRejectRequest();
+  const handleRejectRequest = (requestId: number) => {
+    rejectRequest(requestId, {
+      onSuccess: () => {
+        toast.success('요청을 거절했습니다.');
+        queryClient.invalidateQueries({
+          queryKey: ['chatRequestList', nickName, 'PENDING'],
+        });
+      },
+    });
+  };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return;
