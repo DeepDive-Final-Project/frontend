@@ -174,48 +174,50 @@ const BottomSheet: React.FC = () => {
     const { PENDING: sentPending, ACCEPTED: sentAccepted } = sent;
     const { PENDING: receivedPending, ACCEPTED: receivedAccepted } = received;
 
-    return filteredUsers.map((user) => {
-      const state = getChatButtonState(
-        user.nickName,
-        { PENDING: sentPending, ACCEPTED: sentAccepted },
-        { PENDING: receivedPending, ACCEPTED: receivedAccepted },
-      );
-
-      const isRequested = state === 'WAITING';
-      const isAccepted = state === 'MOVE';
-
-      let buttonLabel: string | undefined;
-      let onButtonClick: (() => void) | undefined;
-
-      if (state === 'CHATTED') {
-        buttonLabel = '대화한 적 있음';
-      } else if (isAccepted) {
-        buttonLabel = '채팅방으로 이동';
-        const acceptedChat = [...sentAccepted, ...receivedAccepted].find(
-          (req) =>
-            req.senderNickname === user.nickName ||
-            req.receiverNickname === user.nickName,
+    return filteredUsers
+      .map((user) => {
+        const state = getChatButtonState(
+          user.nickName,
+          { PENDING: sentPending, ACCEPTED: sentAccepted },
+          { PENDING: receivedPending, ACCEPTED: receivedAccepted },
         );
-        if (acceptedChat) {
-          onButtonClick = () => chatRoomRequestId(acceptedChat.id, navigate);
-        }
-      } else if (isRequested) {
-        buttonLabel = '수락 대기중...';
-      }
 
-      return (
-        <UserCard
-          key={user.id}
-          user={user}
-          onSelect={handleUserSelect}
-          selectedUserId={selectedUserId}
-          isRequested={isRequested}
-          onRequest={() => handleRequest(user.nickName)}
-          buttonLabel={buttonLabel}
-          onButtonClick={onButtonClick}
-        />
-      );
-    });
+        const isRequested = state === 'WAITING';
+        const isAccepted = state === 'MOVE';
+
+        let buttonLabel: string | undefined;
+        let onButtonClick: (() => void) | undefined;
+
+        if (state === 'CHATTED') {
+          buttonLabel = '대화한 적 있음';
+        } else if (isAccepted) {
+          buttonLabel = '채팅방으로 이동';
+          const acceptedChat = [...sentAccepted, ...receivedAccepted].find(
+            (req) =>
+              req.senderNickname === user.nickName ||
+              req.receiverNickname === user.nickName,
+          );
+          if (acceptedChat) {
+            onButtonClick = () => chatRoomRequestId(acceptedChat.id, navigate);
+          }
+        } else if (isRequested) {
+          buttonLabel = '수락 대기중...';
+        }
+
+        return (
+          <UserCard
+            key={user.id}
+            user={user}
+            onSelect={handleUserSelect}
+            selectedUserId={selectedUserId}
+            isRequested={isRequested}
+            onRequest={() => handleRequest(user.nickName)}
+            buttonLabel={buttonLabel}
+            onButtonClick={onButtonClick}
+          />
+        );
+      })
+      .filter(Boolean);
   }, [
     filteredUsers,
     selectedUserId,
