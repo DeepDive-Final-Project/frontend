@@ -69,7 +69,7 @@ const ProfilePreviewPage = () => {
     return <div className="pt-10 text-center text-[#A2A4AA]">로딩 중...</div>;
 
   return (
-    <div className="relative max-w-[375px] m-auto mobile:p-10 p-5 rounded-[4px] text-sm border border-[#222325] bg-[#1E1E1F]">
+    <div className="mt-5">
       <ProfileCard
         name={profile.nickName}
         job={profile.role ?? ''}
