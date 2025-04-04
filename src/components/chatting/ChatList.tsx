@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useChatListStore } from '@/stores/useChatListStore';
 import ChatListItem from './ChatListItem';
 import Button from '@/components/common/Button';
@@ -46,7 +46,9 @@ const ChatList = ({ isLoading, error, onSelectRoom }: ChatListProps) => {
           내 주변 참가자를 탐색하고 <br />
           채팅을 시작해보세요
         </p>
-        <Button className="mt-5">지금 탐색하러 가기</Button>
+        <Button as={Link} to="/home" className="mt-5">
+          지금 탐색하러 가기
+        </Button>
       </div>
     );
   }
