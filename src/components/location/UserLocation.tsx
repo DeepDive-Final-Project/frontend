@@ -56,7 +56,7 @@ const UserLocation = () => {
             어디에 계시나요?
           </div>
           <div className="self-stretch text-center justify-start text-color-Base-white-2 text-base font-normal leading-normal">
-            내 위치를 공개 해보아요요
+            내 위치를 공개 해보아요
           </div>
           <img
             src={NoneRadar}
