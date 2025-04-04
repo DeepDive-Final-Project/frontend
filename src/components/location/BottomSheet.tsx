@@ -208,7 +208,24 @@ const BottomSheet: React.FC = () => {
   ]);
 
   const sentCards = useMemo(() => {
-    return sent.ACCEPTED.map((req) => {
+    const allPending = sent.PENDING.map((req) => {
+      const user = users.find((u) => u.nickName === req.receiverNickname);
+      if (!user) return null;
+
+      return (
+        <UserCard
+          key={user.id}
+          user={user}
+          onSelect={handleUserSelect}
+          selectedUserId={selectedUserId}
+          isRequested={true}
+          onRequest={() => {}}
+          buttonLabel="수락 대기중..."
+          onButtonClick={() => chatRoomRequestId(req.id, navigate)}
+        />
+      );
+    });
+    const allAccepted = sent.ACCEPTED.map((req) => {
       const user = users.find((u) => u.nickName === req.receiverNickname);
       if (!user) return null;
 
@@ -224,8 +241,16 @@ const BottomSheet: React.FC = () => {
           onButtonClick={() => chatRoomRequestId(req.id, navigate)}
         />
       );
-    }).filter(Boolean);
-  }, [sent.ACCEPTED, users, selectedUserId, handleUserSelect, navigate]);
+    });
+    return [...allPending, ...allAccepted].filter(Boolean);
+  }, [
+    sent.PENDING,
+    sent.ACCEPTED,
+    users,
+    selectedUserId,
+    handleUserSelect,
+    navigate,
+  ]);
 
   const receivedPendingCards = useMemo(() => {
     return received.PENDING.map((req) => {
