@@ -20,11 +20,7 @@ const ProfilePreviewPage = () => {
   const { sent, received } = useChatRequestStore();
   const { userId, nickName } = useChatMyInfo();
 
-  const chatButtonState = getChatButtonState(
-    profile?.nickName ?? '',
-    sent,
-    received,
-  );
+  useChatRequestFetch(nickName ?? '');
 
   const acceptedChat = [...sent.ACCEPTED, ...received.ACCEPTED].find(
     (req) =>
@@ -57,8 +53,6 @@ const ProfilePreviewPage = () => {
     );
   };
 
-  useChatRequestFetch(nickName ?? '');
-
   if (!otherId)
     return (
       <div className="pt-10 text-center text-[#A2A4AA]">잘못된 접근입니다.</div>
@@ -66,6 +60,12 @@ const ProfilePreviewPage = () => {
 
   if (loading || !profile)
     return <div className="pt-10 text-center text-[#A2A4AA]">로딩 중...</div>;
+
+  const chatButtonState = getChatButtonState(
+    profile?.nickName ?? '',
+    sent,
+    received,
+  );
 
   return (
     <div className="relative max-w-[375px] m-auto mobile:p-10 p-5 rounded-[4px] text-sm border border-[#222325] bg-[#1E1E1F]">
