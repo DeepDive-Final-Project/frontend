@@ -153,6 +153,13 @@ const UserCard: React.FC<UserCardProps> = ({
             <button className="w-full px-2 py-2 rounded-full text-#E6E6E6 bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
               상세 프로필 보기
             </button>
+            {buttonLabel === '수락 대기중...' && (
+              <button
+                disabled
+                className="-full px-2 py-2 rounded-full border border-[#2C7DF6] text-#E6E6E6 bg-[#0A0A0B] cursor-not-allowed text-xs mobile:text-sm tablet:text-base">
+                수락 대기중...
+              </button>
+            )}
 
             {buttonLabel === '수락하기' && (
               <>
