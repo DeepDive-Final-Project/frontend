@@ -343,7 +343,7 @@ const BottomSheet: React.FC = () => {
             </button>
           </div>
         )}
-        <div className="grid grid-cols-2 gap-x-[20px] gap-y-[20px] px-[20px]">
+        <div className="grid grid-cols-2 gap-x-[20px] gap-y-[20px] px-[20px] overflow-y-auto">
           {visibleCards.map((card, index) => {
             const isLeftCol = index % 2 === 0;
             const isLast = index === visibleCards.length - 1;
