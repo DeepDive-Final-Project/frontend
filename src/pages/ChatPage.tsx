@@ -75,45 +75,53 @@ const ChatPage = () => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-[calc(100vh-64px)] overflow-hidden">
       <div
         className={`
     flex flex-col flex-shrink-0 h-full
-    overflow-y-auto border border-[#222325] bg-[#0A0A0B]
+    border border-[#222325] bg-[#0A0A0B]
     w-full tablet:w-[320px]
     ${expandedMessage ? 'desktop:w-1/3' : 'desktop:w-[400px]'}
     ${selectedRoom ? 'hidden tablet:flex' : 'flex'}
   `}>
-        <ChatFilter
-          filter={{
-            options: filterOptions,
-            selected: selectedOption,
-            onChange: setSelectedOption,
-          }}
-        />
-        <ChatList
-          isLoading={isLoading}
-          error={error}
-          onSelectRoom={(room) => {
-            setSelectedRoom(room);
-          }}
-        />
+        <div className="sticky top-0 z-10 bg-[#0A0A0B]">
+          <ChatFilter
+            filter={{
+              options: filterOptions,
+              selected: selectedOption,
+              onChange: setSelectedOption,
+            }}
+          />
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          <ChatList
+            isLoading={isLoading}
+            error={error}
+            onSelectRoom={(room) => {
+              setSelectedRoom(room);
+            }}
+          />
+        </div>
       </div>
       <div
         className={`
       relative flex flex-col flex-auto
       ${selectedRoom ? 'flex' : 'hidden'} tablet:flex
     `}>
-        <ChatHeader
-          otherUser={otherUser}
-          roomId={selectedRoom?.roomId ?? 0}
-          userId={userId}
-          onBackToList={onBackToList}
-        />
-        <ChatRoom
-          room={selectedRoom}
-          onExpandMessage={(content) => setExpandedMessage(content)}
-        />
+        <div className="sticky top-0 z-10 bg-[#0A0A0B]">
+          <ChatHeader
+            otherUser={otherUser}
+            roomId={selectedRoom?.roomId ?? 0}
+            userId={userId}
+            onBackToList={onBackToList}
+          />
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          <ChatRoom
+            room={selectedRoom}
+            onExpandMessage={(content) => setExpandedMessage(content)}
+          />
+        </div>
       </div>
       {/* 메세지 전체보기 */}
       {expandedMessage && (
