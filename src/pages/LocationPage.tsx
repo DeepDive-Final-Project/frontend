@@ -6,8 +6,8 @@ import RightSheet from '@/components/location/RightSheet';
 
 const LocationPage = () => {
   return (
-    <div className="w-full min-h-screen bg-[#000000] flex flex-col">
-      <div className="flex flex-col tablet:flex-row px-4 gap-4 flex-1">
+    <div className="w-full flex-1 bg-[#000000] flex  flex-col overflow-hidden  ">
+      <div className="flex flex-col tablet:flex-row px-4 gap-4 flex-1 overflow-hidden">
         <div className="w-full tablet:w-1/2 flex flex-col gap-2 mt-6">
           <LocationNavBar />
           {/* <LocationButton /> */}
