@@ -68,8 +68,8 @@ const RightSheet = () => {
               user={user}
               onSelect={() => {}}
               selectedUserId={null}
+              isRequested={false}
               onRequest={() => {}}
-              buttonState={'REQUEST'}
             />
           </div>
         ))}
