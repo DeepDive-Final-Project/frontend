@@ -116,12 +116,10 @@ const ChatPage = () => {
             onBackToList={onBackToList}
           />
         </div>
-        <div className="flex-1 overflow-y-auto">
-          <ChatRoom
-            room={selectedRoom}
-            onExpandMessage={(content) => setExpandedMessage(content)}
-          />
-        </div>
+        <ChatRoom
+          room={selectedRoom}
+          onExpandMessage={(content) => setExpandedMessage(content)}
+        />
       </div>
       {/* 메세지 전체보기 */}
       {expandedMessage && (
