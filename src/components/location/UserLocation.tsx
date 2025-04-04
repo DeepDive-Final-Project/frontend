@@ -46,7 +46,7 @@ const UserLocation = () => {
   }, [users]);
 
   return (
-    <div className="w-full flex justify-center items-center bg-[#000000]">
+    <div className="w-full flex justify-center items-center bg-[#000000] mt-15">
       {users.length === 0 ? (
         <div className="flex flex-col items-center justify-center mt-14">
           <div className="self-stretch text-center justify-start text-color-Base-white-2 text-base font-normal leading-normal">
