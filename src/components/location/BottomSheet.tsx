@@ -18,7 +18,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ChatRequestType } from '@/types/chatRequestType';
 import { getChatButtonState } from '@/utils/chat/getChatButtonState';
 
-const BottomSheet: React.FC = () => {
+const BottomSheet = () => {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const navigate = useNavigate();
@@ -300,7 +300,7 @@ const BottomSheet: React.FC = () => {
     mode === 'chat'
       ? chatTab === 'sent'
         ? sentCards
-        : [...receivedPendingCards, ...receivedAcceptedCards]
+        : [...receivedPendingCards, ...receivedAcceptedCards].filter(Boolean)
       : exploreCards;
 
   return (
