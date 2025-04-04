@@ -57,7 +57,7 @@ const BottomSheet: React.FC = () => {
         onSuccess: () => {
           toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
           queryClient.invalidateQueries({
-            queryKey: ['chatRequestList', nickName, 'PENDING'],
+            queryKey: ['chatSentList', nickName, 'PENDING'],
           });
 
           useBottomSheetStore.getState().setChatTab('sent');
@@ -93,12 +93,12 @@ const BottomSheet: React.FC = () => {
     });
   };
   const { mutate: rejectRequest } = useRejectRequest();
-  const handleRejectRequest = (requestId: number) => {
-    rejectRequest(requestId, {
+  const handleRejectRequest = (req: ChatRequestType) => {
+    rejectRequest(req.id, {
       onSuccess: () => {
         toast.success('요청을 거절했습니다.');
         queryClient.invalidateQueries({
-          queryKey: ['chatRequestList', nickName, 'PENDING'],
+          queryKey: ['chatReceivedList', nickName, 'PENDING'],
         });
       },
     });
@@ -212,7 +212,7 @@ const BottomSheet: React.FC = () => {
         onRequest={() => {}}
         buttonLabel="수락하기"
         onButtonClick={() => handleAcceptRequest(req)}
-        onRejectClick={() => handleRejectRequest(req.id)}
+        onRejectClick={() => handleRejectRequest(req)}
       />
     );
   }).filter(Boolean);
