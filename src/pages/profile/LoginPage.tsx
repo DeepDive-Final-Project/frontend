@@ -1,4 +1,3 @@
-import TopNav from '@/components/profile/TopNav.tsx';
 import LoginButton from '@/components/profile/LoginButton.tsx';
 import Google from '@/assets/images/google.svg';
 import Github from '@/assets/images/github.svg';
@@ -25,7 +24,6 @@ const LoginPage = () => {
           <OnboardingContents />
         </div>
         <div className="w-full tablet:w-[360px] desktop:w-[375px] desktop:mr-20 flex flex-col">
-          <TopNav />
           <div className="flex flex-grow">
             <div className="w-full tablet:w-[370px] desktop:w-[375px] flex flex-col">
               <header className="pt-[120px] text-center">
