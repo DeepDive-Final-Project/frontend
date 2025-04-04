@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserCard from './UserCard';
 import Filter from './Filter';
@@ -44,9 +44,9 @@ const BottomSheet: React.FC = () => {
 
   useChatRequestFetch(nickName ?? '');
 
-  const handleUserSelect = useCallback((userId: number) => {
+  const handleUserSelect = (userId: number) => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
-  }, []);
+  };
 
   const { mutate: chatRequest } = useChatRequest();
   const handleRequest = (receiverNickname: string) => {
@@ -56,17 +56,11 @@ const BottomSheet: React.FC = () => {
       {
         onSuccess: () => {
           toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
-          useChatRequestStore
-            .getState()
-            .setChatRequests('sent', 'PENDING', [
-              ...useChatRequestStore.getState().sent.PENDING,
-            ]);
-
-          useBottomSheetStore.getState().setChatTab('sent');
-
           queryClient.invalidateQueries({
             queryKey: ['chatRequestList', nickName, 'PENDING'],
           });
+
+          useBottomSheetStore.getState().setChatTab('sent');
         },
         onError: () => {
           toast.error('요청에 실패했습니다.');
@@ -81,25 +75,6 @@ const BottomSheet: React.FC = () => {
       onSuccess: (data) => {
         toast.success(`${req.senderNickname}님의 요청을 수락했습니다.`);
 
-        useChatRequestStore.getState().setChatRequests(
-          'received',
-          'PENDING',
-          received.PENDING.filter((r) => r.id !== req.id),
-        );
-
-        useChatRequestStore
-          .getState()
-          .setChatRequests('received', 'ACCEPTED', [
-            ...received.ACCEPTED,
-            { ...req, status: 'ACCEPTED' },
-          ]);
-
-        useChatRequestStore
-          .getState()
-          .setChatRequests('sent', 'ACCEPTED', [
-            ...sent.ACCEPTED,
-            { ...req, status: 'ACCEPTED' },
-          ]);
         setTimeout(() => {
           if (data.roomId) {
             navigate(`/chat?roomId=${data.roomId}`, { replace: true });
@@ -107,6 +82,9 @@ const BottomSheet: React.FC = () => {
         }, 600);
         queryClient.invalidateQueries({
           queryKey: ['chatReceivedList', nickName, 'PENDING'],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['chatReceivedList', nickName, 'ACCEPTED'],
         });
         queryClient.invalidateQueries({
           queryKey: ['chatSentList', nickName, 'ACCEPTED'],
@@ -142,15 +120,13 @@ const BottomSheet: React.FC = () => {
     }
   };
 
-  const filteredUsers = useMemo(() => {
-    return users
-      .filter((user) => user.id !== userId)
-      .filter((user) => {
-        const matchRole = !role || user.role === role;
-        const matchCareer = !career || user.career === career;
-        return matchRole && matchCareer;
-      });
-  }, [users, role, career, userId]);
+  const filteredUsers = users
+    .filter((user) => user.id !== userId)
+    .filter((user) => {
+      const matchRole = !role || user.role === role;
+      const matchCareer = !career || user.career === career;
+      return matchRole && matchCareer;
+    });
 
   const exploreCards = filteredUsers.map((user) => {
     const state = getChatButtonState(user.nickName, sent, received);
