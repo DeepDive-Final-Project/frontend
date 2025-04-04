@@ -108,7 +108,7 @@ const ChatPage = () => {
       relative flex flex-col flex-auto
       ${selectedRoom ? 'flex' : 'hidden'} tablet:flex
     `}>
-        <div className="sticky top-0 z-10 bg-[#0A0A0B]">
+        <div>
           <ChatHeader
             otherUser={otherUser}
             roomId={selectedRoom?.roomId ?? 0}
