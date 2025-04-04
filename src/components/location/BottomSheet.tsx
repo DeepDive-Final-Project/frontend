@@ -32,8 +32,10 @@ const BottomSheet: React.FC = () => {
 
   useChatRequestFetch(nickName ?? '');
 
-  const { sent, received } = useChatRequestStore();
-  const sentPending = sent.PENDING;
+  const { sent, received } = useChatRequestStore((state) => ({
+    sent: state.sent,
+    received: state.received,
+  }));
 
   const height = useBottomSheetStore((state) => state.height);
   const setHeight = useBottomSheetStore((state) => state.setHeight);
@@ -60,9 +62,10 @@ const BottomSheet: React.FC = () => {
         {
           onSuccess: (data) => {
             toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
+
             useChatRequestStore
               .getState()
-              .setChatRequests('sent', 'PENDING', [...sentPending, data]);
+              .setChatRequests('sent', 'PENDING', [...sent.PENDING, data]);
 
             queryClient.invalidateQueries({ queryKey: ['chatRequestList'] });
           },
@@ -72,7 +75,7 @@ const BottomSheet: React.FC = () => {
         },
       );
     },
-    [nickName, chatRequest, sentPending, queryClient],
+    [nickName, chatRequest, sent.PENDING, queryClient],
   );
 
   const handleAcceptRequest = useCallback(
@@ -81,25 +84,23 @@ const BottomSheet: React.FC = () => {
         onSuccess: (data) => {
           toast.success(`${req.senderNickname}님의 요청을 수락했습니다.`);
 
-          useChatRequestStore.getState().setChatRequests(
+          const { setChatRequests } = useChatRequestStore.getState();
+
+          setChatRequests(
             'received',
             'PENDING',
             received.PENDING.filter((r) => r.id !== req.id),
           );
 
-          useChatRequestStore
-            .getState()
-            .setChatRequests('received', 'ACCEPTED', [
-              ...received.ACCEPTED,
-              { ...req, status: 'ACCEPTED' },
-            ]);
+          setChatRequests('received', 'ACCEPTED', [
+            ...received.ACCEPTED,
+            { ...req, status: 'ACCEPTED' },
+          ]);
 
-          useChatRequestStore
-            .getState()
-            .setChatRequests('sent', 'ACCEPTED', [
-              ...sent.ACCEPTED,
-              { ...req, status: 'ACCEPTED' },
-            ]);
+          setChatRequests('sent', 'ACCEPTED', [
+            ...sent.ACCEPTED,
+            { ...req, status: 'ACCEPTED' },
+          ]);
 
           queryClient.invalidateQueries({
             queryKey: ['chatReceivedList', nickName, 'PENDING'],
@@ -127,11 +128,20 @@ const BottomSheet: React.FC = () => {
       rejectRequest(requestId, {
         onSuccess: () => {
           toast.success('요청을 거절했습니다.');
+
+          const updatedReceived = received.PENDING.filter(
+            (req) => req.id !== requestId,
+          );
+
+          useChatRequestStore
+            .getState()
+            .setChatRequests('received', 'PENDING', updatedReceived);
+
           queryClient.invalidateQueries({ queryKey: ['chatRequestList'] });
         },
       });
     },
-    [rejectRequest, queryClient],
+    [rejectRequest, received.PENDING, queryClient],
   );
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -161,23 +171,34 @@ const BottomSheet: React.FC = () => {
   }, [users, role, career, userId]);
 
   const exploreCards = useMemo(() => {
+    const { PENDING: sentPending, ACCEPTED: sentAccepted } = sent;
+    const { PENDING: receivedPending, ACCEPTED: receivedAccepted } = received;
+
     return filteredUsers.map((user) => {
-      const state = getChatButtonState(user.nickName, sent, received);
+      const state = getChatButtonState(
+        user.nickName,
+        { PENDING: sentPending, ACCEPTED: sentAccepted },
+        { PENDING: receivedPending, ACCEPTED: receivedAccepted },
+      );
+
       const isRequested = state === 'WAITING';
       const isAccepted = state === 'MOVE';
 
       let buttonLabel: string | undefined;
       let onButtonClick: (() => void) | undefined;
 
-      if (isAccepted) {
+      if (state === 'CHATTED') {
+        buttonLabel = '대화한 적 있음';
+      } else if (isAccepted) {
         buttonLabel = '채팅방으로 이동';
-        const acceptedChat = [...sent.ACCEPTED, ...received.ACCEPTED].find(
+        const acceptedChat = [...sentAccepted, ...receivedAccepted].find(
           (req) =>
             req.senderNickname === user.nickName ||
             req.receiverNickname === user.nickName,
         );
-        onButtonClick = () =>
-          acceptedChat && chatRoomRequestId(acceptedChat.id, navigate);
+        if (acceptedChat) {
+          onButtonClick = () => chatRoomRequestId(acceptedChat.id, navigate);
+        }
       } else if (isRequested) {
         buttonLabel = '수락 대기중...';
       }
@@ -198,11 +219,11 @@ const BottomSheet: React.FC = () => {
   }, [
     filteredUsers,
     selectedUserId,
-    sent,
-    received,
     handleUserSelect,
     handleRequest,
     navigate,
+    sent,
+    received,
   ]);
 
   const sentCards = useMemo(() => {
