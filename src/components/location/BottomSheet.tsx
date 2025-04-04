@@ -206,7 +206,25 @@ const BottomSheet: React.FC = () => {
   ]);
 
   const sentCards = useMemo(() => {
-    return sent.ACCEPTED.map((req) => {
+    const pendingCards = sent.PENDING.map((req) => {
+      const user = users.find((u) => u.nickName === req.receiverNickname);
+      if (!user) return null;
+
+      return (
+        <UserCard
+          key={user.id}
+          user={user}
+          onSelect={handleUserSelect}
+          selectedUserId={selectedUserId}
+          isRequested={true}
+          onRequest={() => {}}
+          buttonLabel="수락 대기중..."
+          onButtonClick={() => {}}
+        />
+      );
+    });
+
+    const acceptedCards = sent.ACCEPTED.map((req) => {
       const user = users.find((u) => u.nickName === req.receiverNickname);
       if (!user) return null;
 
@@ -222,8 +240,17 @@ const BottomSheet: React.FC = () => {
           onButtonClick={() => chatRoomRequestId(req.id, navigate)}
         />
       );
-    }).filter(Boolean);
-  }, [sent.ACCEPTED, users, selectedUserId, handleUserSelect, navigate]);
+    });
+
+    return [...pendingCards, ...acceptedCards].filter(Boolean);
+  }, [
+    sent.PENDING,
+    sent.ACCEPTED,
+    users,
+    selectedUserId,
+    handleUserSelect,
+    navigate,
+  ]);
 
   const receivedPendingCards = useMemo(() => {
     return received.PENDING.map((req) => {
@@ -284,7 +311,7 @@ const BottomSheet: React.FC = () => {
     <div
       className="fixed bottom-0 left-0 w-full bg-[#141415] rounded-t-lg transition-all duration-100"
       style={{ height: `${height}px` }}>
-      <div className="w-full h-full flex flex-col overflow-hidden">
+      <div className="w-full h-full flex flex-col">
         <div
           className="flex justify-center py-2"
           onTouchStart={() => setIsDragging(true)}
@@ -343,23 +370,25 @@ const BottomSheet: React.FC = () => {
             </button>
           </div>
         )}
-        <div className="grid grid-cols-2 gap-x-[20px] gap-y-[20px] px-[20px]">
-          {visibleCards.map((card, index) => {
-            const isLeftCol = index % 2 === 0;
-            const isLast = index === visibleCards.length - 1;
-            const isOddCount = visibleCards.length % 2 === 1;
-            const shouldForceLeft = isLast && isOddCount;
+        <div className="flex-1 overflow-y-auto">
+          <div className="grid grid-cols-2 gap-x-[20px] gap-y-[20px] px-[20px]">
+            {visibleCards.map((card, index) => {
+              const isLeftCol = index % 2 === 0;
+              const isLast = index === visibleCards.length - 1;
+              const isOddCount = visibleCards.length % 2 === 1;
+              const shouldForceLeft = isLast && isOddCount;
 
-            return (
-              <div
-                key={index}
-                className={`mt-[${index < 2 ? (isLeftCol ? '40' : '60') : '20'}px]
+              return (
+                <div
+                  key={index}
+                  className={`mt-[${index < 2 ? (isLeftCol ? '40' : '60') : '20'}px]
         ${isLeftCol || shouldForceLeft ? 'col-start-1' : ''}
         `}>
-                {card}
-              </div>
-            );
-          })}
+                  {card}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
