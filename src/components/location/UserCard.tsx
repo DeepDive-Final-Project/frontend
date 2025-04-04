@@ -46,12 +46,15 @@ const UserCard: React.FC<UserCardProps> = ({
   return (
     <div className="relative w-full">
       <div
-        className={` user-card
+        className={`user-card aspect-[3/5]
     rounded-xl flex flex-col text-white relative overflow-hidden border-2 border-gray-600 bg-[#0A0A0B]
-    w-full max-w-[288px] min-w-[128px] min-h-[224px] max-h-[502px]
-    tablet:max-w-[320px] tablet:min-h-[280px]
-    desktop:max-w-[360px] desktop:min-h-[320px]
-    mx-auto `}
+    w-[clamp(130px,45vw,286px)]
+    h-[clamp(226px,75vw,497.2px)]     
+
+    tablet:w-[clamp(130px,20vw,176.5px)]    
+    tablet:h-[clamp(226px,34vw,306.84px)]   
+
+    desktop:w-[176.5px] desktop:h-[306.84px] `}
         onClick={handleCardClick}>
         <div className="relative w-full h-48 rounded-lg overflow-hidden">
           <div
@@ -75,12 +78,12 @@ const UserCard: React.FC<UserCardProps> = ({
               </div>
               <button
                 onClick={handleToggleTags}
-                className="hover:opacity-80 rounded-full bg-[#18181b] p-1 transition-colors">
+                className="hover:opacity-80 rounded-full bg-[#18181b] px-1 py-1 mobile:px-2 mobile:py-2 tablet:px-3 tablet:py-3 transition-colors">
                 {showTags ? <ChevronUp /> : <ChevronDown />}
               </button>
             </div>
             {showTags && (
-              <div className="mt-2 p-2 bg-neutral-900/30 backdrop-blur-[5px] rounded-lg shadow-[inset_0px_2px_12px_rgba(161,173,192,0.2)] outline outline-[0.5px] outline-offset-[-0.5px] outline-neutral-200/50">
+              <div className="mt-2 p-2  mobile:p-3 tablet:p-4 text-xs mobile:text-sm tablet:text-base bg-neutral-900/30 backdrop-blur-[5px] rounded-lg shadow-[inset_0px_2px_12px_rgba(161,173,192,0.2)] outline outline-[0.5px] outline-offset-[-0.5px] outline-neutral-200/50">
                 <div className="flex flex-col gap-1">
                   {user.tags.map((tag, index) => (
                     <Tag key={index} color={tag.color} text={tag.text} />
