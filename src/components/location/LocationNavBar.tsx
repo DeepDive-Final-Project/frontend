@@ -225,7 +225,7 @@ const LocationNavBar: React.FC = () => {
       icon: <Users />,
       label: '친구',
       onClick: () => {
-        setHeight(window.innerHeight - 100);
+        setHeight(window.innerHeight - 150);
         setMode('explore');
         resetFilters();
         setActiveIndex(1);
@@ -235,7 +235,7 @@ const LocationNavBar: React.FC = () => {
       icon: <Mail />,
       label: '메시지',
       onClick: () => {
-        setHeight(window.innerHeight - 100);
+        setHeight(window.innerHeight - 150);
         setMode('chat');
         resetFilters();
         setActiveIndex(2);
