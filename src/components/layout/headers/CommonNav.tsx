@@ -1,16 +1,17 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Send, User } from 'react-feather';
-import Logo from '@/assets/images/logo.svg'; // 로고 경로는 예시
+import Logo from '@/assets/images/logo.svg';
 
 const CommonNav = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="h-[64px] flex items-center justify-between px-4 shrink-0 border-b border-[#1f1f1f]">
-      <button onClick={() => navigate('/home')}>
-        <img src={Logo} alt="Logo" className="h-[40px]" />
-      </button>
-
+    <nav className="flex w-full max-w-[1440px] m-auto justify-between">
+      <h1 className="inline-block">
+        <Link to="/home" className="block w-full h-full">
+          <img src={Logo} alt="Logo" className="h-[40px]" />
+        </Link>
+      </h1>
       <div className="flex flex-row items-center gap-4">
         <button
           onClick={() => navigate('/chat')}

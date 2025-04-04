@@ -75,7 +75,7 @@ const ChatPage = () => {
   }
 
   return (
-    <div className="max-w-[1440px] m-auto flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden">
       <div
         className={`
     flex flex-col flex-shrink-0 h-full

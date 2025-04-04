@@ -68,30 +68,28 @@ const ProfilePreviewPage = () => {
     return <div className="pt-10 text-center text-[#A2A4AA]">로딩 중...</div>;
 
   return (
-    <div className="max-w-[1440px] m-auto">
-      <div className="relative max-w-[375px] m-auto mobile:p-10 p-5 rounded-[4px] text-sm border border-[#222325] bg-[#1E1E1F]">
-        <ProfileCard
-          name={profile.nickName}
-          job={profile.role ?? ''}
-          bio={profile.introduction ?? ''}
-          interests={
-            [profile.topic1, profile.topic2, profile.topic3].filter(
-              Boolean,
-            ) as string[]
-          }
-          career={profile.career ?? ''}
-          links={(profile.links ?? []).map((link) => ({
-            title: link.title,
-            url: link.link,
-          }))}
-          profileImageUrl={profile.profileImage}
-          userId={userId}
-          profileId={profile.id}
-          chatButtonState={chatButtonState}
-          onChat={() => onChatRequest(profile.nickName)}
-          onMoveChat={handleMoveChat}
-        />
-      </div>
+    <div className="relative max-w-[375px] m-auto mobile:p-10 p-5 rounded-[4px] text-sm border border-[#222325] bg-[#1E1E1F]">
+      <ProfileCard
+        name={profile.nickName}
+        job={profile.role ?? ''}
+        bio={profile.introduction ?? ''}
+        interests={
+          [profile.topic1, profile.topic2, profile.topic3].filter(
+            Boolean,
+          ) as string[]
+        }
+        career={profile.career ?? ''}
+        links={(profile.links ?? []).map((link) => ({
+          title: link.title,
+          url: link.link,
+        }))}
+        profileImageUrl={profile.profileImage}
+        userId={userId}
+        profileId={profile.id}
+        chatButtonState={chatButtonState}
+        onChat={() => onChatRequest(profile.nickName)}
+        onMoveChat={handleMoveChat}
+      />
     </div>
   );
 };

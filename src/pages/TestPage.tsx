@@ -99,7 +99,7 @@ const TestPage = () => {
   }
 
   return (
-    <div className="max-w-[1440px] m-auto">
+    <>
       <p className="text-2xl">현재 로그인 : {nickName}</p>
       <hr className="my-4" />
       <section>
@@ -188,7 +188,7 @@ const TestPage = () => {
           </ul>
         )}
       </section>
-    </div>
+    </>
   );
 };
 
