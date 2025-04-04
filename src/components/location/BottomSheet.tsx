@@ -62,7 +62,10 @@ const BottomSheet: React.FC = () => {
             toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
             useChatRequestStore
               .getState()
-              .setChatRequests('sent', 'PENDING', [...sentPending, data]);
+              .setChatRequests('sent', 'PENDING', [
+                ...useChatRequestStore.getState().sent.PENDING,
+                data,
+              ]);
 
             useBottomSheetStore.getState().setChatTab('sent');
 
@@ -366,4 +369,4 @@ const BottomSheet: React.FC = () => {
   );
 };
 
-export default React.memo(BottomSheet);
+export default BottomSheet;
