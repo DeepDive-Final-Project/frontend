@@ -12,7 +12,7 @@ const ChatSideBar = ({ onClose, onLeaveConfirmCheck }: ChatSideBarProps) => {
         className="fixed z-10 top-0 inset-0 bg-black bg-opacity-70"
         onClick={onClose}
       />
-      <div className="absolute z-50 top-0 right-0 w-[175px] h-full text-left bg-[#141415]">
+      <div className="absolute z-30 top-0 right-0 w-[175px] h-full text-left bg-[#141415]">
         <p className="pt-[16px] px-[20px] pb-[8px] text-sm text-[#A2A4AA] font-semibold">
           채팅 메뉴
         </p>
