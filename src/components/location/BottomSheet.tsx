@@ -30,8 +30,6 @@ const BottomSheet: React.FC = () => {
   const { mutate: acceptRequest } = useAcceptRequest();
   const { mutate: rejectRequest } = useRejectRequest();
 
-  useChatRequestFetch(nickName ?? '');
-
   const { sent, received } = useChatRequestStore();
   const sentPending = sent.PENDING;
 
@@ -47,6 +45,8 @@ const BottomSheet: React.FC = () => {
   const role = useFilterStore((state) => state.role);
   const career = useFilterStore((state) => state.career);
   const users = useUserStore((state) => state.users);
+
+  useChatRequestFetch(nickName ?? '');
 
   const handleUserSelect = useCallback((userId: number) => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
@@ -66,7 +66,9 @@ const BottomSheet: React.FC = () => {
 
             useBottomSheetStore.getState().setChatTab('sent');
 
-            queryClient.invalidateQueries({ queryKey: ['chatRequestList'] });
+            queryClient.invalidateQueries({
+              queryKey: ['chatRequestList', nickName, 'PENDING'],
+            });
           },
           onError: () => {
             toast.error('요청에 실패했습니다.');
@@ -106,7 +108,9 @@ const BottomSheet: React.FC = () => {
           queryClient.invalidateQueries({
             queryKey: ['chatReceivedList', nickName, 'PENDING'],
           });
-
+          queryClient.invalidateQueries({
+            queryKey: ['chatSentList', nickName, 'ACCEPTED'],
+          });
           if (data.roomId) {
             navigate(`/chat?roomId=${data.roomId}`);
           }
@@ -208,44 +212,46 @@ const BottomSheet: React.FC = () => {
   ]);
 
   const sentCards = useMemo(() => {
-    const allPending = sent.PENDING.map((req) => {
-      const user = users.find((u) => u.nickName === req.receiverNickname);
-      if (!user) return null;
+    return [...sent.PENDING, ...sent.ACCEPTED]
+      .map((req) => {
+        const user = users.find(
+          (u) =>
+            u.nickName === req.receiverNickname ||
+            u.nickName === req.senderNickname,
+        );
+        if (!user) return null;
 
-      return (
-        <UserCard
-          key={user.id}
-          user={user}
-          onSelect={handleUserSelect}
-          selectedUserId={selectedUserId}
-          isRequested={true}
-          onRequest={() => {}}
-          buttonLabel="수락 대기중..."
-          onButtonClick={() => chatRoomRequestId(req.id, navigate)}
-        />
-      );
-    });
-    const allAccepted = sent.ACCEPTED.map((req) => {
-      const user = users.find((u) => u.nickName === req.receiverNickname);
-      if (!user) return null;
+        const state = getChatButtonState(user.nickName, sent, received);
+        let buttonLabel;
+        if (state === 'MOVE') {
+          buttonLabel = '채팅방으로 이동';
+        } else if (state === 'WAITING') {
+          buttonLabel = '수락 대기중...';
+        }
 
-      return (
-        <UserCard
-          key={user.id}
-          user={user}
-          onSelect={handleUserSelect}
-          selectedUserId={selectedUserId}
-          isRequested={false}
-          onRequest={() => {}}
-          buttonLabel="채팅방으로 이동"
-          onButtonClick={() => chatRoomRequestId(req.id, navigate)}
-        />
-      );
-    });
-    return [...allPending, ...allAccepted].filter(Boolean);
+        return (
+          <UserCard
+            key={user.id}
+            user={user}
+            onSelect={handleUserSelect}
+            selectedUserId={selectedUserId}
+            isRequested={state === 'WAITING'}
+            onRequest={() => {}}
+            buttonLabel={buttonLabel}
+            onButtonClick={
+              state === 'MOVE'
+                ? () => chatRoomRequestId(req.id, navigate)
+                : undefined
+            }
+          />
+        );
+      })
+      .filter(Boolean);
   }, [
     sent.PENDING,
     sent.ACCEPTED,
+    sent,
+    received,
     users,
     selectedUserId,
     handleUserSelect,
