@@ -64,6 +64,8 @@ const BottomSheet: React.FC = () => {
               .getState()
               .setChatRequests('sent', 'PENDING', [...sentPending, data]);
 
+            useBottomSheetStore.getState().setChatTab('sent');
+
             queryClient.invalidateQueries({ queryKey: ['chatRequestList'] });
           },
           onError: () => {
