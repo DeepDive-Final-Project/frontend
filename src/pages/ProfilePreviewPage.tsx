@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import ProfileCard from '@/components/common/ProfileCard';
@@ -20,11 +21,7 @@ const ProfilePreviewPage = () => {
   const { sent, received } = useChatRequestStore();
   const { userId, nickName } = useChatMyInfo();
 
-  const chatButtonState = getChatButtonState(
-    profile?.nickName ?? '',
-    sent,
-    received,
-  );
+  useChatRequestFetch(nickName ?? '');
 
   const acceptedChat = [...sent.ACCEPTED, ...received.ACCEPTED].find(
     (req) =>
@@ -57,7 +54,11 @@ const ProfilePreviewPage = () => {
     );
   };
 
-  useChatRequestFetch(nickName ?? '');
+  const chatButtonState = useMemo(() => {
+    if (!profile) return undefined;
+
+    return getChatButtonState(profile.nickName, sent, received);
+  }, [profile, sent, received]);
 
   if (!otherId)
     return (
@@ -68,30 +69,28 @@ const ProfilePreviewPage = () => {
     return <div className="pt-10 text-center text-[#A2A4AA]">로딩 중...</div>;
 
   return (
-    <div className="max-w-[1440px] m-auto">
-      <div className="relative max-w-[375px] m-auto mobile:p-10 p-5 rounded-[4px] text-sm border border-[#222325] bg-[#1E1E1F]">
-        <ProfileCard
-          name={profile.nickName}
-          job={profile.role ?? ''}
-          bio={profile.introduction ?? ''}
-          interests={
-            [profile.topic1, profile.topic2, profile.topic3].filter(
-              Boolean,
-            ) as string[]
-          }
-          career={profile.career ?? ''}
-          links={(profile.links ?? []).map((link) => ({
-            title: link.title,
-            url: link.link,
-          }))}
-          profileImageUrl={profile.profileImage}
-          userId={userId}
-          profileId={profile.id}
-          chatButtonState={chatButtonState}
-          onChat={() => onChatRequest(profile.nickName)}
-          onMoveChat={handleMoveChat}
-        />
-      </div>
+    <div className="relative max-w-[375px] m-auto mobile:p-10 p-5 rounded-[4px] text-sm border border-[#222325] bg-[#1E1E1F]">
+      <ProfileCard
+        name={profile.nickName}
+        job={profile.role ?? ''}
+        bio={profile.introduction ?? ''}
+        interests={
+          [profile.topic1, profile.topic2, profile.topic3].filter(
+            Boolean,
+          ) as string[]
+        }
+        career={profile.career ?? ''}
+        links={(profile.links ?? []).map((link) => ({
+          title: link.title,
+          url: link.link,
+        }))}
+        profileImageUrl={profile.profileImage}
+        userId={userId}
+        profileId={profile.id}
+        chatButtonState={chatButtonState}
+        onChat={() => onChatRequest(profile.nickName)}
+        onMoveChat={handleMoveChat}
+      />
     </div>
   );
 };

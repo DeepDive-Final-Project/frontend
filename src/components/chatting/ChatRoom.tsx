@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSocketStore } from '@/stores/useSocketStore';
 import { useChatMessageStore } from '@/stores/useChatMessageStore';
 import ChatProfileInfo from '@/components/chatting/ChatProfileInfo';
@@ -15,10 +15,15 @@ interface ChatRoomProps {
 }
 
 const ChatRoom = ({ room, onExpandMessage }: ChatRoomProps) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   const { stompClient } = useSocketStore();
   const { userId, nickName } = useChatMyInfo();
-  const { appendMessage, setMessages, clearMessages } = useChatMessageStore();
+  const { appendMessage, setMessages, clearMessages, messagesByRoom } =
+    useChatMessageStore();
   const { updateLastMessage } = useChatListStore();
+
+  const messages = room ? messagesByRoom[room.roomId] || [] : [];
 
   // 이전 메시지 불러오기
   useEffect(() => {
@@ -35,6 +40,15 @@ const ChatRoom = ({ room, onExpandMessage }: ChatRoomProps) => {
 
     fetchMessages();
   }, [room?.roomId, userId, setMessages]);
+
+  // 이전 메세지 불러온 뒤 하단 이동
+  useEffect(() => {
+    if (!scrollRef.current) return;
+
+    scrollRef.current.scrollTo({
+      top: scrollRef.current.scrollHeight,
+    });
+  }, [messages.length]);
 
   useEffect(() => {
     if (!room || !stompClient || !stompClient.connected) return;
@@ -73,7 +87,9 @@ const ChatRoom = ({ room, onExpandMessage }: ChatRoomProps) => {
 
   return (
     <>
-      <div className="relative flex flex-col flex-auto p-5 overflow-y-auto scrollbar-hide">
+      <div
+        ref={scrollRef}
+        className="relative flex flex-col flex-auto p-5 overflow-y-auto scrollbar-hide">
         <ChatProfileInfo otherId={otherId} />
         <div className="flex flex-col pt-5">
           <ChatMessageItem

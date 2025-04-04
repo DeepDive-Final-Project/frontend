@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Link2 } from 'react-feather';
-import { useNavigate } from 'react-router-dom';
+import { Link2 } from 'react-feather';
 import axios from 'axios';
 import { Edit3 } from 'react-feather';
 
@@ -17,7 +16,6 @@ interface ProfileData {
 }
 
 const EditMyPage = () => {
-  const navigate = useNavigate();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
@@ -60,14 +58,6 @@ const EditMyPage = () => {
 
   return (
     <div className="max-w-md mx-auto p-6 text-white bg-[#0F0F10] min-h-screen">
-      <div className="relative text-center text-[16px] font-bold mb-4">
-        <button
-          onClick={() => navigate('/home')}
-          className="absolute left-0 top-1/2 -translate-y-1/2">
-          <ArrowLeft size={20} />
-        </button>
-        내 계정
-      </div>
       <div className="relative flex justify-center mb-6">
         <img
           src={profileImage || undefined}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProfileCard from '@/components/common/ProfileCard';
-import CommonNav from '@/components/common/CommomNav.tsx';
+import CommonNav from '@/components/layout/headers/CommonNav';
 
 interface ProfileData {
   nickName: string;

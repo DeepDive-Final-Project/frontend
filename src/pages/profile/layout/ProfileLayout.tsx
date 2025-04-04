@@ -1,14 +1,9 @@
 import { Outlet } from 'react-router-dom';
 import OnboardingContents from '@/components/profile/OnboardingContents.tsx';
-import Logo from '@/assets/images/logo.svg';
 
 const ProfileLayout = () => {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
-      <nav className="h-[64px] flex items-center px-4 shrink-0">
-        <img src={Logo} alt="Logo" className="h-[40px]" />
-      </nav>
-
       <div
         className="flex w-full overflow-hidden"
         style={{ height: 'calc(100vh - 64px)' }}>
