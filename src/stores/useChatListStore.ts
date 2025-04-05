@@ -10,7 +10,13 @@ interface ChatListState {
   setSelectedRoom: (room: ChatRoomType | null) => void;
   removeChatRoom: (roomId: number) => void;
 
-  updateLastMessage: (roomId: number, lastMessage: ChatMessageType) => void;
+  updateLastMessage: (
+    roomId: number,
+    lastMessage: ChatMessageType,
+    currentUser: string,
+  ) => void;
+
+  increaseUnreadCount: (roomId: number) => void;
 }
 
 export const useChatListStore = create<ChatListState>((set) => ({
@@ -26,15 +32,33 @@ export const useChatListStore = create<ChatListState>((set) => ({
         state.selectedRoom?.roomId === roomId ? null : state.selectedRoom,
     })),
 
-  updateLastMessage: (roomId: number, lastMessage: ChatMessageType) =>
+  updateLastMessage: (
+    roomId: number,
+    lastMessage: ChatMessageType,
+    currentUser: string,
+  ) =>
+    set((state) => ({
+      chatList: state.chatList.map((room) => {
+        if (room.roomId === roomId) {
+          const isSenderMe = lastMessage.senderNickname === currentUser;
+
+          return {
+            ...room,
+            lastMessage: lastMessage.content,
+            lastMessageTime: lastMessage.timeStamp ?? null,
+            unreadCount: isSenderMe ? 0 : room.unreadCount,
+          };
+        }
+        return room;
+      }),
+    })),
+
+  // 안 읽은 메시지 수신되었을 때 count 증가
+  increaseUnreadCount: (roomId: number) =>
     set((state) => ({
       chatList: state.chatList.map((room) =>
         room.roomId === roomId
-          ? {
-              ...room,
-              lastMessage: lastMessage.content,
-              lastMessageTime: lastMessage.timeStamp ?? null,
-            }
+          ? { ...room, unreadCount: (room.unreadCount ?? 0) + 1 }
           : room,
       ),
     })),

@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { useChatMyInfo } from '@/stores/useChatMyInfoStore';
 import { ChatRoomType } from '@/types/chatRoomType';
 import { formatTime } from '@/utils/chat/formatTime';
-import { api } from '@/utils/api';
 
 interface ChatListItemProps {
   room: ChatRoomType;
@@ -11,9 +9,7 @@ interface ChatListItemProps {
 }
 
 const ChatListItem = ({ room, onClick }: ChatListItemProps) => {
-  const [unreadCount, setUnreadCount] = useState(0);
-
-  const { participants, lastMessage, lastMessageTime } = room;
+  const { participants, lastMessage, lastMessageTime, unreadCount } = room;
 
   const { profile } = useUserProfile(room.otherId);
   const { nickName } = useChatMyInfo();
@@ -21,24 +17,6 @@ const ChatListItem = ({ room, onClick }: ChatListItemProps) => {
   const otherUser = participants.find(
     (userNickname) => userNickname !== nickName,
   );
-
-  // 임시 테스트 코드
-  useEffect(() => {
-    const fetchUnreadCount = async () => {
-      try {
-        const response = await api.get<{ unreadCount: number }>(
-          `/api/chat/${room.roomId}/unread-count?clientId=${room.otherId}`,
-        );
-        setUnreadCount(response.data.unreadCount);
-
-        console.log(response.data.unreadCount);
-      } catch (err) {
-        console.error('unread-count 가져오기 실패:', err);
-      }
-    };
-
-    fetchUnreadCount();
-  }, [room.roomId, room.otherId]);
 
   return (
     <li
