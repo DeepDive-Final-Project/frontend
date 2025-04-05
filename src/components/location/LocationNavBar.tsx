@@ -57,11 +57,11 @@ const LocationNavBar: React.FC = () => {
         `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
         { withCredentials: true },
       );
-      const { id, profileImage } = response.data;
+      const { id, image } = response.data;
 
       setUserId(id);
-      setMyProfileImage(profileImage);
-      console.log('내 이미지', profileImage);
+      setMyProfileImage(image);
+      console.log('내 이미지', image);
     } catch (error) {
       console.error('내 정보 요청 실패:', error);
     }
