@@ -48,7 +48,7 @@ const UserLocation = () => {
 
   return (
     <div className="w-full flex justify-center items-center bg-[#000000] mt-15">
-      {users.length === 0 ? (
+      {users.length === 0 && !myProfileImage ? (
         <div className="flex flex-col items-center justify-center mt-14">
           <div className="self-stretch text-center justify-start text-color-Base-white-2 text-base font-normal leading-normal">
             Opps!
@@ -129,7 +129,7 @@ const UserLocation = () => {
                   src={user.image}
                   alt={user.nickName}
                   className="absolute  left-1/2 top-1/2 w-[22px] h-[22px] rounded-full object-cover"
-                  style={{ transform: 'translate(-50%, -50%)' }}
+                  style={{ top: '46%', transform: 'translate(-50%, -50%)' }}
                 />
               </div>
               <p className="text-[10px] text-white whitespace-nowrap">
