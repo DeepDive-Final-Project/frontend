@@ -5,7 +5,6 @@ import NoneRadar from '@/assets/images/404.svg';
 
 const UserLocation = () => {
   const myProfileImage = useUserStore((state) => state.myProfileImage);
-  console.log('중앙 이미지', myProfileImage);
   const users = useUserStore((state) => state.users);
   const smallR = 20;
   const midR = 32;
