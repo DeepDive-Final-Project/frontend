@@ -24,6 +24,9 @@ interface UserStore {
   latitude: number | null;
   longitude: number | null;
   setUserLocation: (lat: number, lng: number) => void;
+
+  myProfileImage: string | null;
+  setMyProfileImage: (img: string) => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -32,4 +35,7 @@ export const useUserStore = create<UserStore>((set) => ({
   latitude: null,
   longitude: null,
   setUserLocation: (lat, lng) => set({ latitude: lat, longitude: lng }),
+
+  myProfileImage: null,
+  setMyProfileImage: (img) => set({ myProfileImage: img }),
 }));

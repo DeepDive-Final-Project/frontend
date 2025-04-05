@@ -4,6 +4,7 @@ import { useUserStore } from '@/stores/useUserStore';
 import NoneRadar from '@/assets/images/404.svg';
 
 const UserLocation = () => {
+  const myProfileImage = useUserStore((state) => state.myProfileImage);
   const users = useUserStore((state) => state.users);
   const smallR = 20;
   const midR = 32;
@@ -46,7 +47,7 @@ const UserLocation = () => {
   }, [users]);
 
   return (
-    <div className="w-full flex justify-center items-center bg-[#000000]">
+    <div className="w-full flex justify-center items-center bg-[#000000] mt-15">
       {users.length === 0 ? (
         <div className="flex flex-col items-center justify-center mt-14">
           <div className="self-stretch text-center justify-start text-color-Base-white-2 text-base font-normal leading-normal">
@@ -56,7 +57,7 @@ const UserLocation = () => {
             어디에 계시나요?
           </div>
           <div className="self-stretch text-center justify-start text-color-Base-white-2 text-base font-normal leading-normal">
-            내 위치를 공개 해보아요요
+            내 위치를 공개 해보아요
           </div>
           <img
             src={NoneRadar}
@@ -71,16 +72,32 @@ const UserLocation = () => {
             width: 'min(100vw, 320px)',
             height: 'min(100vw, 320px)',
           }}>
-          <div
-            className="absolute bg-gray-500 rounded-full"
-            style={{
-              width: '10px',
-              height: '10px',
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-            }}
-          />
+          {myProfileImage ? (
+            <img
+              src={myProfileImage}
+              alt="my-profile"
+              className="absolute rounded-full object-cover border border-white"
+              style={{
+                width: '28px',
+                height: '28px',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            />
+          ) : (
+            <div
+              className="absolute bg-gray-500 rounded-full"
+              style={{
+                width: '10px',
+                height: '10px',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            />
+          )}
+
           {[smallR, midR, bigR].map((r, idx) => (
             <div
               key={idx}
@@ -102,11 +119,19 @@ const UserLocation = () => {
                 top: `${y}%`,
                 transform: 'translate(-50%, -50%)',
               }}>
-              <img
-                src={avatarIcon}
-                alt="avatar"
-                className={`w-[28px] h-[28px]`}
-              />
+              <div className="relative w-[28px] h-[28px]">
+                <img
+                  src={avatarIcon}
+                  alt="avatarIcon"
+                  className="absolute w-full h-full"
+                />
+                <img
+                  src={user.image}
+                  alt={user.nickName}
+                  className="absolute  left-1/2 top-1/2 w-[24px] h-[24px] rounded-full object-cover border-[1.5px] border-white"
+                  style={{ transform: 'translate(-50%, -50%)' }}
+                />
+              </div>
               <p className="text-[10px] text-white whitespace-nowrap">
                 {user.nickName}
               </p>
