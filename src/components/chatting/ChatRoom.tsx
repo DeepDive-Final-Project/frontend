@@ -42,7 +42,16 @@ const ChatRoom = ({ room, onExpandMessage }: ChatRoomProps) => {
     fetchMessages();
   }, [room?.roomId, userId, setMessages]);
 
-  // 임시 테스트 코드: 방 입장시 시간 업데이트
+  // 이전 메세지 불러온 뒤 하단 이동
+  useEffect(() => {
+    if (!scrollRef.current) return;
+
+    scrollRef.current.scrollTo({
+      top: scrollRef.current.scrollHeight,
+    });
+  }, [messages.length]);
+
+  //방 입장시 시간 업데이트
   useEffect(() => {
     if (!room || !userId) return;
 
@@ -52,23 +61,35 @@ const ChatRoom = ({ room, onExpandMessage }: ChatRoomProps) => {
           roomId: room.roomId,
           clientId: userId,
         });
-        console.log('채팅방 입장 완료');
       } catch (err) {
-        console.error('채팅방 입장 API 실패', err);
+        console.error('채팅방 입장 실패', err);
       }
     };
 
     enterChatRoom();
   }, [room?.roomId, userId]);
 
-  // 이전 메세지 불러온 뒤 하단 이동
   useEffect(() => {
-    if (!scrollRef.current) return;
+    if (!room || !userId) return;
 
-    scrollRef.current.scrollTo({
-      top: scrollRef.current.scrollHeight,
-    });
-  }, [messages.length]);
+    const readMessages = async () => {
+      try {
+        await api.patch(`/api/messages/${room.roomId}/read`, null, {
+          params: { clientId: userId },
+        });
+
+        useChatListStore.setState((state) => ({
+          chatList: state.chatList.map((r) =>
+            r.roomId === room.roomId ? { ...r, unreadCount: 0 } : r,
+          ),
+        }));
+      } catch (err) {
+        console.error('읽음 처리 실패', err);
+      }
+    };
+
+    readMessages();
+  }, [room?.roomId, userId]);
 
   useEffect(() => {
     if (!room || !stompClient || !stompClient.connected) return;

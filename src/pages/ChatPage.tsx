@@ -11,6 +11,7 @@ import { useChatMyInfo } from '@/stores/useChatMyInfoStore';
 import { fetchChatListApi } from '@/services/chatListApi';
 import { ChatFilterOption } from '@/types/chatFilterOptionType';
 import { useSocketStore } from '@/stores/useSocketStore';
+import { toast } from 'react-toastify';
 
 const filterOptions: ChatFilterOption[] = [
   { label: '최신 메세지 순', value: 'latest' },
@@ -36,18 +37,96 @@ const ChatPage = () => {
     queryKey: ['chatList', nickName, selectedOption],
     queryFn: async () => {
       const data = await fetchChatListApi(nickName ?? '', selectedOption.value);
-      useChatListStore.getState().setChatList(data);
 
-      // 데이터 상태 확인용
-      console.log(data);
-      return data;
+      // 읽음 처리된 상태로 먼저 필터링
+      const filtered = data.map((room) => {
+        const isMyRoom = room.participants.includes(nickName ?? '');
+        const isSelectedRoom = room.roomId === roomId;
+
+        if (isMyRoom && isSelectedRoom) {
+          return {
+            ...room,
+            unreadCount: 0,
+          };
+        }
+
+        return room;
+      });
+
+      // 정렬 추가
+      const sorted = [...filtered].sort((a, b) => {
+        if (selectedOption.value === 'unread') {
+          return (b.unreadCount ?? 0) - (a.unreadCount ?? 0);
+        } else {
+          return (
+            new Date(b.lastMessageTime ?? '').getTime() -
+            new Date(a.lastMessageTime ?? '').getTime()
+          );
+        }
+      });
+
+      useChatListStore.getState().setChatList(sorted);
+      return sorted;
     },
   });
 
   //
   useEffect(() => {
     if (!isConnected) {
-      connect();
+      connect(() => {
+        const client = useSocketStore.getState().stompClient;
+        if (client) {
+          client.subscribe(
+            `/queue/chat-notification/${nickName}`,
+            (message) => {
+              const payload = JSON.parse(message.body);
+              console.log('수신한 메시지 데이터', payload);
+
+              const sender = payload.senderNickname ?? '알 수 없음';
+              const content = payload.messagePreview ?? '';
+              const sentAt = payload.sentAt ?? '';
+
+              const currentRoomId =
+                useChatListStore.getState().selectedRoom?.roomId;
+
+              if (payload.senderNickname === nickName) {
+                return;
+              }
+
+              if (currentRoomId !== payload.roomId) {
+                // 현재 방과 알림 메시지 온 방 id가 다른 경우
+
+                // 알림 내용 설정
+                toast.info(
+                  <div>
+                    <p className="text-[#E6E6E6]">{sender}</p>
+                    <p className="text-[#B7B9BD] font-medium line-clamp-2 leading-normal">
+                      {content}
+                    </p>
+                  </div>,
+                );
+
+                useChatListStore.setState((state) => ({
+                  chatList: state.chatList.map((room) => {
+                    if (room.roomId === payload.roomId) {
+                      return {
+                        ...room,
+                        lastMessage: content,
+                        lastMessageTime: sentAt,
+                        unreadCount:
+                          room.roomId !== currentRoomId
+                            ? room.unreadCount + 1
+                            : room.unreadCount,
+                      };
+                    }
+                    return room;
+                  }),
+                }));
+              }
+            },
+          );
+        }
+      });
     }
   }, [connect, isConnected]);
 
