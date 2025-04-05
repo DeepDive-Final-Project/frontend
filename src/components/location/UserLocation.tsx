@@ -1,12 +1,19 @@
 import React, { useMemo, useState } from 'react';
 import avatarIcon from '@/assets/images/avatarMapin.svg';
 import { useUserStore } from '@/stores/useUserStore';
+import { useBottomSheetStore } from '@/stores/useBottomSheetStore';
 import NoneRadar from '@/assets/images/404.svg';
 
 const UserLocation = () => {
   const myProfileImage = useUserStore((state) => state.myProfileImage);
   const users = useUserStore((state) => state.users);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const setMode = useBottomSheetStore((state) => state.setMode);
+  const setHeight = useBottomSheetStore((state) => state.setHeight);
+  const setSelectedByMapPin = useUserStore(
+    (state) => state.setSelectedByMapPin,
+  );
+
   const smallR = 20;
   const midR = 32;
   const bigR = 45;
@@ -46,6 +53,15 @@ const UserLocation = () => {
       user: users[i],
     }));
   }, [users]);
+  const handlePinClick = (userId: number) => {
+    setSelectedUserId(userId);
+    setSelectedByMapPin(userId);
+
+    setTimeout(() => {
+      setMode('explore');
+      setHeight(window.innerHeight - 150);
+    }, 700);
+  };
 
   return (
     <div className="w-full flex justify-center items-center bg-[#000000] mt-15">
@@ -131,7 +147,7 @@ const UserLocation = () => {
                   zIndex: isSelected ? 30 : 20,
                   opacity: selectedUserId === null || isSelected ? 1 : 0.3,
                 }}
-                onClick={() => setSelectedUserId(user.id)}>
+                onClick={() => handlePinClick(user.id)}>
                 <div className="relative w-[28px] h-[28px]">
                   <img
                     src={avatarIcon}

@@ -281,7 +281,7 @@ const LocationNavBar: React.FC = () => {
   ];
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center z-[60]">
       <div className="flex flex-col items-center">
         <div className="inline-flex bg-[#111111] p-1 rounded-xl shadow-lg outline outline-[0.5px] outline-offset-[-0.5px] outline-[#333333] w-fit">
           {buttons.map((btn, index) => {
