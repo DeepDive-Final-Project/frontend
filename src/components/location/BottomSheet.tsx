@@ -244,7 +244,7 @@ const BottomSheet: React.FC = () => {
 
   return (
     <div
-      className="fixed bottom-0 left-0 w-full bg-[#141415] rounded-t-lg transition-all duration-100"
+      className="fixed bottom-0 left-0 w-full bg-[#141415] rounded-t-lg transition-all duration-100 z-50"
       style={{ height: `${height}px` }}>
       <div className="w-full h-full flex flex-col overflow-hidden">
         <div
