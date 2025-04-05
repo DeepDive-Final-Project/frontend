@@ -57,11 +57,14 @@ const LocationNavBar: React.FC = () => {
         `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
         { withCredentials: true },
       );
-      const { id, image } = response.data;
-
+      const { id } = response.data;
       setUserId(id);
-      setMyProfileImage(image);
-      console.log('내 이미지', image);
+      const myImage = await axios.get(
+        `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/${id}`,
+        { withCredentials: true },
+      );
+      const profileImage = myImage.data.profileImage;
+      setMyProfileImage(profileImage);
     } catch (error) {
       console.error('내 정보 요청 실패:', error);
     }

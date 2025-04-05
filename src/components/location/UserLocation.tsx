@@ -73,18 +73,31 @@ const UserLocation = () => {
             width: 'min(100vw, 320px)',
             height: 'min(100vw, 320px)',
           }}>
-          <img
-            src={myProfileImage}
-            alt="my-profile"
-            className="absolute rounded-full object-cover border border-white"
-            style={{
-              width: '28px',
-              height: '28px',
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-            }}
-          />
+          {myProfileImage ? (
+            <img
+              src={myProfileImage}
+              alt="my-profile"
+              className="absolute rounded-full object-cover border border-white"
+              style={{
+                width: '28px',
+                height: '28px',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            />
+          ) : (
+            <div
+              className="absolute bg-gray-500 rounded-full"
+              style={{
+                width: '10px',
+                height: '10px',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            />
+          )}
 
           {[smallR, midR, bigR].map((r, idx) => (
             <div
