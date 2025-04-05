@@ -52,7 +52,7 @@ const ChatInput = ({ roomId, socketRef, nickName }: ChatInputProps) => {
 
     // 상태 반영
     appendMessage(roomId, chatMessage);
-    updateLastMessage(roomId, chatMessage);
+    updateLastMessage(roomId, chatMessage, nickName);
 
     setMessage('');
 

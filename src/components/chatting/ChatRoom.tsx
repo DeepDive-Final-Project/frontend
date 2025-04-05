@@ -100,7 +100,7 @@ const ChatRoom = ({ room, onExpandMessage }: ChatRoomProps) => {
         const newMessage = JSON.parse(message.body);
 
         appendMessage(room.roomId, newMessage);
-        updateLastMessage(room.roomId, newMessage);
+        updateLastMessage(room.roomId, newMessage, nickName ?? '');
       },
     );
 
