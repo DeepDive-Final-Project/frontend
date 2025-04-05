@@ -72,7 +72,7 @@ const ChatPage = () => {
 
   //
   useEffect(() => {
-    if (!isConnected) {
+    if (!isConnected && nickName) {
       connect(() => {
         const client = useSocketStore.getState().stompClient;
         if (client) {
@@ -128,7 +128,7 @@ const ChatPage = () => {
         }
       });
     }
-  }, [connect, isConnected]);
+  }, [connect, isConnected, nickName]);
 
   useEffect(() => {
     if (chatList.length > 0 && roomId) {
