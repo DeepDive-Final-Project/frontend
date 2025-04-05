@@ -4,6 +4,7 @@ import { useBottomSheetStore } from '@/stores/useBottomSheetStore';
 import { User } from '@/stores/useUserStore';
 import gradientOverlay from '@/assets/images/user_profile_radial_gradient.png';
 import Tag from './Tag';
+import { useNavigate } from 'react-router-dom';
 
 interface UserCardProps {
   user: User;
@@ -29,6 +30,7 @@ const UserCard: React.FC<UserCardProps> = ({
   const [showTags, setShowTags] = useState(false);
   const isSelected = selectedUserId === user.id;
   const mode = useBottomSheetStore((state) => state.mode);
+  const navigate = useNavigate();
 
   const handleCardClick = useCallback(
     (e: React.MouseEvent) => {
@@ -98,7 +100,10 @@ const UserCard: React.FC<UserCardProps> = ({
           (isSelected ? (
             <div className="p-2 mt-2 flex flex-col gap-2 bg-[#0A0A0B] rounded-b-lg transition-all">
               <button
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/profilePreview/${user.id}`);
+                }}
                 className="w-full px-2 py-2 rounded-full text-#E6E6E6 bg-[#0A0A0B] hover:bg-#146EF5 text-xs mobile:text-sm tablet:text-base">
                 상세 프로필 보기
               </button>
@@ -150,7 +155,12 @@ const UserCard: React.FC<UserCardProps> = ({
 
         {mode === 'chat' && (
           <div className="p-2 mt-2 flex flex-col gap-2 bg-[#0A0A0B] rounded-b-lg transition-all">
-            <button className="w-full px-2 py-2 rounded-full text-#E6E6E6 bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/profilePreview/${user.id}`);
+              }}
+              className="w-full px-2 py-2 rounded-full text-#E6E6E6 bg-[#0A0A0B] hover:bg-blue-600 text-xs mobile:text-sm tablet:text-base">
               상세 프로필 보기
             </button>
             {buttonLabel === '수락 대기중...' && (

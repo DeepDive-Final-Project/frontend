@@ -47,6 +47,8 @@ const LocationNavBar: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
   const moreRef = useRef<HTMLDivElement | null>(null);
+  const moreButtonRef = useRef<HTMLButtonElement | null>(null);
+  const [introHint, setIntroHint] = useState(false);
 
   const fetchMyInfo = async () => {
     try {
@@ -193,7 +195,9 @@ const LocationNavBar: React.FC = () => {
       if (
         moreSetting &&
         moreRef.current &&
-        !moreRef.current.contains(e.target as Node)
+        !moreRef.current.contains(e.target as Node) &&
+        moreButtonRef.current &&
+        !moreButtonRef.current.contains(e.target as Node)
       ) {
         setMoreSetting(false);
       }
@@ -218,6 +222,7 @@ const LocationNavBar: React.FC = () => {
         resetHeight();
         resetFilters();
         setMode('explore');
+        setMoreSetting(false);
         setActiveIndex(0);
       },
     },
@@ -225,9 +230,10 @@ const LocationNavBar: React.FC = () => {
       icon: <Users />,
       label: '친구',
       onClick: () => {
-        setHeight(window.innerHeight - 100);
+        setHeight(window.innerHeight - 150);
         setMode('explore');
         resetFilters();
+        setMoreSetting(false);
         setActiveIndex(1);
       },
     },
@@ -235,9 +241,10 @@ const LocationNavBar: React.FC = () => {
       icon: <Mail />,
       label: '메시지',
       onClick: () => {
-        setHeight(window.innerHeight - 100);
+        setHeight(window.innerHeight - 150);
         setMode('chat');
         resetFilters();
+        setMoreSetting(false);
         setActiveIndex(2);
       },
     },
@@ -246,6 +253,7 @@ const LocationNavBar: React.FC = () => {
       label: '새로고침',
       onClick: () => {
         handleRefresh();
+        setMoreSetting(false);
         setActiveIndex(3);
       },
     },
@@ -253,8 +261,23 @@ const LocationNavBar: React.FC = () => {
       icon: <MoreHorizontal />,
       label: '더보기',
       onClick: () => {
-        setMoreSetting((prev) => !prev);
-        setActiveIndex(4);
+        if (!introHint) {
+          setIntroHint(true);
+        }
+        const willClose = moreSetting && activeIndex === 4;
+
+        if (shareLocation) {
+          if (willClose) {
+            setMoreSetting(false);
+            setActiveIndex(-1);
+          } else {
+            setMoreSetting(true);
+            setActiveIndex(4);
+          }
+        } else {
+          setMoreSetting(!willClose);
+          setActiveIndex(willClose ? -1 : 4);
+        }
       },
     },
   ];
@@ -264,17 +287,18 @@ const LocationNavBar: React.FC = () => {
       <div className="flex flex-col items-center">
         <div className="inline-flex bg-[#111111] p-1 rounded-xl shadow-lg outline outline-[0.5px] outline-offset-[-0.5px] outline-[#333333] w-fit">
           {buttons.map((btn, index) => {
-            const isActive = activeIndex === index;
             const isMoreButton = index === 4;
+            const isActive = isMoreButton
+              ? activeIndex === 4 && (shareLocation || moreSetting)
+              : activeIndex === index;
 
             return (
               <div key={btn.label} className="relative">
                 <button
+                  ref={isMoreButton ? moreButtonRef : undefined}
                   key={btn.label}
-                  onClick={() => {
-                    if (!isMoreButton) setMoreSetting(false);
-                    btn.onClick();
-                  }}
+                  onClick={btn.onClick}
+                  disabled={(index === 0 || index === 1) && users.length === 0}
                   className={`w-10 h-10 flex items-center justify-center rounded-lg transition-colors
                 ${
                   isMoreButton
@@ -296,7 +320,7 @@ const LocationNavBar: React.FC = () => {
                 ${index === 2 || index === 3 ? 'border-r border-[#333333]' : ''}`}>
                   {btn.icon}
                 </button>
-                {isMoreButton && users.length === 0 && (
+                {isMoreButton && users.length === 0 && !introHint && (
                   <span className="absolute left-1/2 -bottom-8 -translate-x-1/2 px-2 py-1 text-xs rounded-md bg-[#262627] text-#E6E6E6 whitespace-nowrap z-10">
                     내 위치 공개는 여기에 있어요
                   </span>
@@ -309,7 +333,7 @@ const LocationNavBar: React.FC = () => {
         {moreSetting && (
           <div
             ref={moreRef}
-            className="mt-2 bg-[#0A0A0B] border border-[#B0B2B7] rounded-lg px-4 py-4 w-full shadow-lg z-50">
+            className="absolute  bg-[#0A0A0B] top-[140px] border border-[#B0B2B7] rounded-lg px-4 py-4 w-[220px] shadow-lg z-50">
             <p className="text-sm font-semibold leading-tight border-b border-[#262626] ">
               설정하기
             </p>
