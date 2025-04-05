@@ -5,7 +5,6 @@ import NoneRadar from '@/assets/images/404.svg';
 
 const UserLocation = () => {
   const myProfileImage = useUserStore((state) => state.myProfileImage);
-  console.log('중앙 이미지', myProfileImage);
   const users = useUserStore((state) => state.users);
   const smallR = 20;
   const midR = 32;
@@ -120,16 +119,19 @@ const UserLocation = () => {
                 top: `${y}%`,
                 transform: 'translate(-50%, -50%)',
               }}>
-              <img
-                src={avatarIcon}
-                alt="avatar"
-                className={`w-[28px] h-[28px]`}
-              />
-              <img
-                src={user.image}
-                alt={`${user.nickName}-profile`}
-                className='className="w-[20px] h-[20px] rounded-full object-cover border-[1.5px] border-white absolute top-[4px] left-[4px]'
-              />
+              <div className="relative w-[28px] h-[28px]">
+                <img
+                  src={avatarIcon}
+                  alt="avatarIcon"
+                  className="absolute w-full h-full"
+                />
+                <img
+                  src={user.image}
+                  alt={user.nickName}
+                  className="absolute  left-1/2 top-1/2 w-[24px] h-[24px] rounded-full object-cover border-[1.5px] border-white"
+                  style={{ transform: 'translate(-50%, -50%)' }}
+                />
+              </div>
               <p className="text-[10px] text-white whitespace-nowrap">
                 {user.nickName}
               </p>

@@ -144,7 +144,6 @@ const LocationNavBar: React.FC = () => {
         image: imageMap[user.id] || '',
       }));
 
-      console.log('이미지 포함 유저 리스트:', usersWithImages);
       setUsers(usersWithImages);
     } catch (error) {
       console.error('위치 전송 실패:', error);
