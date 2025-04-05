@@ -51,29 +51,6 @@ const LocationNavBar: React.FC = () => {
   const [introHint, setIntroHint] = useState(false);
   const setMyProfileImage = useUserStore((state) => state.setMyProfileImage);
 
-  const fetchMyInfo = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
-        { withCredentials: true },
-      );
-      const { id } = response.data;
-      setUserId(id);
-      const myImage = await axios.get(
-        `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/${id}`,
-        { withCredentials: true },
-      );
-      const profileImage = myImage.data.profileImage;
-      setMyProfileImage(profileImage);
-    } catch (error) {
-      console.error('내 정보 요청 실패:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchMyInfo();
-  }, []);
-
   const parseInterestString = (interest: string): Tag[] => {
     const colors = ['#ff7f50', '#6a5acd', '#32cd32'];
     const tags: Tag[] = [];
@@ -163,9 +140,23 @@ const LocationNavBar: React.FC = () => {
 
           console.log('위치 허용됨', lat, lng);
           setShareLocation(true);
+          try {
+            const response = await axios.get(
+              `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
+              { withCredentials: true },
+            );
+            const { id } = response.data;
+            setUserId(id);
+            const myImage = await axios.get(
+              `${import.meta.env.VITE_BASE_API_URL}/api/client/profile/${id}`,
+              { withCredentials: true },
+            );
+            const profileImage = myImage.data.profileImage;
+            setMyProfileImage(profileImage);
 
-          if (userId) {
-            await sendLocationToServer(lat, lng, userId);
+            await sendLocationToServer(lat, lng, id);
+          } catch (error) {
+            console.error('내 정보 요청 실패:', error);
           }
         },
         (error) => {
