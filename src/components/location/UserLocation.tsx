@@ -135,7 +135,7 @@ const UserLocation = () => {
             />
           )}
 
-          {[smallR, midR, bigR].map((r, idx) => (
+          {[bigR, midR, smallR].map((r, idx) => (
             <div
               key={idx}
               className="absolute border border-gray-500 rounded-full bg-transparent"
