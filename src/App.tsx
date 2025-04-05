@@ -62,7 +62,7 @@ export default function App() {
         </Routes>
 
         <ToastContainer
-          position="top-right"
+          position="top-left"
           autoClose={1500}
           hideProgressBar={true}
           closeOnClick
@@ -70,7 +70,7 @@ export default function App() {
           icon={false}
           closeButton={false}
           toastClassName={() =>
-            'rounded-sm border border-[#5A5C63] bg-[#262627] text-sm px-4 py-3 shadow-none'
+            'mt-4 ml-4 !w-[calc(100%-2rem)] tablet:!w-[300px] tablet:!mt-0 tablet:!ml-0 desktop:!mt-0 desktop:ml-0 cursor-pointer rounded-sm border border-[#5A5C63] bg-[#262627] text-sm px-4 py-3 shadow-none'
           }
         />
       </Router>
