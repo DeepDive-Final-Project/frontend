@@ -13,7 +13,7 @@ export const useSocketStore = create<StompState>((set, get) => ({
   stompClient: null,
   isConnected: false,
 
-  connect: () => {
+  connect: (onConnected) => {
     console.log('웹소켓 연결 시도 중');
 
     const client = new Client({
@@ -24,6 +24,7 @@ export const useSocketStore = create<StompState>((set, get) => ({
       reconnectDelay: 5000,
       onConnect: () => {
         set({ isConnected: true });
+        if (onConnected) onConnected();
       },
       onStompError: (frame) => {
         console.error('STOMP 오류', frame);
