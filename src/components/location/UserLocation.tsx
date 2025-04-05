@@ -5,6 +5,7 @@ import NoneRadar from '@/assets/images/404.svg';
 
 const UserLocation = () => {
   const myProfileImage = useUserStore((state) => state.myProfileImage);
+  console.log('중앙 이미지', myProfileImage);
   const users = useUserStore((state) => state.users);
   const smallR = 20;
   const midR = 32;
@@ -72,31 +73,18 @@ const UserLocation = () => {
             width: 'min(100vw, 320px)',
             height: 'min(100vw, 320px)',
           }}>
-          {myProfileImage ? (
-            <img
-              src={myProfileImage}
-              alt="my-profile"
-              className="absolute rounded-full object-cover border border-white"
-              style={{
-                width: '28px',
-                height: '28px',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-              }}
-            />
-          ) : (
-            <div
-              className="absolute bg-gray-500 rounded-full"
-              style={{
-                width: '10px',
-                height: '10px',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-              }}
-            />
-          )}
+          <img
+            src={myProfileImage}
+            alt="my-profile"
+            className="absolute rounded-full object-cover border border-white"
+            style={{
+              width: '28px',
+              height: '28px',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
 
           {[smallR, midR, bigR].map((r, idx) => (
             <div
