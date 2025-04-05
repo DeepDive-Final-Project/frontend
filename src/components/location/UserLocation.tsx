@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import avatarIcon from '@/assets/images/avatarMapin.svg';
 import { useUserStore } from '@/stores/useUserStore';
 import NoneRadar from '@/assets/images/404.svg';
@@ -6,6 +6,7 @@ import NoneRadar from '@/assets/images/404.svg';
 const UserLocation = () => {
   const myProfileImage = useUserStore((state) => state.myProfileImage);
   const users = useUserStore((state) => state.users);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const smallR = 20;
   const midR = 32;
   const bigR = 45;
@@ -72,6 +73,12 @@ const UserLocation = () => {
             width: 'min(100vw, 320px)',
             height: 'min(100vw, 320px)',
           }}>
+          {selectedUserId !== null && (
+            <div
+              className="absolute inset-0 bg-black/80 z-10 rounded-full"
+              onClick={() => setSelectedUserId(null)}
+            />
+          )}
           {myProfileImage ? (
             <img
               src={myProfileImage}
@@ -87,7 +94,7 @@ const UserLocation = () => {
             />
           ) : (
             <div
-              className="absolute bg-gray-500 rounded-full"
+              className="absolute bg-gray-500 rounded-full z-30"
               style={{
                 width: '10px',
                 height: '10px',
@@ -110,33 +117,44 @@ const UserLocation = () => {
               }}
             />
           ))}
-          {userPositions.map(({ x, y, user }) => (
-            <div
-              key={user.id}
-              className="absolute flex flex-col items-center"
-              style={{
-                left: `${x}%`,
-                top: `${y}%`,
-                transform: 'translate(-50%, -50%)',
-              }}>
-              <div className="relative w-[28px] h-[28px]">
-                <img
-                  src={avatarIcon}
-                  alt="avatarIcon"
-                  className="absolute w-full h-full"
-                />
-                <img
-                  src={user.image}
-                  alt={user.nickName}
-                  className="absolute  left-1/2 top-1/2 w-[22px] h-[22px] rounded-full object-cover"
-                  style={{ top: '46%', transform: 'translate(-50%, -50%)' }}
-                />
+          {userPositions.map(({ x, y, user }) => {
+            const isSelected = selectedUserId === user.id;
+
+            return (
+              <div
+                key={user.id}
+                className="absolute flex flex-col items-center cursor-pointer"
+                style={{
+                  left: `${x}%`,
+                  top: `${y}%`,
+                  transform: 'translate(-50%, -50%)',
+                  zIndex: isSelected ? 30 : 20,
+                  opacity: selectedUserId === null || isSelected ? 1 : 0.3,
+                }}
+                onClick={() => setSelectedUserId(user.id)}>
+                <div className="relative w-[28px] h-[28px]">
+                  <img
+                    src={avatarIcon}
+                    alt="avatarIcon"
+                    className="absolute w-full h-full"
+                  />
+                  <img
+                    src={user.image}
+                    alt={user.nickName}
+                    className="absolute left-1/2 top-1/2 w-[22px] h-[22px] rounded-full object-cover"
+                    style={{ top: '46%', transform: 'translate(-50%, -50%)' }}
+                  />
+                </div>
+
+                {isSelected && (
+                  <div className="mt-2 bg-white text-black px-2 py-1 rounded-md text-center text-xs shadow z-30 whitespace-nowrap">
+                    <p className="font-bold">{user.nickName}</p>
+                    <p className="text-[11px]">{user.role}</p>
+                  </div>
+                )}
               </div>
-              <p className="text-[10px] text-white whitespace-nowrap">
-                {user.nickName}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
