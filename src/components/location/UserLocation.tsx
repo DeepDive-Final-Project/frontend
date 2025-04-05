@@ -3,7 +3,7 @@ import avatarIcon from '@/assets/images/avatarMapin.svg';
 import { useUserStore } from '@/stores/useUserStore';
 import { useBottomSheetStore } from '@/stores/useBottomSheetStore';
 import NoneRadar from '@/assets/images/404.svg';
-import GradCilcle from '@/assets/images/Group 6.svg';
+import GradCircle from '@/assets/images/Group 6.svg';
 
 const UserLocation = () => {
   const myProfileImage = useUserStore((state) => state.myProfileImage);
@@ -91,11 +91,11 @@ const UserLocation = () => {
             height: 'min(100vw, 320px)',
           }}>
           <img
-            src={GradCilcle}
+            src={GradCircle}
             alt="center-graphic"
-            className="absolute"
+            className="absolute z-35"
             style={{
-              width: `${smallR * 2}%`, // smallR 기반으로 정중앙 크기 맞춤
+              width: `${smallR * 2}%`,
               height: `${smallR * 2}%`,
               left: '50%',
               top: '50%',
@@ -138,7 +138,7 @@ const UserLocation = () => {
           {[smallR, midR, bigR].map((r, idx) => (
             <div
               key={idx}
-              className="absolute border border-gray-500 rounded-full bg-[#000000]"
+              className="absolute border border-gray-500 rounded-full bg-transparent"
               style={{
                 width: `${r * 2}%`,
                 height: `${r * 2}%`,
