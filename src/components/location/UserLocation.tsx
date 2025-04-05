@@ -128,7 +128,7 @@ const UserLocation = () => {
                 <img
                   src={user.image}
                   alt={user.nickName}
-                  className="absolute  left-1/2 top-1/2 w-[24px] h-[24px] rounded-full object-cover border-[1.5px] border-white"
+                  className="absolute  left-1/2 top-1/2 w-[22px] h-[22px] rounded-full object-cover"
                   style={{ transform: 'translate(-50%, -50%)' }}
                 />
               </div>
