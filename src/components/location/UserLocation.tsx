@@ -2,12 +2,28 @@ import React, { useMemo } from 'react';
 import avatarIcon from '@/assets/images/avatarMapin.svg';
 import { useUserStore } from '@/stores/useUserStore';
 import NoneRadar from '@/assets/images/404.svg';
+import { useState, useEffect } from 'react';
+import { api } from '@/utils/api';
 
 const UserLocation = () => {
   const users = useUserStore((state) => state.users);
   const smallR = 20;
   const midR = 32;
   const bigR = 45;
+  const [myProfileImage, setMyProfileImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const myImage = async () => {
+      try {
+        const res = await api.get('/auth/me');
+        setMyProfileImage(res.data.profileImage);
+      } catch (err) {
+        console.log('내 프로필 가져오기 실패', err);
+      }
+    };
+
+    myImage();
+  }, []);
 
   const getCirclePoints = (radius: number) => {
     const angleStep = 360 / 10;
@@ -71,16 +87,31 @@ const UserLocation = () => {
             width: 'min(100vw, 320px)',
             height: 'min(100vw, 320px)',
           }}>
-          <div
-            className="absolute bg-gray-500 rounded-full"
-            style={{
-              width: '10px',
-              height: '10px',
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-            }}
-          />
+          {myProfileImage ? (
+            <img
+              src={myProfileImage}
+              alt="profile"
+              className="absolute rounded-full object-cover"
+              style={{
+                width: '28px',
+                height: '28px',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            />
+          ) : (
+            <div
+              className="absolute bg-gray-500 rounded-full object-cover"
+              style={{
+                width: '10px',
+                height: '10px',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            />
+          )}
           {[smallR, midR, bigR].map((r, idx) => (
             <div
               key={idx}
