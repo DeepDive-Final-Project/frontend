@@ -125,6 +125,11 @@ const UserLocation = () => {
                 alt="avatar"
                 className={`w-[28px] h-[28px]`}
               />
+              <img
+                src={user.image}
+                alt={`${user.nickName}-profile`}
+                className='className="w-[20px] h-[20px] rounded-full object-cover border-[1.5px] border-white absolute top-[4px] left-[4px]'
+              />
               <p className="text-[10px] text-white whitespace-nowrap">
                 {user.nickName}
               </p>
