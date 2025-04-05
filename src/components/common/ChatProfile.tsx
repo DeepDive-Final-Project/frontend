@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProfileCard from '@/components/common/ProfileCard';
-import CommonNav from '@/components/layout/headers/CommonNav';
 
 interface ProfileData {
   nickName: string;
@@ -80,7 +79,6 @@ const ChatProfile = () => {
 
   return (
     <div className="max-w-[1440px] m-auto">
-      <CommonNav />
       <div className="flex flex-row px-4 tablet:px-8  mt-4">
         <div className="tablet: w-full">
           <ProfileCard
