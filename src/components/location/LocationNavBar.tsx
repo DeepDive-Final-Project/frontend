@@ -49,6 +49,7 @@ const LocationNavBar: React.FC = () => {
   const moreRef = useRef<HTMLDivElement | null>(null);
   const moreButtonRef = useRef<HTMLButtonElement | null>(null);
   const [introHint, setIntroHint] = useState(false);
+  const setMyProfileImage = useUserStore((state) => state.setMyProfileImage);
 
   const fetchMyInfo = async () => {
     try {
@@ -56,7 +57,10 @@ const LocationNavBar: React.FC = () => {
         `${import.meta.env.VITE_BASE_API_URL}/auth/me`,
         { withCredentials: true },
       );
-      setUserId(response.data.id);
+      const { id, profileImage } = response.data;
+
+      setUserId(id);
+      setMyProfileImage(profileImage);
     } catch (error) {
       console.error('내 정보 요청 실패:', error);
     }
