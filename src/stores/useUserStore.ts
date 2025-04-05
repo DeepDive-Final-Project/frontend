@@ -27,6 +27,10 @@ interface UserStore {
 
   myProfileImage: string | null;
   setMyProfileImage: (img: string) => void;
+
+  selectedByMapPin: number | null;
+  setSelectedByMapPin: (id: number | null) => void;
+  resetSelectedByMapPin: () => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -38,4 +42,9 @@ export const useUserStore = create<UserStore>((set) => ({
 
   myProfileImage: null,
   setMyProfileImage: (img) => set({ myProfileImage: img }),
+
+  selectedByMapPin: null,
+  setSelectedByMapPin: (id) => set({ selectedByMapPin: id }),
+
+  resetSelectedByMapPin: () => set({ selectedByMapPin: null }),
 }));

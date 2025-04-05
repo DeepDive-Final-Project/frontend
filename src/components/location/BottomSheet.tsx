@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserCard from './UserCard';
 import Filter from './Filter';
@@ -35,6 +35,7 @@ const BottomSheet: React.FC = () => {
   const mode = useBottomSheetStore((state) => state.mode);
   const chatTab = useBottomSheetStore((state) => state.chatTab);
   const setChatTab = useBottomSheetStore((state) => state.setChatTab);
+  const selectedByMapPin = useUserStore((state) => state.selectedByMapPin);
 
   const setActiveIndex = useNavBarStore((state) => state.setActiveIndex);
   const resetFilters = useFilterStore((state) => state.resetFilters);
@@ -127,8 +128,14 @@ const BottomSheet: React.FC = () => {
       const matchCareer = !career || user.career === career;
       return matchRole && matchCareer;
     });
+  const sortedUsers = useMemo(() => {
+    if (!selectedByMapPin) return filteredUsers;
+    const selected = filteredUsers.find((u) => u.id === selectedByMapPin);
+    const rest = filteredUsers.filter((u) => u.id !== selectedByMapPin);
+    return selected ? [selected, ...rest] : filteredUsers;
+  }, [filteredUsers, selectedByMapPin]);
 
-  const exploreCards = filteredUsers.map((user) => {
+  const exploreCards = sortedUsers.map((user) => {
     const state = getChatButtonState(user.nickName, sent, received);
     const isRequested = state === 'WAITING';
     const isAccepted = state === 'MOVE';
