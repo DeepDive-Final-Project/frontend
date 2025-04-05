@@ -61,6 +61,7 @@ const LocationNavBar: React.FC = () => {
 
       setUserId(id);
       setMyProfileImage(profileImage);
+      console.log('내 이미지', profileImage);
     } catch (error) {
       console.error('내 정보 요청 실패:', error);
     }
