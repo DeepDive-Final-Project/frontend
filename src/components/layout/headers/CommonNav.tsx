@@ -39,11 +39,12 @@ const CommonNav = () => {
       <div className="flex flex-row items-center gap-4">
         <button
           onClick={() => navigate('/chat')}
-          className="hidden tablet:flex h-[32px] w-[88px] bg-[#1f1f1f] rounded-full items-center justify-center gap-1 border border-[#5A5C63]">
-          <Send className="h-4 text-[#E6E6E6] pl-3" />
-          <p className="text-sm font-medium text-[#E6E6E6] pr-3">내 채팅</p>
+          className="flex h-[32px] w-[32px] tablet:w-[88px] tablet:bg-[#1f1f1f] rounded-full items-center justify-center gap-1 border-0 tablet:border tablet:border-[#5A5C63]">
+          <Send className="h-5 w-5 tablet:h-4 tablet:w-4 text-[#E6E6E6]" />
+          <p className="hidden tablet:inline text-sm font-medium text-[#E6E6E6]">
+            내 채팅
+          </p>
         </button>
-
         <button
           className="w-8 h-8 bg-[#1f1f1f] rounded-full flex items-center justify-center overflow-hidden"
           onClick={() => navigate('/chatProfile')}>
