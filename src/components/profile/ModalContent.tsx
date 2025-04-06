@@ -28,17 +28,17 @@ const ModalContent = ({ onClose, onSave }: ModalContentProps) => {
         <span className="text-[#66A1F8] text-[12px]">최대 3개까지 선택</span>
       </div>
       <Accordian
-        label="개발 직무 선택"
+        label="기술 및 개발"
         apiUrl={`${import.meta.env.VITE_BASE_API_URL}/api/client/enums/interests?category=DEV`}
         onSelect={handleSelect}
       />
       <Accordian
-        label="기획 직무 선택"
+        label="프로덕트 및 비즈니스"
         apiUrl={`${import.meta.env.VITE_BASE_API_URL}/api/client/enums/interests?category=PD`}
         onSelect={handleSelect}
       />
       <Accordian
-        label="데이터 직무 선택"
+        label="프로덕트 디자인"
         apiUrl={`${import.meta.env.VITE_BASE_API_URL}/api/client/enums/interests?category=DS`}
         onSelect={handleSelect}
       />
