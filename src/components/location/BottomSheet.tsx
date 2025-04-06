@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserCard from './UserCard';
 import Filter from './Filter';
@@ -17,6 +17,8 @@ import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
 import { ChatRequestType } from '@/types/chatRequestType';
 import { getChatButtonState } from '@/utils/chat/getChatButtonState';
+import { useSocketStore } from '@/stores/useSocketStore';
+import { useLocation } from 'react-router-dom';
 
 const BottomSheet: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
@@ -42,8 +44,40 @@ const BottomSheet: React.FC = () => {
   const role = useFilterStore((state) => state.role);
   const career = useFilterStore((state) => state.career);
   const users = useUserStore((state) => state.users);
+  const location = useLocation();
 
   useChatRequestFetch(nickName ?? '');
+
+  useEffect(() => {
+    const { connect, isConnected } = useSocketStore.getState();
+
+    if (!isConnected && nickName && location.pathname === '/home') {
+      connect(() => {
+        const client = useSocketStore.getState().stompClient;
+        if (!client) return;
+
+        client.subscribe(`/queue/chat-request/${nickName}`, (message) => {
+          const payload = JSON.parse(message.body);
+          console.log(' [WebSocket] 받은 채팅 요청:', payload);
+
+          const current = useChatRequestStore.getState().received.PENDING;
+          const alreadyExists = current.some((r) => r.id === payload.id);
+          if (alreadyExists) return;
+
+          useChatRequestStore.setState((state) => ({
+            received: {
+              ...state.received,
+              PENDING: [...state.received.PENDING, payload],
+            },
+          }));
+
+          if (location.pathname === '/home') {
+            toast.info(`${payload.senderNickname}님이 대화 요청을 보냈습니다.`);
+          }
+        });
+      });
+    }
+  }, [nickName, location.pathname]);
 
   const handleUserSelect = (userId: number) => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
