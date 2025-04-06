@@ -60,16 +60,17 @@ const BottomSheet: React.FC = () => {
           const payload = JSON.parse(message.body);
           console.log(' [WebSocket] 받은 채팅 요청:', payload);
 
-          const current = useChatRequestStore.getState().received.PENDING;
-          const alreadyExists = current.some((r) => r.id === payload.id);
+          const currentPending =
+            useChatRequestStore.getState().received.PENDING;
+          const alreadyExists = currentPending.some((r) => r.id === payload.id);
           if (alreadyExists) return;
 
-          useChatRequestStore.setState((state) => ({
-            received: {
-              ...state.received,
-              PENDING: [...state.received.PENDING, payload],
-            },
-          }));
+          useChatRequestStore
+            .getState()
+            .setChatRequests('received', 'PENDING', [
+              ...currentPending,
+              payload,
+            ]);
 
           if (location.pathname === '/home') {
             toast.info(`${payload.senderNickname}님이 대화 요청을 보냈습니다.`);
@@ -78,7 +79,7 @@ const BottomSheet: React.FC = () => {
       });
     }
   }, [nickName, location.pathname]);
-
+  console.log('[ 상태 확인]', useChatRequestStore.getState().received.PENDING);
   const handleUserSelect = (userId: number) => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
   };
