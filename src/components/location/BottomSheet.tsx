@@ -71,6 +71,13 @@ const BottomSheet: React.FC = () => {
               ...currentPending,
               payload,
             ]);
+          const users = useUserStore.getState().users;
+          console.log(' 현재 users:', users);
+          console.log(' 받은 요청 senderNickname:', payload.senderNickname);
+          console.log(
+            ' users.find():',
+            users.find((u) => u.nickName === payload.senderNickname),
+          );
 
           if (location.pathname === '/home') {
             toast.info(`${payload.senderNickname}님이 대화 요청을 보냈습니다.`);
