@@ -58,26 +58,36 @@ const BottomSheet: React.FC = () => {
 
         client.subscribe(`/queue/chat-request/${nickName}`, (message) => {
           const payload = JSON.parse(message.body);
-          console.log(' [WebSocket] 받은 채팅 요청:', payload);
+          console.log('📩 [WebSocket] 받은 채팅 요청:', payload);
 
-          const currentPending =
-            useChatRequestStore.getState().received.PENDING;
-          const alreadyExists = currentPending.some((r) => r.id === payload.id);
-          if (alreadyExists) return;
-
-          useChatRequestStore
-            .getState()
-            .setChatRequests('received', 'PENDING', [
-              ...currentPending,
-              payload,
-            ]);
-          const users = useUserStore.getState().users;
-          console.log(' 현재 users:', users);
-          console.log(' 받은 요청 senderNickname:', payload.senderNickname);
-          console.log(
-            ' users.find():',
-            users.find((u) => u.nickName === payload.senderNickname),
+          const { received } = useChatRequestStore.getState();
+          const alreadyExists = received.PENDING.some(
+            (req) => req.id === payload.id,
           );
+          if (alreadyExists) {
+            console.log('⚠️ 이미 받은 요청 목록에 존재함, 무시');
+            return;
+          }
+
+          useChatRequestStore.setState((state) => ({
+            ...state,
+            received: {
+              ...state.received,
+              PENDING: [...state.received.PENDING, payload],
+            },
+          }));
+
+          const userList = useUserStore.getState().users;
+          const matchedUser = userList.find(
+            (u) => u.nickName === payload.senderNickname,
+          );
+
+          if (!matchedUser) {
+            console.warn(
+              '🚨 받은 요청에 해당하는 유저가 users 목록에 없음. 카드가 뜨지 않을 수 있음:',
+              payload.senderNickname,
+            );
+          }
 
           if (location.pathname === '/home') {
             toast.info(`${payload.senderNickname}님이 대화 요청을 보냈습니다.`);
