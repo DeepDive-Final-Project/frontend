@@ -87,6 +87,7 @@ const BottomSheet: React.FC = () => {
     }
   }, [nickName, location.pathname]);
   console.log('[ 상태 확인]', useChatRequestStore.getState().received.PENDING);
+
   const handleUserSelect = (userId: number) => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
   };
@@ -247,24 +248,26 @@ const BottomSheet: React.FC = () => {
     })
     .filter(Boolean);
 
-  const receivedPendingCards = received.PENDING.map((req) => {
-    const user = users.find((u) => u.nickName === req.senderNickname);
-    if (!user) return null;
+  const getReceivedPendingCards = () => {
+    return received.PENDING.map((req) => {
+      const user = users.find((u) => u.nickName === req.senderNickname);
+      if (!user) return null;
 
-    return (
-      <UserCard
-        key={user.id}
-        user={user}
-        onSelect={handleUserSelect}
-        selectedUserId={selectedUserId}
-        isRequested={false}
-        onRequest={() => {}}
-        buttonLabel="수락하기"
-        onButtonClick={() => handleAcceptRequest(req)}
-        onRejectClick={() => handleRejectRequest(req)}
-      />
-    );
-  }).filter(Boolean);
+      return (
+        <UserCard
+          key={user.id}
+          user={user}
+          onSelect={handleUserSelect}
+          selectedUserId={selectedUserId}
+          isRequested={false}
+          onRequest={() => {}}
+          buttonLabel="수락하기"
+          onButtonClick={() => handleAcceptRequest(req)}
+          onRejectClick={() => handleRejectRequest(req)}
+        />
+      );
+    }).filter(Boolean);
+  };
 
   const receivedAcceptedCards = received.ACCEPTED.map((req) => {
     const user = users.find((u) => u.nickName === req.senderNickname);
@@ -288,7 +291,7 @@ const BottomSheet: React.FC = () => {
     mode === 'chat'
       ? chatTab === 'sent'
         ? sentCards
-        : [...receivedPendingCards, ...receivedAcceptedCards]
+        : [...getReceivedPendingCards(), ...receivedAcceptedCards]
       : exploreCards;
 
   return (
