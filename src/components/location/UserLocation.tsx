@@ -135,18 +135,35 @@ const UserLocation = () => {
             />
           )}
 
-          {[bigR, midR, smallR].map((r, idx) => (
-            <div
-              key={idx}
-              className="absolute border border-gray-500 rounded-full bg-transparent"
-              style={{
-                width: `${r * 2}%`,
-                height: `${r * 2}%`,
-                left: `${50 - r}%`,
-                top: `${50 - r}%`,
-              }}
+          <svg
+            viewBox="0 0 100 100"
+            className="absolute w-full h-full"
+            style={{ zIndex: 0 }}>
+            <circle
+              cx="50"
+              cy="50"
+              r="20"
+              stroke="#9CA3AF"
+              strokeWidth="0.5"
+              fill="none"
             />
-          ))}
+            <circle
+              cx="50"
+              cy="50"
+              r="32"
+              stroke="#9CA3AF"
+              strokeWidth="0.5"
+              fill="none"
+            />
+            <circle
+              cx="50"
+              cy="50"
+              r="45"
+              stroke="#9CA3AF"
+              strokeWidth="0.5"
+              fill="none"
+            />
+          </svg>
           {userPositions.map(({ x, y, user }) => {
             const isSelected = selectedUserId === user.id;
 
