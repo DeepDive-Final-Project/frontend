@@ -35,4 +35,4 @@ body:
       value: |
         ---
         **🔗 자동 생성된 정보**
-        - Jira Sub-task: `${{ inputs.subtaskKey }}`
+        - Jira Story: `${{ inputs.storyKey }}`
