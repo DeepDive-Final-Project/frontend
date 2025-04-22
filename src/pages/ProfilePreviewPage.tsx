@@ -21,7 +21,7 @@ const ProfilePreviewPage = () => {
   const { sent, received } = useChatRequestStore();
   const { userId, nickName } = useChatMyInfo();
 
-  useChatRequestFetch(nickName ?? '');
+  useChatRequestFetch(nickName ?? '', userId ?? NaN);
 
   const acceptedChat = [...sent.ACCEPTED, ...received.ACCEPTED].find(
     (req) =>

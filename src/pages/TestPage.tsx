@@ -24,10 +24,10 @@ const fetchUsers = async () => {
 const TestPage = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { nickName, isLoading } = useChatMyInfo();
+  const { userId, nickName, isLoading } = useChatMyInfo();
   const { sent, received } = useChatRequestStore();
 
-  useChatRequestFetch(nickName ?? '');
+  useChatRequestFetch(nickName ?? '', userId ?? NaN);
 
   // 참가자 조회
   const { data: users = [] } = useQuery<UserProfileType[]>({
