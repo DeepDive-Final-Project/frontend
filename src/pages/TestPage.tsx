@@ -24,10 +24,10 @@ const fetchUsers = async () => {
 const TestPage = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { nickName, isLoading } = useChatMyInfo();
+  const { userId, nickName, isLoading } = useChatMyInfo();
   const { sent, received } = useChatRequestStore();
 
-  useChatRequestFetch(nickName ?? '');
+  useChatRequestFetch(nickName ?? '', userId ?? NaN);
 
   // 참가자 조회
   const { data: users = [] } = useQuery<UserProfileType[]>({
@@ -37,17 +37,17 @@ const TestPage = () => {
 
   // 채팅 요청
   const { mutate: chatRequest } = useChatRequest();
-  const onChatRequest = (receiverNickname: string) => {
-    if (!nickName) return;
+  const onChatRequest = (receiverId: number, receiverNickname: string) => {
+    if (!userId) return;
 
     chatRequest(
-      { senderNickname: nickName, receiverNickname },
+      { senderId: userId, receiverId },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
           toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
 
-          queryClient.invalidateQueries({
-            queryKey: ['chatSentList', nickName, 'PENDING'],
+          await queryClient.invalidateQueries({
+            queryKey: ['chatSentList', userId, 'PENDING'],
           });
         },
       },
@@ -58,7 +58,7 @@ const TestPage = () => {
   const { mutate: acceptRequest } = useAcceptRequest();
   const onChatAccept = (req: ChatRequestType) => {
     acceptRequest(req.id, {
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
         toast.success(`${req.senderNickname}님의 요청을 수락했습니다.`, {
           autoClose: 0.5,
         });
@@ -69,7 +69,7 @@ const TestPage = () => {
           }
         }, 600);
 
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: ['chatReceivedList', nickName, 'PENDING'],
         });
       },
@@ -80,10 +80,10 @@ const TestPage = () => {
   const { mutate: rejectRequest } = useRejectRequest();
   const onChatReject = (req: ChatRequestType) => {
     rejectRequest(req.id, {
-      onSuccess: () => {
+      onSuccess: async () => {
         toast.success(`${req.senderNickname}님의 요청을 거절했습니다.`);
 
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: ['chatReceivedList', nickName, 'PENDING'],
         });
       },
@@ -141,7 +141,7 @@ const TestPage = () => {
                 {state === 'REQUEST' && (
                   <Button
                     size="sm"
-                    onClick={() => onChatRequest(user.nickName)}>
+                    onClick={() => onChatRequest(user.id, user.nickName)}>
                     대화 요청하기
                   </Button>
                 )}

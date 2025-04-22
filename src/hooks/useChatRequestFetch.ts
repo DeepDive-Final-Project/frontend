@@ -5,31 +5,32 @@ import {
 } from '@/services/chatRequestListApi';
 import { useChatRequestStore } from '@/stores/useChatRequestStore';
 
-export const useChatRequestFetch = (currentUser: string) => {
-  const enabled = !!currentUser;
+export const useChatRequestFetch = (currentUser: string, senderId: number) => {
+  const senderEnabled = !isNaN(senderId);
+  const receiverEnabled = !!currentUser;
 
   useQuery({
-    queryKey: ['chatSentList', currentUser, 'PENDING'],
+    queryKey: ['chatSentList', senderId, 'PENDING'],
     queryFn: async () => {
-      const data = await fetchChatSentList(currentUser, 'PENDING');
+      const data = await fetchChatSentList(senderId, 'PENDING');
       useChatRequestStore
         .getState()
         .setChatRequests('sent', 'PENDING', Array.isArray(data) ? data : []);
       return data;
     },
-    enabled,
+    enabled: senderEnabled,
   });
 
   useQuery({
-    queryKey: ['chatSentList', currentUser, 'ACCEPTED'],
+    queryKey: ['chatSentList', senderId, 'ACCEPTED'],
     queryFn: async () => {
-      const data = await fetchChatSentList(currentUser, 'ACCEPTED');
+      const data = await fetchChatSentList(senderId, 'ACCEPTED');
       useChatRequestStore
         .getState()
         .setChatRequests('sent', 'ACCEPTED', Array.isArray(data) ? data : []);
       return data;
     },
-    enabled,
+    enabled: senderEnabled,
   });
 
   useQuery({
@@ -45,7 +46,7 @@ export const useChatRequestFetch = (currentUser: string) => {
         );
       return data;
     },
-    enabled,
+    enabled: receiverEnabled,
   });
 
   useQuery({
@@ -61,6 +62,6 @@ export const useChatRequestFetch = (currentUser: string) => {
         );
       return data;
     },
-    enabled,
+    enabled: receiverEnabled,
   });
 };
