@@ -46,7 +46,7 @@ const BottomSheet: React.FC = () => {
   const users = useUserStore((state) => state.users);
   const location = useLocation();
 
-  useChatRequestFetch(nickName ?? '');
+  useChatRequestFetch(nickName ?? '', userId ?? NaN);
 
   useEffect(() => {
     const { connect, isConnected } = useSocketStore.getState();
@@ -103,15 +103,15 @@ const BottomSheet: React.FC = () => {
   };
 
   const { mutate: chatRequest } = useChatRequest();
-  const handleRequest = (receiverNickname: string) => {
-    if (!nickName) return;
+  const handleRequest = (receiverId: number, receiverNickname: string) => {
+    if (!userId) return;
     chatRequest(
-      { senderNickname: nickName, receiverNickname },
+      { senderId: userId, receiverId },
       {
         onSuccess: () => {
           toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
           queryClient.invalidateQueries({
-            queryKey: ['chatSentList', nickName, 'PENDING'],
+            queryKey: ['chatSentList', userId, 'PENDING'],
           });
 
           useBottomSheetStore.getState().setChatTab('sent');
@@ -216,7 +216,7 @@ const BottomSheet: React.FC = () => {
         onSelect={handleUserSelect}
         selectedUserId={selectedUserId}
         isRequested={isRequested}
-        onRequest={() => handleRequest(user.nickName)}
+        onRequest={() => handleRequest(user.id, user.nickName)}
         buttonLabel={buttonLabel}
         onButtonClick={onButtonClick}
       />
