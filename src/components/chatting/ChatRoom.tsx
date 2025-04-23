@@ -144,6 +144,7 @@ const ChatRoom = ({ room, onExpandMessage }: ChatRoomProps) => {
       <ChatInput
         roomId={room.roomId}
         nickName={nickName ?? ''}
+        senderId={userId || 0}
         socketRef={{ current: stompClient }}
       />
     </>
