@@ -8,10 +8,11 @@ import { useChatListStore } from '@/stores/useChatListStore';
 interface ChatInputProps {
   roomId: number;
   socketRef: { current: Client | null };
+  senderId: number;
   nickName: string;
 }
 
-const ChatInput = ({ roomId, socketRef, nickName }: ChatInputProps) => {
+const ChatInput = ({ roomId, socketRef, nickName, senderId }: ChatInputProps) => {
   const [message, setMessage] = useState('');
   const maxLength = 1000;
 
@@ -38,6 +39,7 @@ const ChatInput = ({ roomId, socketRef, nickName }: ChatInputProps) => {
     const chatMessage: ChatMessageType = {
       messageId: Date.now(),
       roomId,
+      senderId,
       senderNickname: nickName,
       content: trimmed,
       timeStamp: new Date().toISOString(),
