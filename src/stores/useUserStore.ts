@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { mockUsers } from '@/components/location/mockusers';
 
 export interface Tag {
   text: string;
@@ -34,7 +35,7 @@ interface UserStore {
 }
 
 export const useUserStore = create<UserStore>((set) => ({
-  users: [],
+  users: mockUsers,
   setUsers: (users) => set({ users }),
   latitude: null,
   longitude: null,

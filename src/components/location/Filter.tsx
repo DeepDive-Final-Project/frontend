@@ -19,7 +19,7 @@ const Filter: React.FC = () => {
 
   return (
     <div className="flex gap-x-3 items-start w-full">
-      <div className="relative w-1/2">
+      <div className="px-[10px] relative w-1/2">
         <button
           onClick={() => setShowRoleDropdown((prev) => !prev)}
           className="w-full flex items-center justify-between gap-2 px-4 py-2 rounded-lg border border-gray-500 bg-[#222222] text-white text-sm">
@@ -45,7 +45,7 @@ const Filter: React.FC = () => {
         )}
       </div>
 
-      <div className="relative w-1/2">
+      <div className="pr-[10px] relative w-1/2">
         <button
           onClick={() => {
             if (!isCareerDisabled) {
