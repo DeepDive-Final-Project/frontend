@@ -383,13 +383,10 @@ const BottomSheet: React.FC = () => {
             } else if (index === 1) {
               marginTop = 60;
             } else if (index % 2 === 0) {
-              // 왼쪽 열: 2, 4, 6...
               marginTop = 40 + (index / 2) * 20;
             } else {
-              // 오른쪽 열: 3, 5, 7...
               marginTop = 60 + Math.floor(index / 2) * 20;
             }
-
             return (
               <div key={index} style={{ marginTop: `${marginTop}px` }}>
                 {card}
