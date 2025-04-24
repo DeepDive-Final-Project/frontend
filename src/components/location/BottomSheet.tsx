@@ -1,4 +1,5 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
+// import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserCard from './UserCard';
 import Filter from './Filter';
@@ -17,8 +18,8 @@ import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
 import { ChatRequestType } from '@/types/chatRequestType';
 import { getChatButtonState } from '@/utils/chat/getChatButtonState';
-import { useSocketStore } from '@/stores/useSocketStore';
-import { useLocation } from 'react-router-dom';
+// import { useSocketStore } from '@/stores/useSocketStore';
+// import { useLocation } from 'react-router-dom';
 
 const BottomSheet: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
@@ -44,60 +45,60 @@ const BottomSheet: React.FC = () => {
   const role = useFilterStore((state) => state.role);
   const career = useFilterStore((state) => state.career);
   const users = useUserStore((state) => state.users);
-  const location = useLocation();
+  // const location = useLocation();
 
   useChatRequestFetch(nickName ?? '', userId ?? NaN);
 
-  useEffect(() => {
-    const { connect, isConnected } = useSocketStore.getState();
+  // useEffect(() => {
+  //   const { connect, isConnected } = useSocketStore.getState();
 
-    if (!isConnected && nickName && location.pathname === '/home') {
-      connect(() => {
-        const client = useSocketStore.getState().stompClient;
-        if (!client) return;
+  //   if (!isConnected && nickName && location.pathname === '/home') {
+  //     connect(() => {
+  //       const client = useSocketStore.getState().stompClient;
+  //       if (!client) return;
 
-        client.subscribe(`/queue/chat-request/${nickName}`, (message) => {
-          const payload = JSON.parse(message.body);
-          console.log('📩 [WebSocket] 받은 채팅 요청:', payload);
+  //       client.subscribe(`/queue/chat-request/${nickName}`, (message) => {
+  //         const payload = JSON.parse(message.body);
+  //         console.log(' [WebSocket] 받은 채팅 요청:', payload);
 
-          const { received } = useChatRequestStore.getState();
-          const alreadyExists = received.PENDING.some(
-            (req) => req.id === payload.id,
-          );
-          if (alreadyExists) {
-            console.log('⚠️ 이미 받은 요청 목록에 존재함, 무시');
-            return;
-          }
+  //         const { received } = useChatRequestStore.getState();
+  //         const alreadyExists = received.PENDING.some(
+  //           (req) => req.id === payload.id,
+  //         );
+  //         if (alreadyExists) {
+  //           console.log(' 이미 받은 요청 목록에 존재함, 무시');
+  //           return;
+  //         }
 
-          useChatRequestStore.setState((state) => ({
-            ...state,
-            received: {
-              ...state.received,
-              PENDING: [...state.received.PENDING, payload],
-            },
-          }));
+  //         useChatRequestStore.setState((state) => ({
+  //           ...state,
+  //           received: {
+  //             ...state.received,
+  //             PENDING: [...state.received.PENDING, payload],
+  //           },
+  //         }));
 
-          const userList = useUserStore.getState().users;
-          const matchedUser = userList.find(
-            (u) => u.nickName === payload.senderNickname,
-          );
+  //         const userList = useUserStore.getState().users;
+  //         const matchedUser = userList.find(
+  //           (u) => u.nickName === payload.senderNickname,
+  //         );
 
-          if (!matchedUser) {
-            console.warn(
-              '🚨 받은 요청에 해당하는 유저가 users 목록에 없음. 카드가 뜨지 않을 수 있음:',
-              payload.senderNickname,
-            );
-          }
+  //         if (!matchedUser) {
+  //           console.warn(
+  //             ' 받은 요청에 해당하는 유저가 users 목록에 없음. 카드가 뜨지 않을 수 있음:',
+  //             payload.senderNickname,
+  //           );
+  //         }
 
-          if (location.pathname === '/home') {
-            toast.info(`${payload.senderNickname}님이 대화 요청을 보냈습니다.`);
-          }
-        });
-      });
-    }
-  }, [nickName, location.pathname]);
-  console.log('[ 상태 확인]', useChatRequestStore.getState().received.PENDING);
-
+  //         if (location.pathname === '/home') {
+  //           toast.info(`${payload.senderNickname}님이 대화 요청을 보냈습니다.`);
+  //         }
+  //       });
+  //     });
+  //   }
+  // }, [nickName, location.pathname]);
+  // console.log('[ 상태 확인]', useChatRequestStore.getState().received.PENDING);
+  // console.log('[ 상태 확인]', useChatRequestStore.getState().sent.PENDING);
   const handleUserSelect = (userId: number) => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
   };
@@ -293,6 +294,12 @@ const BottomSheet: React.FC = () => {
         onRequest={() => {}}
         buttonLabel="채팅방으로 이동"
         onButtonClick={() => chatRoomRequestId(req.id, navigate)}
+        className="
+    w-[clamp(130px,45vw,286px)]
+    h-[clamp(226px,75vw,497.2px)]
+    tablet:w-[clamp(130px,20vw,176.5px)]
+    tablet:h-[clamp(226px,34vw,306.84px)]
+  "
       />
     );
   }).filter(Boolean);
@@ -367,19 +374,21 @@ const BottomSheet: React.FC = () => {
             </button>
           </div>
         )}
-        <div className="grid grid-cols-2 gap-x-[20px] gap-y-[20px] px-[20px] overflow-y-auto">
+        <div className="grid grid-cols-2 gap-x-[20px] px-[20px] overflow-y-auto">
           {visibleCards.map((card, index) => {
-            const isLeftCol = index % 2 === 0;
-            const isLast = index === visibleCards.length - 1;
-            const isOddCount = visibleCards.length % 2 === 1;
-            const shouldForceLeft = isLast && isOddCount;
+            let marginTop = 0;
 
+            if (index === 0) {
+              marginTop = 40;
+            } else if (index === 1) {
+              marginTop = 60;
+            } else if (index % 2 === 0) {
+              marginTop = 40 + (index / 2) * 20;
+            } else {
+              marginTop = 60 + Math.floor(index / 2) * 20;
+            }
             return (
-              <div
-                key={index}
-                className={`mt-[${index < 2 ? (isLeftCol ? '40' : '60') : '20'}px]
-        ${isLeftCol || shouldForceLeft ? 'col-start-1' : ''}
-        `}>
+              <div key={index} style={{ marginTop: `${marginTop}px` }}>
                 {card}
               </div>
             );

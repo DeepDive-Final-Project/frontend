@@ -15,6 +15,7 @@ interface UserCardProps {
   buttonLabel?: string;
   onButtonClick?: () => void;
   onRejectClick?: () => void;
+  className?: string;
 }
 
 const UserCard: React.FC<UserCardProps> = ({
@@ -26,6 +27,7 @@ const UserCard: React.FC<UserCardProps> = ({
   buttonLabel,
   onButtonClick,
   onRejectClick,
+  className = '',
 }) => {
   const [showTags, setShowTags] = useState(false);
   const isSelected = selectedUserId === user.id;
@@ -46,17 +48,11 @@ const UserCard: React.FC<UserCardProps> = ({
   }, []);
 
   return (
-    <div className="relative w-full">
+    <div className={`relative ${className}  w-full`}>
       <div
         className={`user-card aspect-[3/5]
     rounded-xl flex flex-col text-white relative overflow-hidden border-2 border-gray-600 bg-[#0A0A0B]
-    w-[clamp(130px,45vw,286px)]
-    h-[clamp(226px,75vw,497.2px)]     
-
-    tablet:w-[clamp(130px,20vw,176.5px)]    
-    tablet:h-[clamp(226px,34vw,306.84px)]   
-
-    desktop:w-[176.5px] desktop:h-[306.84px] `}
+     `}
         onClick={handleCardClick}>
         <div className="relative w-full h-48 rounded-lg overflow-hidden">
           <div
