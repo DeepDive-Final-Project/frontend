@@ -34,9 +34,9 @@ const ChatPage = () => {
   );
 
   const { isLoading, error } = useQuery({
-    queryKey: ['chatList', nickName, selectedOption],
+    queryKey: ['chatList', userId, selectedOption],
     queryFn: async () => {
-      const data = await fetchChatListApi(nickName ?? '', selectedOption.value);
+      const data = await fetchChatListApi(userId || 0, selectedOption.value);
 
       // 읽음 처리된 상태로 먼저 필터링
       const filtered = data.map((room) => {

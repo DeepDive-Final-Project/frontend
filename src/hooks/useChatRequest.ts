@@ -2,8 +2,8 @@ import { useMutation } from '@tanstack/react-query';
 import { api } from '@/utils/api';
 
 interface ChatRequestPayload {
-  senderNickname: string;
-  receiverNickname: string;
+  senderId: number;
+  receiverId: number;
 }
 
 export const useChatRequest = () => {

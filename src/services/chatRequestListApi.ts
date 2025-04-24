@@ -3,12 +3,12 @@ import { ChatRequestType } from '@/types/chatRequestType';
 
 // 보낸 요청 호출
 export const fetchChatSentList = async (
-  nickname: string,
+  senderId: number,
   status: 'PENDING' | 'ACCEPTED',
 ): Promise<ChatRequestType[]> => {
   const response = await api.get(`/api/chat/request/sent`, {
     params: {
-      senderNickname: nickname,
+      senderId,
       status,
     },
   });

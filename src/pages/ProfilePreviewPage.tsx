@@ -21,7 +21,7 @@ const ProfilePreviewPage = () => {
   const { sent, received } = useChatRequestStore();
   const { userId, nickName } = useChatMyInfo();
 
-  useChatRequestFetch(nickName ?? '');
+  useChatRequestFetch(nickName ?? '', userId ?? NaN);
 
   const acceptedChat = [...sent.ACCEPTED, ...received.ACCEPTED].find(
     (req) =>
@@ -29,25 +29,25 @@ const ProfilePreviewPage = () => {
       req.receiverNickname === profile?.nickName,
   );
 
-  const handleMoveChat = () => {
+  const handleMoveChat = async () => {
     if (acceptedChat) {
-      chatRoomRequestId(acceptedChat.id, navigate);
+      await chatRoomRequestId(acceptedChat.id, navigate);
     }
   };
 
   // 채팅 요청
   const { mutate: chatRequest } = useChatRequest();
-  const onChatRequest = (receiverNickname: string) => {
-    if (!nickName) return;
+  const onChatRequest = () => {
+    if (!userId || !profile?.id) return;
 
     chatRequest(
-      { senderNickname: nickName, receiverNickname },
+      { senderId: userId, receiverId: profile.id },
       {
-        onSuccess: () => {
-          toast.success(`${receiverNickname}님에게 요청을 보냈습니다.`);
+        onSuccess: async () => {
+          toast.success(`${profile.nickName}님에게 요청을 보냈습니다.`);
 
-          queryClient.invalidateQueries({
-            queryKey: ['chatSentList', nickName, 'PENDING'],
+          await queryClient.invalidateQueries({
+            queryKey: ['chatSentList', userId, 'PENDING'],
           });
         },
       },
@@ -88,7 +88,7 @@ const ProfilePreviewPage = () => {
         userId={userId}
         profileId={profile.id}
         chatButtonState={chatButtonState}
-        onChat={() => onChatRequest(profile.nickName)}
+        onChat={() => onChatRequest}
         onMoveChat={handleMoveChat}
       />
     </div>
