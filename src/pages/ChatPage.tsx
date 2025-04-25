@@ -70,6 +70,12 @@ const ChatPage = () => {
     },
   });
 
+  useEffect(() => {
+    return () => {
+      setSelectedRoom(null);  // selectedRoom 초기화
+    };
+  }, []);
+  
   //
   useEffect(() => {
     if (!isConnected && nickName) {
@@ -131,12 +137,12 @@ const ChatPage = () => {
   }, [connect, isConnected, nickName]);
 
   useEffect(() => {
-    if (chatList.length > 0 && roomId) {
+    if (chatList.length > 0 && roomId && !isLoading) {
       const room = chatList.find((room) => room.roomId === roomId);
 
-      if (room) setSelectedRoom(room);
+      if (room) setSelectedRoom({ ...room, unreadCount: 0 });
     }
-  }, [chatList, roomId, setSelectedRoom]);
+  }, [chatList, roomId, setSelectedRoom, isLoading]);
 
   const otherUser = selectedRoom?.participants.find(
     (nickname) => nickname !== nickName,
