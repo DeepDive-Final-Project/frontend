@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-// import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserCard from './UserCard';
 import Filter from './Filter';
@@ -18,17 +17,17 @@ import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
 import { ChatRequestType } from '@/types/chatRequestType';
 import { getChatButtonState } from '@/utils/chat/getChatButtonState';
-// import { useSocketStore } from '@/stores/useSocketStore';
-// import { useLocation } from 'react-router-dom';
+import { useChatRequestRealtime } from '@/hooks/useChatRequestRealtime';
 
 const BottomSheet: React.FC = () => {
+  const { nickName } = useChatMyInfo();
+  useChatRequestRealtime(nickName ?? '');
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { userId } = useChatMyInfo();
-  const { nickName } = useChatMyInfo();
 
   const { sent, received } = useChatRequestStore();
 
@@ -45,60 +44,9 @@ const BottomSheet: React.FC = () => {
   const role = useFilterStore((state) => state.role);
   const career = useFilterStore((state) => state.career);
   const users = useUserStore((state) => state.users);
-  // const location = useLocation();
 
   useChatRequestFetch(nickName ?? '', userId ?? NaN);
 
-  // useEffect(() => {
-  //   const { connect, isConnected } = useSocketStore.getState();
-
-  //   if (!isConnected && nickName && location.pathname === '/home') {
-  //     connect(() => {
-  //       const client = useSocketStore.getState().stompClient;
-  //       if (!client) return;
-
-  //       client.subscribe(`/queue/chat-request/${nickName}`, (message) => {
-  //         const payload = JSON.parse(message.body);
-  //         console.log(' [WebSocket] 받은 채팅 요청:', payload);
-
-  //         const { received } = useChatRequestStore.getState();
-  //         const alreadyExists = received.PENDING.some(
-  //           (req) => req.id === payload.id,
-  //         );
-  //         if (alreadyExists) {
-  //           console.log(' 이미 받은 요청 목록에 존재함, 무시');
-  //           return;
-  //         }
-
-  //         useChatRequestStore.setState((state) => ({
-  //           ...state,
-  //           received: {
-  //             ...state.received,
-  //             PENDING: [...state.received.PENDING, payload],
-  //           },
-  //         }));
-
-  //         const userList = useUserStore.getState().users;
-  //         const matchedUser = userList.find(
-  //           (u) => u.nickName === payload.senderNickname,
-  //         );
-
-  //         if (!matchedUser) {
-  //           console.warn(
-  //             ' 받은 요청에 해당하는 유저가 users 목록에 없음. 카드가 뜨지 않을 수 있음:',
-  //             payload.senderNickname,
-  //           );
-  //         }
-
-  //         if (location.pathname === '/home') {
-  //           toast.info(`${payload.senderNickname}님이 대화 요청을 보냈습니다.`);
-  //         }
-  //       });
-  //     });
-  //   }
-  // }, [nickName, location.pathname]);
-  // console.log('[ 상태 확인]', useChatRequestStore.getState().received.PENDING);
-  // console.log('[ 상태 확인]', useChatRequestStore.getState().sent.PENDING);
   const handleUserSelect = (userId: number) => {
     setSelectedUserId((prev) => (prev === userId ? null : userId));
   };
