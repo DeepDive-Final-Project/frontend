@@ -13,7 +13,7 @@ interface ChatListState {
   updateLastMessage: (
     roomId: number,
     lastMessage: ChatMessageType,
-    currentUser: string,
+    currentUserId: number,
   ) => void;
 
   increaseUnreadCount: (roomId: number) => void;
@@ -35,12 +35,12 @@ export const useChatListStore = create<ChatListState>((set) => ({
   updateLastMessage: (
     roomId: number,
     lastMessage: ChatMessageType,
-    currentUser: string,
+    currentUserId: number,
   ) =>
     set((state) => ({
       chatList: state.chatList.map((room) => {
         if (room.roomId === roomId) {
-          const isSenderMe = lastMessage.senderNickname === currentUser;
+          const isSenderMe = lastMessage.senderId === currentUserId;
 
           return {
             ...room,
