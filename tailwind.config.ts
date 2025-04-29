@@ -37,6 +37,9 @@ export default {
         '.scrollbar-hide::-webkit-scrollbar': {
           display: 'none',
         },
+        '.pt-safe': {
+          'padding-top': 'env(safe-area-inset-top)',
+        }
       });
     },
   ],
