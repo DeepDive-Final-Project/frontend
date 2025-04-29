@@ -82,7 +82,7 @@ const ChatInput = ({ roomId, socketRef, nickName, senderId }: ChatInputProps) =>
       <div className="relative flex-shrink-0 w-full px-5 flex items-end">
         <textarea
           ref={textarea}
-          className={`w-full py-2 px-5 max-h-[97.5px] rounded-[20px] resize-none scrollbar-hide text-[#E6E6E6] text-sm leading-normal placeholder-[#A2A4AA] bg-[#1E1E1F] border ${
+          className={`w-full py-2 px-5 max-h-[97.5px] rounded-[20px] resize-none scrollbar-hide text-[#E6E6E6] leading-normal placeholder-[#A2A4AA] bg-[#1E1E1F] border ${
             message.length > maxLength
               ? 'border-[#FF2B2B] focus:border-[#FF2B2B]'
               : 'border-[#1E1E1F]'
