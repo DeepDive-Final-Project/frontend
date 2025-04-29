@@ -160,7 +160,7 @@ const ChatPage = () => {
   }
 
   return (
-    <div className="flex h-[calc(100vh-64px)] overflow-hidden">
+    <div className="flex h-[calc(100dvh-64px)] overflow-hidden">
       <div
         className={`
     flex flex-col flex-shrink-0 h-full
