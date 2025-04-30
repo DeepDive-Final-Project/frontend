@@ -40,7 +40,7 @@ const ChatPage = () => {
 
       // 읽음 처리된 상태로 먼저 필터링
       const filtered = data.map((room) => {
-        const isMyMessage = room.lastSenderId === userId;
+        const isMyMessage = room.lastSenderid === userId;
         const isSelectedRoom = room.roomId === roomId;
 
         if (isSelectedRoom && isMyMessage) {
