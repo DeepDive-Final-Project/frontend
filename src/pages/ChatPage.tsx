@@ -164,7 +164,7 @@ const ChatPage = () => {
       <div
         className={`
     flex flex-col flex-shrink-0 h-full
-    border border-[#222325] bg-[#0A0A0B]
+    border-r border-x border-b border-[#222325] bg-[#0A0A0B]
     w-full tablet:w-[320px]
     ${expandedMessage ? 'desktop:w-1/3' : 'desktop:w-[400px]'}
     ${selectedRoom ? 'hidden tablet:flex' : 'flex'}
