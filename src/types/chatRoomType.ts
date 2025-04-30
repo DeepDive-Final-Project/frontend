@@ -3,7 +3,7 @@ export interface ChatRoomType {
   participants: string[];
   lastMessage: string;
   lastMessageTime: string | null;
-  lastSenderId:number;
+  lastSenderid:number;
   unreadCount: number;
   exited: boolean;
   otherId: number;
