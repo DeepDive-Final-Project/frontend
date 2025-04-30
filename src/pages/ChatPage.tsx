@@ -43,7 +43,7 @@ const ChatPage = () => {
         const isMyMessage = room.lastSenderid === userId;
         const isSelectedRoom = room.roomId === roomId;
 
-        if (isSelectedRoom && isMyMessage) {
+        if (isSelectedRoom || isMyMessage) {
           return {
             ...room,
             unreadCount: 0,
