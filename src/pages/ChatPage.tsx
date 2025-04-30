@@ -40,10 +40,10 @@ const ChatPage = () => {
 
       // 읽음 처리된 상태로 먼저 필터링
       const filtered = data.map((room) => {
-        const isMyRoom = room.participants.includes(nickName ?? '');
+        const isMyMessage = room.lastSenderId === userId;
         const isSelectedRoom = room.roomId === roomId;
 
-        if (isMyRoom && isSelectedRoom) {
+        if (isSelectedRoom && isMyMessage) {
           return {
             ...room,
             unreadCount: 0,
@@ -160,11 +160,11 @@ const ChatPage = () => {
   }
 
   return (
-    <div className="flex h-[calc(100dvh-64px)] overflow-hidden">
+    <div className="flex h-[calc(100vh-64px)] overflow-hidden">
       <div
         className={`
     flex flex-col flex-shrink-0 h-full
-    border-r border-x border-b border-[#222325] bg-[#0A0A0B]
+    border border-[#222325] bg-[#0A0A0B]
     w-full tablet:w-[320px]
     ${expandedMessage ? 'desktop:w-1/3' : 'desktop:w-[400px]'}
     ${selectedRoom ? 'hidden tablet:flex' : 'flex'}
