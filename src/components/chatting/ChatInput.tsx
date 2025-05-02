@@ -13,7 +13,7 @@ interface ChatInputProps {
   recipientNickname: string;
 }
 
-const ChatInput = ({ roomId, socketRef, nickName, senderId, recipientNickname  }: ChatInputProps) => {
+const ChatInput = ({ roomId, socketRef, nickName, senderId, recipientNickname }: ChatInputProps) => {
   const [message, setMessage] = useState('');
   const maxLength = 1000;
 

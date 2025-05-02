@@ -78,9 +78,10 @@ const ChatPage = () => {
   
   //
   useEffect(() => {
-    if (!isConnected && nickName) {
-      connect(() => {
+    if (!isConnected && nickName && userId && selectedRoom?.roomId) {
+      connect(userId, nickName, selectedRoom.roomId, () => {
         const client = useSocketStore.getState().stompClient;
+
         if (client) {
           client.subscribe(
             `/queue/chat-notification/${nickName}`,
@@ -134,8 +135,8 @@ const ChatPage = () => {
         }
       });
     }
-  }, [connect, isConnected, nickName]);
-
+  }, [connect, isConnected, nickName, userId, selectedRoom?.roomId]);
+  
   useEffect(() => {
     if (chatList.length > 0 && roomId && !isLoading) {
       const room = chatList.find((room) => room.roomId === roomId);
