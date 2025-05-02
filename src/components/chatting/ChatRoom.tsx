@@ -146,6 +146,9 @@ const ChatRoom = ({ room, onExpandMessage }: ChatRoomProps) => {
         nickName={nickName ?? ''}
         senderId={userId || 0}
         socketRef={{ current: stompClient }}
+        recipientNickname={
+          room.participants.find((name) => name !== nickName) ?? ''
+        }
       />
     </>
   );

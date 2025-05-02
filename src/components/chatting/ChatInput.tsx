@@ -10,9 +10,10 @@ interface ChatInputProps {
   socketRef: { current: Client | null };
   senderId: number;
   nickName: string;
+  recipientNickname: string;
 }
 
-const ChatInput = ({ roomId, socketRef, nickName, senderId }: ChatInputProps) => {
+const ChatInput = ({ roomId, socketRef, nickName, senderId, recipientNickname  }: ChatInputProps) => {
   const [message, setMessage] = useState('');
   const maxLength = 1000;
 
@@ -41,6 +42,7 @@ const ChatInput = ({ roomId, socketRef, nickName, senderId }: ChatInputProps) =>
       roomId,
       senderId,
       senderNickname: nickName,
+      recipientNickname,
       content: trimmed,
       timeStamp: new Date().toISOString(),
       type: 'CHAT',
