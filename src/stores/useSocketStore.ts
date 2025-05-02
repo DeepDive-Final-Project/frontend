@@ -34,6 +34,16 @@ export const useSocketStore = create<StompState>((set, get) => ({
       reconnectDelay: 5000,
       onConnect: () => {
         set({ isConnected: true });
+
+        client.publish({
+          destination: '/app/chat.enter',
+          body: JSON.stringify({
+            roomId,
+            clientId: userId,
+            senderNickname: nickName,
+          }),
+        });
+        
         if (onConnected) onConnected();
       },
       onStompError: (frame) => {
