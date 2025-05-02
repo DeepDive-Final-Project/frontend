@@ -48,11 +48,15 @@ const ChatInput = ({ roomId, socketRef, nickName, senderId, recipientNickname  }
       type: 'CHAT',
     };
 
+    console.log(`[SEND]`, chatMessage);
+
     // 서버에 전송
     socketRef.current.publish({
       destination: '/app/chat.sendMessage',
       body: JSON.stringify(chatMessage),
     });
+
+    console.log(`[SEND - after publish]`, chatMessage);
 
     // 상태 반영
     appendMessage(roomId, chatMessage);
