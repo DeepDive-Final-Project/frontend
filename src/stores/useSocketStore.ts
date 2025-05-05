@@ -34,17 +34,19 @@ export const useSocketStore = create<StompState>((set, get) => ({
       reconnectDelay: 5000,
       onConnect: () => {
         set({ isConnected: true });
-
-        client.publish({
-          destination: '/app/chat.enter',
-          body: JSON.stringify({
-            roomId,
-            clientId: userId,
-            senderNickname: nickName,
-          }),
-        });
         
-        if (onConnected) onConnected();
+        setTimeout(() => {
+          client.publish({
+            destination: '/app/chat.enter',
+            body: JSON.stringify({
+              roomId,
+              clientId: userId,
+              senderNickname: nickName,
+            }),
+          });
+        
+          if (onConnected) onConnected();
+        }, 500);
       },
       onStompError: (frame) => {
         console.error('STOMP 오류', frame);
