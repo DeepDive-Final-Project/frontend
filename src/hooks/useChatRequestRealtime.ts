@@ -5,7 +5,10 @@ import { useUserStore } from '@/stores/useUserStore';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
 
-export const useChatRequestRealtime = (nickName: string) => {
+export const useChatRequestRealtime = (
+  userId: number,
+  nickName: string,
+) => {
   const { connect, isConnected } = useSocketStore();
   const users = useUserStore((state) => state.users);
   const location = useLocation();
@@ -13,7 +16,7 @@ export const useChatRequestRealtime = (nickName: string) => {
   useEffect(() => {
     if (!nickName) return;
     if (!isConnected) {
-      connect();
+      connect(userId, nickName);
     }
 
     const interval = setInterval(() => {

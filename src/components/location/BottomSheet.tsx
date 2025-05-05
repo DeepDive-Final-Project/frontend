@@ -20,14 +20,13 @@ import { getChatButtonState } from '@/utils/chat/getChatButtonState';
 import { useChatRequestRealtime } from '@/hooks/useChatRequestRealtime';
 
 const BottomSheet: React.FC = () => {
-  const { nickName } = useChatMyInfo();
-  useChatRequestRealtime(nickName ?? '');
+  const { userId, nickName } = useChatMyInfo();
+  useChatRequestRealtime(userId || 0, nickName ?? '');
+
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
-  const { userId } = useChatMyInfo();
 
   const { sent, received } = useChatRequestStore();
 

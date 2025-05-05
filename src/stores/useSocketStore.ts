@@ -8,7 +8,7 @@ interface StompState {
   connect: (
     userId: number,
     nickName: string,
-    roomId: number,
+    roomId?: number,
     onConnected?: () => void,
   ) => void;
   disconnect: () => void;
